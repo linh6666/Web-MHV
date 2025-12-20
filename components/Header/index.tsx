@@ -95,6 +95,7 @@ export default function Header() {
             onClick={toggle}
             className={classes.burger}
             size="sm"
+           color="white"
           />
         </Box>
       </div>
