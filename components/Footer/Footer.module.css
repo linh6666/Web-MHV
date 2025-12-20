@@ -1,0 +1,91 @@
+.footer {
+  background-color: #053c74;
+  padding: 20px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.footerOverlay {
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.logo {
+  flex: 1 1 200px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.company {
+  flex: 2 1 300px;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.links {
+  flex: 1 1 200px;
+  font-size: 0.9em;
+  color: #fff;
+  text-align: center;
+}
+
+/* Mobile: ≤600px */
+@media (max-width: 600px) {
+  .logo {
+    flex: 1 1 100px;
+    margin-bottom: 10px;
+  }
+
+  .company {
+    flex: 1 1 150px;
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  .links {
+    display: none; /* Ẩn links trên mobile */
+  }
+}
+
+/* Tablet: 601px–1024px */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .logo {
+    flex: 1 1 150px;
+    margin-bottom: 15px;
+  }
+
+  .company {
+    flex: 2 1 250px;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+
+  .links {
+    flex: 1 1 200px;
+    font-size: 0.85em;
+    text-align: center;
+  }
+}
+
+/* Desktop: >1024px */
+@media (min-width: 1025px) {
+  .logo {
+    flex: 1 1 200px;
+  }
+
+  .company {
+    flex: 2 1 300px;
+    font-size: 1.5em;
+  }
+
+  .links {
+    flex: 1 1 200px;
+    font-size: 0.9em;
+  }
+}
