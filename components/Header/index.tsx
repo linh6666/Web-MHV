@@ -9,7 +9,7 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPhoneCall, IconShoppingCart, IconUser } from "@tabler/icons-react";
+import { IconPhoneCall, IconShoppingCart } from "@tabler/icons-react";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
 
@@ -40,27 +40,26 @@ export default function Header() {
   return (
     <div className={classes.header}>
       <div className={classes.inner}>
-        {/* Logo */}
+        {/* Logo với padding trái/phải trực tiếp */}
         <Image
           src="/Ciputra.png"
           alt="Logo"
           w={150}
           h={70}
           fit="contain"
+          style={{ paddingLeft: 12, paddingRight: 12 }}
         />
 
-        {/* Menu desktop + Icon user */}
+        {/* Menu desktop */}
         <Box className={classes.links} visibleFrom="sm">
           <Group gap="md" justify="flex-end" className={classes.mainLinks}>
             {mainItems}
-
-            {/* User icon */}
-           
           </Group>
         </Box>
-        <div  style={{ display: "flex", gap: "20px" }}>
 
-             <div
+        {/* Icons desktop */}
+        <Box visibleFrom="sm" style={{ display: "flex", gap: "20px" }}>
+          <Box
             style={{
               border: "1px solid #fff",
               borderRadius: "50%",
@@ -72,8 +71,8 @@ export default function Header() {
             }}
           >
             <IconPhoneCall size={17} color="#fff" stroke={1.5} />
-          </div>
-          <div
+          </Box>
+          <Box
             style={{
               border: "1px solid #fff",
               borderRadius: "50%",
@@ -85,22 +84,58 @@ export default function Header() {
             }}
           >
             <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-          </div>
-  
-            <UserIcon />
+          </Box>
+          <UserIcon />
+        </Box>
 
-        </div>
-       
-
-        {/* Burger mobile */}
-        <Burger
-          opened={opened}
-          onClick={toggle}
-          className={classes.burger}
-          size="sm"
-          hiddenFrom="sm"
-        />
+        {/* Burger mobile với padding trái/phải */}
+        <Box hiddenFrom="sm" style={{ paddingLeft: 12, paddingRight: 12 }}>
+          <Burger
+            opened={opened}
+            onClick={toggle}
+            className={classes.burger}
+            size="sm"
+          />
+        </Box>
       </div>
+
+      {/* Menu mobile hiển thị khi Burger mở */}
+      {opened && (
+        <Box className={classes.mobileMenu} hiddenFrom="sm">
+          <Box className={classes.mobileLinks}>{mainItems}</Box>
+
+          {/* Icons mobile */}
+          <Box style={{ display: "flex", gap: "20px", marginTop: "20px", paddingLeft: 12, paddingRight: 12 }}>
+            <Box
+              style={{
+                border: "1px solid #fff",
+                borderRadius: "50%",
+                width: 26,
+                height: 26,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconPhoneCall size={17} color="#fff" stroke={1.5} />
+            </Box>
+            <Box
+              style={{
+                border: "1px solid #fff",
+                borderRadius: "50%",
+                width: 26,
+                height: 26,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IconShoppingCart size={17} color="#fff" stroke={1.5} />
+            </Box>
+            <UserIcon />
+          </Box>
+        </Box>
+      )}
     </div>
   );
 }
