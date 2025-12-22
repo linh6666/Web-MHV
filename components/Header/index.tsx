@@ -14,8 +14,8 @@ import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
 
 const mainLinks = [
-  { link: "#", label: "GIỚI THIỆU" },
-  { link: "#", label: "MÔ HÌNH TƯƠNG TÁC" },
+  { link: "/gioi-thieu", label: "GIỚI THIỆU" },
+  { link: "/tuong-tac", label: "MÔ HÌNH TƯƠNG TÁC" },
 ];
 
 export default function Header() {
