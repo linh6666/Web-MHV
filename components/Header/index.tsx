@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Anchor,
   Box,
@@ -10,6 +9,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPhoneCall, IconShoppingCart } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
 
@@ -19,21 +19,16 @@ const mainLinks = [
 ];
 
 export default function Header() {
-  const [opened, { toggle }] = useDisclosure(false);
-//   const [active, setActive] = useState(0);
-const [active, setActive] = useState<number | null>(null);
+  const [opened, { toggle, close }] = useDisclosure(false);
+  const pathname = usePathname(); // ✅ LẤY PATH HIỆN TẠI
 
-
-  const mainItems = mainLinks.map((item, index) => (
+  const mainItems = mainLinks.map((item) => (
     <Anchor
       key={item.label}
       href={item.link}
       className={classes.mainLink}
-      data-active={index === active || undefined}
-      onClick={(e) => {
-        e.preventDefault();
-        setActive(index);
-      }}
+      data-active={pathname === item.link || undefined}
+      onClick={close} // mobile click → đóng menu
     >
       {item.label}
     </Anchor>
@@ -42,7 +37,7 @@ const [active, setActive] = useState<number | null>(null);
   return (
     <div className={classes.header}>
       <div className={classes.inner}>
-        {/* Logo với padding trái/phải trực tiếp */}
+        {/* Logo */}
         <Image
           src="/Ciputra.png"
           alt="Logo"
@@ -61,84 +56,74 @@ const [active, setActive] = useState<number | null>(null);
 
         {/* Icons desktop */}
         <Box visibleFrom="sm" style={{ display: "flex", gap: "20px" }}>
-          <Box
-            style={{
-              border: "1px solid #fff",
-              borderRadius: "50%",
-              width: 26,
-              height: 26,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <IconCircle>
             <IconPhoneCall size={17} color="#fff" stroke={1.5} />
-          </Box>
-          <Box
-            style={{
-              border: "1px solid #fff",
-              borderRadius: "50%",
-              width: 26,
-              height: 26,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          </IconCircle>
+
+          <IconCircle>
             <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-          </Box>
+          </IconCircle>
+
           <UserIcon />
         </Box>
 
-        {/* Burger mobile với padding trái/phải */}
+        {/* Burger mobile */}
         <Box hiddenFrom="sm" style={{ paddingLeft: 12, paddingRight: 12 }}>
           <Burger
             opened={opened}
             onClick={toggle}
             className={classes.burger}
             size="sm"
-           color="white"
+            color="white"
           />
         </Box>
       </div>
 
-      {/* Menu mobile hiển thị khi Burger mở */}
+      {/* Menu mobile */}
       {opened && (
         <Box className={classes.mobileMenu} hiddenFrom="sm">
           <Box className={classes.mobileLinks}>{mainItems}</Box>
 
-          {/* Icons mobile */}
-          <Box style={{ display: "flex", gap: "20px", marginTop: "20px", paddingLeft: 12, paddingRight: 12 }}>
-            <Box
-              style={{
-                border: "1px solid #fff",
-                borderRadius: "50%",
-                width: 26,
-                height: 26,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <Box
+            style={{
+              display: "flex",
+              gap: "20px",
+              marginTop: "20px",
+              paddingLeft: 12,
+              paddingRight: 12,
+            }}
+          >
+            <IconCircle>
               <IconPhoneCall size={17} color="#fff" stroke={1.5} />
-            </Box>
-            <Box
-              style={{
-                border: "1px solid #fff",
-                borderRadius: "50%",
-                width: 26,
-                height: 26,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+            </IconCircle>
+
+            <IconCircle>
               <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-            </Box>
+            </IconCircle>
+
             <UserIcon />
           </Box>
         </Box>
       )}
     </div>
+  );
+}
+
+/* ============ Icon wrapper dùng chung ============ */
+function IconCircle({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      style={{
+        border: "1px solid #fff",
+        borderRadius: "50%",
+        width: 26,
+        height: 26,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </Box>
   );
 }

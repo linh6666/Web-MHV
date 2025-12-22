@@ -50,7 +50,7 @@ const Login = () => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("access_token");
       if (token) {
-        window.location.href = "/Tuong-tac";
+        window.location.href = "/tuong-tac";
       }
     }
   }, []);

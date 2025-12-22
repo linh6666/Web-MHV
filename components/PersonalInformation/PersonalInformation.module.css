@@ -1,0 +1,113 @@
+.Box {
+  display: flex;
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: 30px;
+margin-top: 100px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  height: fit-content;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px;
+    border: none;              /* bỏ viền mặc định */
+  outline: none;             /* bỏ viền focus mặc định */
+  background: transparent; 
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.2s;
+  white-space: nowrap; /* giúp không xuống dòng khi scroll ngang */
+}
+
+.menuItem:hover {
+  background-color: #f5f5f5;
+}
+
+.active {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  color: #d9534f;
+}
+
+.logoutBtn:hover {
+  background-color: #f9e3e2;
+}
+
+/* Content */
+.content {
+  /* flex: 1; */
+  width: 800px;
+}
+
+/* 📱 Responsive cho mobile */
+@media (max-width: 768px) {
+  .Box {
+    flex-direction: column;       /* đổi từ 2 cột thành 1 cột */
+    /* margin: 20px auto;            */
+    gap: 16px;
+    padding: 0 10px;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 8px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    overflow-x: auto;           /* cho phép cuộn ngang */
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  .sidebar ul {
+    display: flex;              /* xếp menu thành hàng ngang */
+    /* gap: 10px; */
+  }
+
+  .sidebar li {
+    flex: 0 0 auto;             /* giữ kích thước item khi cuộn */
+  }
+
+  .menuItem {
+    flex-direction: column;     /* icon trên, chữ dưới */
+    justify-content: center;
+    font-size: 10px;
+    /* padding: 8px 10px;
+    min-width: 80px;            */
+    text-align: center;
+  }
+
+  .menuItem svg {
+    margin-bottom: 4px;
+  }
+
+  .content {
+    width: 100%;
+  }
+}

@@ -1,0 +1,39 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.buildingCard {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+
+.buildingCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.buildingHeader {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.statusBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .gridContainer {
+    grid-template-columns: 1fr; /* ✅ mobile: mỗi hàng 1 ô */
+  }
+}

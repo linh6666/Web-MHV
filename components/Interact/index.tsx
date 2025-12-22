@@ -150,10 +150,10 @@ export default function DetailInteractive() {
         <Button
           mt="md"
           fullWidth
-          onClick={() => (window.location.href = "/dang-nhap")}
+          onClick={() => (window.location.href = "/")}
           style={{
-            backgroundColor: "#ffbe00",
-            color: "#762f0b",
+            backgroundColor: "#053c74",
+            color: "#fff",
             fontWeight: 600,
           }}
         >
