@@ -3,11 +3,11 @@ import "@mantine/core/styles.css";
 import "./globals.css";
 
 import { MantineProvider, mantineHtmlProps } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals"; // ✅ Thêm import ModalsProvider
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
 import { Nunito_Sans } from "next/font/google";
-
 
 export const metadata: Metadata = {
   title: "Tập đoàn Ciputra",
@@ -35,12 +35,12 @@ export default function RootLayout({
       <body>
         {/* ✅ MantineProvider bọc TẤT CẢ */}
         <MantineProvider>
-          <Header />
-          
-            <main className="main">
-         {children}
-            </main>
-<Footer />
+          {/* ✅ Thêm ModalsProvider bọc Header, main, Footer */}
+          <ModalsProvider>
+            <Header />
+            <main className="main">{children}</main>
+            <Footer />
+          </ModalsProvider>
         </MantineProvider>
       </body>
     </html>
