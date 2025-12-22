@@ -23,6 +23,7 @@ export default function Header() {
 //   const [active, setActive] = useState(0);
 const [active, setActive] = useState<number | null>(null);
 
+
   const mainItems = mainLinks.map((item, index) => (
     <Anchor
       key={item.label}
