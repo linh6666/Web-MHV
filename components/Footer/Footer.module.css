@@ -1,6 +1,6 @@
 .footer {
   background-color: #053c74;
-  padding: 20px;
+  padding: 10px;
   color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -24,7 +24,7 @@
 .company {
   flex: 2 1 300px;
   font-size: 1.5em;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   text-align: center;
 }
 

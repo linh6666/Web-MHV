@@ -1,12 +1,12 @@
 .registerPage {
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  margin-top: 85px;
 }
 
 .registerPage .container {
-  margin: 0 auto;
-  padding: 0 5px;
+  /* margin: 0 auto; */
+  /* padding: 0 5px; */
   display: block;
   height: 100%;
   position: relative;
@@ -130,7 +130,7 @@
 }
 
 .input:focus-within {
-  border-color: #ffbe00;
+  border-color: #053c74;
   padding-left: 0 !important;
   outline: transparent;
   border-top: none;
@@ -180,4 +180,36 @@
   background-color: var(--clr-bright-primary);
   border-radius: 50%;
   color: white;
+}
+@media (max-width: 480px) {
+  .registerPage {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .registerPage .container {
+    padding: 0 5px;
+  }
+
+  .registerPage .container .topNavBar .navBarTitle {
+    font-size: 18px;
+  }
+
+  .inputBox {
+    margin: 22px 0;
+  }
+
+  .label {
+    font-size: 14px;
+  }
+
+  .label[data-floating] {
+    transform: translateY(-26px);
+    font-size: 14px;
+  }
+
+  .registerPage .container .btn {
+    font-size: 13px;
+    padding: 10px;
+  }
 }

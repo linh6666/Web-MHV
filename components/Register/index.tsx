@@ -17,7 +17,7 @@ import { NotificationExtension } from "../../extension/NotificationExtension";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import style from "./Register.module.css";
-import AppContainer from "../../common/AppContainer";
+
 
 interface Register {
   fullName: string;
@@ -190,7 +190,6 @@ const RegisterForm = () => {
 
   return (
 
-<AppContainer>
  <Box
       className={style.registerPage}
       component="form"
@@ -387,7 +386,7 @@ const RegisterForm = () => {
         </Text>
       </Box>
     </Box>
-</AppContainer>
+
    
   );
 };
