@@ -119,7 +119,8 @@ GET_LIST_DETAIL_HOME:"/api/v1/detal_unit/get_detal_units/{project_id}/{unit_code
 ////Project basic
 GET_LIST_PROJECT_BASIC:"/api/v1/projects/basic",
 
-
+///Control
+    GET_LIST_CONTROL:"/api/v1/projects/control/",
 
 
 }

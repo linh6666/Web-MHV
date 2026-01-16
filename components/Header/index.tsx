@@ -13,22 +13,35 @@ import { usePathname } from "next/navigation";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
 
+/* ============ Menu config ============ */
 const mainLinks = [
-  { link: "/gioi-thieu", label: "GIỚI THIỆU" },
-  { link: "/tuong-tac", label: "MÔ HÌNH TƯƠNG TÁC" },
+  {
+    link: "https://sunshinegroup.vn/",
+    label: "GIỚI THIỆU",
+    external: true,
+  },
+  {
+    link: "/tuong-tac",
+    label: "MÔ HÌNH TƯƠNG TÁC",
+  },
 ];
 
 export default function Header() {
   const [opened, { toggle, close }] = useDisclosure(false);
-  const pathname = usePathname(); // ✅ LẤY PATH HIỆN TẠI
+  const pathname = usePathname();
 
+  /* ============ Render menu items ============ */
   const mainItems = mainLinks.map((item) => (
     <Anchor
       key={item.label}
       href={item.link}
       className={classes.mainLink}
-      data-active={pathname === item.link || undefined}
-      onClick={close} // mobile click → đóng menu
+      data-active={
+        !item.external && pathname === item.link ? true : undefined
+      }
+      onClick={close}
+      target={item.external ? "_blank" : undefined}
+      rel={item.external ? "noopener noreferrer" : undefined}
     >
       {item.label}
     </Anchor>
@@ -37,9 +50,9 @@ export default function Header() {
   return (
     <div className={classes.header}>
       <div className={classes.inner}>
-        {/* Logo */}
+        {/* ============ Logo ============ */}
         <Image
-          src="/Ciputra.png"
+          src="/logo.png"
           alt="Logo"
           w={150}
           h={70}
@@ -47,14 +60,14 @@ export default function Header() {
           style={{ paddingLeft: 12, paddingRight: 12 }}
         />
 
-        {/* Menu desktop */}
+        {/* ============ Menu desktop ============ */}
         <Box className={classes.links} visibleFrom="sm">
           <Group gap="md" justify="flex-end" className={classes.mainLinks}>
             {mainItems}
           </Group>
         </Box>
 
-        {/* Icons desktop */}
+        {/* ============ Icons desktop ============ */}
         <Box visibleFrom="sm" style={{ display: "flex", gap: "20px" }}>
           <IconCircle>
             <IconPhoneCall size={17} color="#fff" stroke={1.5} />
@@ -67,7 +80,7 @@ export default function Header() {
           <UserIcon />
         </Box>
 
-        {/* Burger mobile */}
+        {/* ============ Burger mobile ============ */}
         <Box hiddenFrom="sm" style={{ paddingLeft: 12, paddingRight: 12 }}>
           <Burger
             opened={opened}
@@ -79,7 +92,7 @@ export default function Header() {
         </Box>
       </div>
 
-      {/* Menu mobile */}
+      {/* ============ Menu mobile ============ */}
       {opened && (
         <Box className={classes.mobileMenu} hiddenFrom="sm">
           <Box className={classes.mobileLinks}>{mainItems}</Box>
