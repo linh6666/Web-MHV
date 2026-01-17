@@ -253,10 +253,10 @@ border-radius: 15px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border: 1.5px solid #762f0b;
+  border: 1.5px solid #EEEEEE;
   border-radius: 999px;
-  background-color: #FFFAEE;
-  color: #762f0b;
+  background-color: #234374;
+  color: #EEEEEE;
   font-size: 11px;
   padding: 6px 18px;
   transition: all 0.2s ease;
@@ -296,15 +296,15 @@ border-radius: 15px;
 /* hover / active (tùy chỉnh nếu muốn) */
 .menuBtn:hover,
 .menuBtnSmall:hover {
-  background-color: #FFF1D2;
-  color: #752E0B;
+  background-color: #C2923F;
+  color: #12223B;
 }
 
 .menuBtn:active,
 .menuBtnSmall:active,
 .menuBtn:focus,
 .menuBtnSmall:focus {
-  background: linear-gradient(to top, #FFE09A,#FFF1D2);
-  color: #752E0B;
-  border-color: #762f0b;
+  background: #C2923F;
+  color: #12223B;
+  border-color: #EEEEEE;
 }

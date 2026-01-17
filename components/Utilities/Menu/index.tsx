@@ -92,7 +92,7 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
 
   const handleBack = () => {
     if (!project_id) return;
-    router.push(`/Tuong-tac/Millennia-City?id=${project_id}`);
+    router.push(`/tuong-tac/Ciputra?id=${project_id}`);
   };
 
   return (

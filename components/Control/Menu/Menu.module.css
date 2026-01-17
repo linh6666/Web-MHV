@@ -25,7 +25,7 @@
 .title h1 {
   font-weight: 700; /* hoặc bold */
   font-size: 14px;  /* tùy chỉnh thêm nếu muốn chữ to hơn */
-  color: #EEEEEE;   /* tuỳ chọn: đổi màu cho đồng bộ */
+  color: #C2923F;   /* tuỳ chọn: đổi màu cho đồng bộ */
 }
 /* nút chức năng */
 .Function {
@@ -289,15 +289,15 @@ border-radius: 15px;
 /* hover / active (tùy chỉnh nếu muốn) */
 .menuBtn:hover,
 .menuBtnSmall:hover {
-  background-color: #FFF1D2;
-  color: #752E0B;
+  background-color: #C2923F;
+  color: #12223B;
 }
 
 .menuBtn:active,
 .menuBtnSmall:active,
 .menuBtn:focus,
 .menuBtnSmall:focus {
-  background: linear-gradient(to top, #FFE09A,#FFF1D2);
-  color: #752E0B;
-  border-color: #762f0b;
+  background: #C2923F;
+  color: #12223B;
+  border-color: #EEEEEE;
 }

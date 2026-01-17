@@ -153,18 +153,18 @@ export default function Menu({
 
   // 🎨 Style nút ON/OFF
   const getButtonStyle = (isActive: boolean) => ({
-    width: 30,
+    width: 90,
     height: 30,
-    padding: 0,
     borderRadius: 40,
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
     transition: "background 0.3s",
-    background: isActive ? "#eeeeee85" : "#234374",
-    color: "#EEEEEE",
-    border: "1.5px solid #EEEEEE",
+    background: isActive ? "#C2923F" : "#234374",
+    color: isActive ? "#12223B" : "#EEEEEE",
+      border: isActive
+    ? "1.5px solid #C2923F"
+    : "1.5px solid #EEEEEE",
   });
 
   return (
@@ -226,44 +226,46 @@ export default function Menu({
           /> */}
 
           {/* ⚙️ ON/OFF + Back */}
-          <Group gap="xs">
-            <Button
-              style={getButtonStyle(active === "on")}
-              onClick={() =>
-                active !== "on" ? handleClickOn() : setActive(null)
-              }
-            >
-              <Text style={{ fontSize: "13px" }}>ON</Text>
-            </Button>
+        <Group gap="xs" wrap="nowrap" align="center">
+  <Button
+    style={getButtonStyle(active === "on")}
+    onClick={() =>
+      active !== "on" ? handleClickOn() : setActive(null)
+    }
+  >
+    <Text size="11px">BẬT TẤT CẢ</Text>
+  </Button>
 
-            <Button
-              style={getButtonStyle(active === "off")}
-              onClick={() =>
-                active !== "off" ? handleClickOFF() : setActive(null)
-              }
-            >
-              <Text style={{ fontSize: "12px" }}>OFF</Text>
-            </Button>
+  <Button
+    style={getButtonStyle(active === "off")}
+    onClick={() =>
+      active !== "off" ? handleClickOFF() : setActive(null)
+    }
+  >
+    <Text size="11px">TẮT TẤT CẢ</Text>
+  </Button>
 
-            <Button
-              onClick={handleBack}
-              variant="filled"
-              style={{
-                width: 30,
-                height: 30,
-                padding: 0,
-                borderRadius: 40,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "#234374",
-                color: "#EEEEEE",
-                border: "1.5px solid #EEEEEE",
-              }}
-            >
-              <IconArrowLeft size={18} color="#EEEEEE" />
-            </Button>
-          </Group>
+ 
+</Group>
+<Button
+  onClick={handleBack}
+  variant="filled"
+  style={{
+    width: 30,
+    height: 30,
+    padding: 0,
+    borderRadius: 40,
+    background: "#234374",
+    border: "1.5px solid #EEEEEE",
+    flexShrink: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  <IconArrowLeft size={18} color="#EEEEEE" />
+</Button>
+
         </Stack>
       </div>
     </div>

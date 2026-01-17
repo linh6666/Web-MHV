@@ -77,87 +77,119 @@ export default function Sun({ project_id }: SunProps) {
   return (
     <>
       {/* Nút Sáng */}
-      <Button
-      onClick={handleClickNight}
-        // onClick={handleClickMorning}
-        variant="filled"
+     <Button
+  onClick={handleClickNight}
+  variant="filled"
+  style={{
+    width: active === "night" ? 65 : 30,
+    height: 30,
+    padding: 0,
+    borderRadius: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: active === "night" ? "space-around" : "center",
+    overflow: "hidden",
+    transition: "width 0.3s, background-color 0.3s",
+    background: active === "night" ? "#C2923F" : "#234374",
+    border: "1.5px solid #EEEEEE",
+  }}
+>
+  <Group gap={active === "night" ? 4 : 0} align="center">
+    <IconSunHigh
+      size={18}
+      color={active === "night" ? "#12223B" : "#EEEEEE"}
+    />
+    {active === "night" && (
+      <span
         style={{
-          width: active === "night" ? 65 : 30,
-          height: 30,
-          padding: 0,
-          borderRadius: 40,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: active === "night" ? "space-around" : "center",
-          overflow: "hidden",
-          transition: "width 0.3s, background-color 0.3s",
-          background:
-            active === "night"
-              ? "#234374"
-              : "#234374",
-          border: "1.5px solid #EEEEEE",
+          color: "#12223B",
+          fontSize: 13,
+          fontWeight: 500,
         }}
       >
-        <Group gap={active === "night" ? 4 : 0} align="center">
-          <IconSunHigh size={18} color="#EEEEEE" />
-          {active === "night" && <span style={{ color: "#EEEEEE" }}>Sáng</span>}
-        </Group>
-      </Button>
+        Sáng
+      </span>
+    )}
+  </Group>
+</Button>
+
 
       {/* Nút Chiều */}
-      <Button
-        onClick={handleClickAfternoon}
-        variant="filled"
+     <Button
+  onClick={handleClickAfternoon}
+  variant="filled"
+  style={{
+    width: active === "afternoon" ? 65 : 30,
+    height: 30,
+    padding: 0,
+    borderRadius: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: active === "afternoon" ? "space-around" : "center",
+    overflow: "hidden",
+    transition: "width 0.3s, background-color 0.3s",
+    background: active === "afternoon" ? "#C2923F" : "#234374",
+    border: "1.5px solid #EEEEEE",
+  }}
+>
+  <Group gap={active === "afternoon" ? 4 : 0} align="center">
+    <IconSunset2
+      size={18}
+      color={active === "afternoon" ? "#12223B" : "#EEEEEE"}
+    />
+    {active === "afternoon" && (
+      <span
         style={{
-          width: active === "afternoon" ? 65 : 30,
-          height: 30,
-          padding: 0,
-          borderRadius: 40,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: active === "afternoon" ? "space-around" : "center",
-          overflow: "hidden",
-          transition: "width 0.3s, background-color 0.3s",
-          background:
-            active === "afternoon"
-              ? "#234374"
-              : "#234374",
-          border: "1.5px solid #EEEEEE",
+          color: "#12223B",
+          fontSize: 13,
+          fontWeight: 500,
         }}
       >
-        <Group gap={active === "afternoon" ? 4 : 0} align="center">
-          <IconSunset2 size={18} color="#EEEEEE" />
-          {active === "afternoon" && <span style={{ color: "#EEEEEE" }}>Chiều</span>}
-        </Group>
-      </Button>
+        Chiều
+      </span>
+    )}
+  </Group>
+</Button>
+
 
       {/* Nút Tối */}
-      <Button
-        // onClick={handleClickNight}
-        onClick={handleClickMorning}
-        variant="filled"
+    <Button
+  // onClick={handleClickNight}
+  onClick={handleClickMorning}
+  variant="filled"
+  style={{
+    width: active === "morning" ? 60 : 30,
+    height: 30,
+    padding: 0,
+    borderRadius: 40,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: active === "morning" ? "space-around" : "center",
+    overflow: "hidden",
+    transition: "width 0.3s, background-color 0.3s",
+  background: active === "morning" ? "#C2923F" : "#234374",
+    border: "1.5px solid #EEEEEE",
+  }}
+>
+  <Group gap={active === "morning" ? 4 : 0} align="center">
+    <IconMoonStars
+      size={18}
+      color={active === "morning" ? "#12223B" : "#EEEEEE"}
+    />
+    {active === "morning" && (
+      <span
         style={{
-          width: active === "morning" ? 60 : 30,
-          height: 30,
-          padding: 0,
-          borderRadius: 40,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: active === "morning" ? "space-around" : "center",
-          overflow: "hidden",
-          transition: "width 0.3s, background-color 0.3s",
-          background:
-            active === "morning"
-              ? "#234374"
-              : "#234374",
-          border: "1.5px solid #EEEEEE",
+          color: "#12223B",
+          fontSize: 13,
+          fontWeight: 500,
         }}
       >
-        <Group gap={active === "morning" ? 4 : 0} align="center">
-          <IconMoonStars size={18} color="#EEEEEE" />
-          {active === "morning" && <span style={{ color: "#EEEEEE" }}>Tối</span>}
-        </Group>
-      </Button>
+        Tối
+      </span>
+    )}
+  </Group>
+</Button>
+
     </>
   );
 }
