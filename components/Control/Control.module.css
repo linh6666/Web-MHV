@@ -68,9 +68,7 @@
 
 /* logo ô thao tác nhé */
 .box {
-  max-width: 1320px;
-  /* padding: 10px; */
-
+  max-width: 1200px;
   margin: auto;
   display: flex;
     margin-top: 100px;

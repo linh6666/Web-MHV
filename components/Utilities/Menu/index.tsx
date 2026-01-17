@@ -17,80 +17,78 @@ interface MenuItem {
 }
 
 interface NodeAttributeItem {
-  building_type_vi?: string;
+  layer6?: string | null;
+  building_code?: string;
   [key: string]: unknown;
 }
 
-export default function Menu({ project_id,onModelsLoaded }: MenuProps) {
+export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
   const router = useRouter();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
 
-useEffect(() => {
-  const fetchData = async () => {
-    if (!project_id) return;
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!project_id) return;
 
-    setLoading(true);
-    try {
-      const body = {
-        project_id,
-        filters: [{ label: "group", values: ["ti"] }],
-      };
+      setLoading(true);
 
-      const data = await createNodeAttribute(body);
+      try {
+        const body = {
+          project_id,
+          filters: [{ label: "layer8", values: ["ti", "ct;ti"] }],
+        };
 
-      if (data?.data && Array.isArray(data.data)) {
-        // ✅ Gọi callback khi models đã load xong
+        const res = await createNodeAttribute(body);
+
+        if (!res?.data || !Array.isArray(res.data)) {
+          setMenuItems([]);
+          return;
+        }
+
+        const data: NodeAttributeItem[] = res.data;
+
+        // ✅ callback load models (không phụ thuộc layer6)
         onModelsLoaded?.(
-          data.data.map((i: NodeAttributeItem) => i.building_code)
+          data
+            .map((item) => item.building_code)
+            .filter((code): code is string => Boolean(code))
         );
 
-        const allZones: string[] = data.data
-          .flatMap((item: NodeAttributeItem) =>
-            String(item.building_type_vi || "")
-              .split(";")
-              .map((z) => z.trim())
-              .filter(Boolean)
-          );
+        // ✅ xử lý zone từ layer6
+        const zones: string[] = [];
+        const zoneSet = new Set<string>();
 
-        const uniqueZones = Array.from(new Set(allZones));
+        data.forEach((item) => {
+          if (!item.layer6) return; // ❌ null | undefined | ""
 
-        // --- Sắp xếp fix cứng ---
-        const fixedOrder = [
-          "Trung tâm thương mại",
-          "Trường học",
-          "Giao thông",
-          "Thể dục thể thao",
-          "Hạ tầng kỹ thuật",
-          "Đài phun nước",
-        ];
+          item.layer6
+            .split(";")
+            .map((z) => z.trim())
+            .filter(
+              (z) =>
+                z &&
+                z.toLowerCase() !== "skip" // ❌ loại skip
+            )
+            .forEach((z) => {
+              if (!zoneSet.has(z)) {
+                zoneSet.add(z);
+                zones.push(z);
+              }
+            });
+        });
 
-        const sortedZones = fixedOrder.filter((z) => uniqueZones.includes(z));
-        const remainingZones = uniqueZones.filter(
-          (z) => !fixedOrder.includes(z)
-        );
-        const finalZones = [...sortedZones, ...remainingZones];
-
-        const items: MenuItem[] = finalZones.map((zone) => ({ label: zone }));
-        setMenuItems(items);
+        setMenuItems(zones.map((zone) => ({ label: zone })));
+      } catch (error) {
+        console.error("❌ Lỗi khi gọi API:", error);
+        setMenuItems([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("❌ Lỗi khi gọi API:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchData();
-}, [project_id, onModelsLoaded]);
-
-
-  const handleNavigate = (building_type_vi: string) => {
-    if (!project_id) return;
-    router.push(
-      `/Tuong-tac/Millennia-City/Chi-tiet-tien-ich?id=${project_id}&building_type_vi=${encodeURIComponent(building_type_vi)}`
-    );
-  };
+    fetchData();
+  }, [project_id, onModelsLoaded]);
 
   const handleBack = () => {
     if (!project_id) return;
@@ -99,18 +97,17 @@ useEffect(() => {
 
   return (
     <div className={styles.box}>
+      {/* Logo */}
       <div className={styles.logo}>
-        <Image
-          src="/logo.png"
-          alt="Logo"
-          className={styles.imgea}
-        />
+        <Image src="/logo.png" alt="Logo" className={styles.imgea} />
       </div>
 
+      {/* Title */}
       <div className={styles.title}>
         <h1>TIỆN ÍCH TIÊU BIÊU</h1>
       </div>
 
+      {/* Menu */}
       <div className={styles.Function}>
         {loading ? (
           <Loader color="orange" />
@@ -120,10 +117,8 @@ useEffect(() => {
               <Button
                 key={index}
                 className={styles.menuBtn}
-                onClick={() => handleNavigate(item.label)}
                 variant="outline"
-                 style={{ margin: "8px", fontSize: "9px" }} 
-                
+                style={{ margin: "8px", fontSize: "9px" }}
               >
                 {item.label}
               </Button>
@@ -136,6 +131,7 @@ useEffect(() => {
         )}
       </div>
 
+      {/* Footer */}
       <div className={styles.footer}>
         <Group gap="xs">
           <Button
