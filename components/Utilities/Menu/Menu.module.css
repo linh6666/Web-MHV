@@ -1,5 +1,5 @@
 .logo {
-  height: 140px;
+  height: 125px;
   border: 1px solid #EEEEEE;
   margin-bottom: 10px;
   border-radius: 13px;
@@ -8,12 +8,12 @@
   align-items: center; /* căn giữa dọc */
 }
 .imgea{
-  width: 170px;
+  width: 150px;
   height: auto;
   object-fit: contain; /* giữ tỉ lệ ảnh */
 }
 .title {
-  height: 55px;
+  height: 50px;
   border: 1px solid #EEEEEE;
   border-radius: 13px;
   margin-bottom: 10px;
@@ -70,7 +70,7 @@ border-radius: 15px;
 
 /* hàng nút cuối cùng */
 .footer {
-  height: 90px;
+  height: 80px;
   border: 1px solid #EEEEEE;
   display: flex;
   border-radius: 13px;

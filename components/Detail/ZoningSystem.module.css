@@ -5,12 +5,12 @@
   display: flex;
 } */
 .box {
-  max-width: 1320px;
+  max-width: 1260px;
   /* padding: 10px; */
 
   margin: auto;
   display: flex;
-    margin-top: 100px;
+    margin-top: 80px;
 }
 /* Cột trái (ảnh) */
 .left {

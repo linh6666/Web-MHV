@@ -1,60 +1,39 @@
 .box {
-  max-width: 1320px;
-  /* padding: 10px; */
-
+  max-width: 1260px;
+  padding: 10px;
   margin: auto;
+  margin-top: 80px;
   display: flex;
-    margin-top: 100px;
 }
 
-
-/* Cột trái (ảnh) */
+/* FIX CHÍNH Ở ĐÂY */
 .left {
   flex: 3;
+    /* ✅ không cho ảnh tràn khi zoom */
 }
 
-/* Wrapper để đặt SVG lên ảnh */
-.imageWrapper {
-  position: relative; /* ✅ để SVG có thể đặt lên ảnh */
-  width: 100%;
-}
-
-/* Ảnh full kích thước */
-.img {
-  width: 100%;
-  height: auto; /* Để đảm bảo ảnh giữ tỷ lệ */
-  object-fit: cover; 
-  display: block;
-}
-.imageWrapper svg {
-  position: absolute;
-  z-index: 10; /* đảm bảo SVG nằm trên ảnh */
-  pointer-events: all; /* cho phép path nhận hover */
-}
-
-.overlaySvg {
-  position: absolute;
-  top: 1%;
-  left: 6%;
-  pointer-events: auto; /* Đảm bảo SVG nhận sự kiện hover */
-}
-
-/* .overlaySvg:hover path {
-  fill: black; 
-} */
-
-/* Cột phải (text) */
 .right {
-  width: 240px;     
-  background-color:#234374;
-  justify-content: center;
+  width: 240px;
+  background-color: #234374;
   color: #762f0b;
   font-size: 18px;
   text-align: center;
   padding: 10px;
 }
 
-/* 📱 Mobile responsive */
+/* FIX CHÍNH Ở ĐÂY */
+.imageWrapper {
+  width: 100%;
+  height: 100%;           /* ✅ fill toàn bộ vùng left */
+}
+
+/* nếu bạn có class mapImage */
+.mapImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;    /* ✅ giữ đúng tỉ lệ ảnh */
+}
+
 @media (max-width: 768px) {
   .box {
     flex-direction: column;
@@ -73,17 +52,6 @@
     padding: 20px;
     font-size: 16px;
   }
-
-  .img {
-    height: 100%; /* Đảm bảo ảnh chiếm đầy không gian */
-  }
-
-  .overlaySvg {
-    top: 10px;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -96,26 +64,4 @@
     padding: 15px;
     margin-top: 10px;
   }
-
-  .overlaySvg {
-    top: 5px;
-    left: 5px;
-    width: 30px;
-    height: 30px;
-  }
 }
-.hoverablePath1,
-.hoverablePath2,
-.hoverablePath3,
-.hoverablePath4 {
-  pointer-events: all;
-  cursor: pointer;
-  transition: fill 0.3s;
-}
-
-/* .hoverablePath1:hover,
-.hoverablePath2:hover,
-.hoverablePath3:hover,
-.hoverablePath4:hover {
-  fill: rgba(243, 232, 190, 0.7);
-} */

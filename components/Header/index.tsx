@@ -73,9 +73,9 @@ export default function Header() {
             <IconPhoneCall size={17} color="#fff" stroke={1.5} />
           </IconCircle>
 
-          <IconCircle>
+          {/* <IconCircle>
             <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-          </IconCircle>
+          </IconCircle> */}
 
           <UserIcon />
         </Box>
@@ -110,9 +110,9 @@ export default function Header() {
               <IconPhoneCall size={17} color="#fff" stroke={1.5} />
             </IconCircle>
 
-            <IconCircle>
+            {/* <IconCircle>
               <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-            </IconCircle>
+            </IconCircle> */}
 
             <UserIcon />
           </Box>

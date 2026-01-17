@@ -134,7 +134,7 @@ export default function Menu({ project_id }: MenuProps) {
         {loading ? (
           <Loader color="orange" />
         ) : menuItems.length > 0 ? (
-          <Stack align="center" style={{ gap: "20px", marginTop: "30px" }}>
+          <Stack align="center" style={{ gap: "20px", marginTop: "15px" }}>
             {menuItems.map((item) => (
               <Button
                 key={item.label}

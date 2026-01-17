@@ -1,5 +1,5 @@
 .logo {
-  height: 140px;
+  height: 125px;
   border: 1px solid #FFFFFF;
   margin-bottom: 10px;
   border-radius: 13px;
@@ -8,12 +8,12 @@
   align-items: center; /* căn giữa dọc */
 }
 .imgea{
-  width: 170px;
+  width: 150px;
   height: auto;
   object-fit: contain; /* giữ tỉ lệ ảnh */
 }
 .title {
-  height: 55px;
+  height: 50px;
   border: 1px solid #FFFFFF;
   border-radius: 13px;
   margin-bottom: 10px;
@@ -24,12 +24,12 @@
 
 .title h1 {
   font-weight: 700; /* hoặc bold */
-  font-size: 15px;  /* tùy chỉnh thêm nếu muốn chữ to hơn */
-  color: #C2923F;   /* tuỳ chọn: đổi màu cho đồng bộ */
+  font-size: 14px;  /* tùy chỉnh thêm nếu muốn chữ to hơn */
+  color: #EEEEEE;   /* tuỳ chọn: đổi màu cho đồng bộ */
 }
 /* nút chức năng */
 .Function {
-  height: 410px;
+  height: 390px;
   border: 1px solid #FFFFFF;
   margin-bottom: 10px;
   padding: 10px;
@@ -63,7 +63,7 @@ border-radius: 15px;
 
 /* hàng nút cuối cùng */
 .footer {
-  height: 90px;
+  height: 80px;
   border: 1px solid #FFFFFF;
   display: flex;
   border-radius: 13px;
