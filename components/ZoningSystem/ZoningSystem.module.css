@@ -26,6 +26,13 @@
   width: 100%;
   height: 100%;           /* ✅ fill toàn bộ vùng left */
 }
+.overlaySvg {
+  position: absolute; /* Để đặt SVG ở vị trí chính xác */
+  /* top: 20px; 
+  left: 20px;  */
+  z-index: 2; /* Đặt SVG lên trên ảnh */
+  pointer-events: none; /* Ngăn chặn sự kiện chuột trên SVG nếu không cần thiết */
+}
 
 /* nếu bạn có class mapImage */
 .mapImage {

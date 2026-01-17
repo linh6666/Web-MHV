@@ -10,6 +10,7 @@ import { NotificationExtension } from "../../../extension/NotificationExtension"
 
 interface MenuProps {
   project_id: string | null;
+    onModelsLoaded?: (models: string[]) => void;
 }
 
 interface MenuItem {
@@ -27,84 +28,106 @@ interface ApiResponse {
   [key: string]: unknown;
 }
 
-export default function Menu({ project_id }: MenuProps) {
+export default function Menu({ project_id,onModelsLoaded }: MenuProps) {
   const router = useRouter();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!project_id) return;
+useEffect(() => {
+  const fetchData = async () => {
+    if (!project_id) return;
 
-      setLoading(true);
-      try {
-        const body = {
-          project_id,
-          filters: [{ label: "layer8", values: ["ct", "ct;ti"],
- }],
+    setLoading(true);
+
+    try {
+      const body = {
+        project_id,
+        filters: [
+          {
+            label: "layer8",
+            values: ["ct", "ct;ti"],
+          },
+        ],
+      };
+
+      const data: ApiResponse = await createNodeAttribute(body);
+
+      // ✅ Thông báo message từ API (nếu có)
+      if (data?.message) {
+        NotificationExtension.Success(data.message);
+      }
+
+      // ❗ Chỉ check data 1 lần
+      if (data?.data && Array.isArray(data.data)) {
+        // ✅ Trả building_code ra ngoài
+        onModelsLoaded?.(
+          data.data
+            .map((i) => i.layer7)
+            .filter(Boolean) as string[]
+        );
+
+        // ✅ Lấy layer7 → tách → trim
+        const allPhases: string[] = data.data.flatMap(
+          (item: NodeAttributeItem) =>
+            String(item.layer7 || "")
+              .split(";")
+              .map((z) => z.trim())
+              .filter(Boolean)
+        );
+
+        // 🆕 Loại bỏ phase = "skip"
+        const filteredPhases = allPhases.filter(
+          (phase) => phase.toLowerCase() !== "skip"
+        );
+
+        // ✅ Unique
+        const uniquePhases = Array.from(new Set(filteredPhases));
+
+        // ✅ Sort theo số trước, chữ sau
+        const sortedPhases = uniquePhases.sort((a, b) => {
+          const numA = a.match(/\d+/)?.[0];
+          const numB = b.match(/\d+/)?.[0];
+
+          if (numA && numB) return Number(numA) - Number(numB);
+          return a.localeCompare(b, "vi", { sensitivity: "base" });
+        });
+
+        const items: MenuItem[] = sortedPhases.map((phase) => ({
+          label: phase,
+        }));
+
+        setMenuItems(items);
+      } else {
+        console.warn("⚠️ Dữ liệu trả về không đúng định dạng:", data);
+        NotificationExtension.Fails("Dữ liệu trả về không hợp lệ từ API!");
+      }
+    } catch (error: unknown) {
+      console.error("❌ Lỗi khi gọi API:", error);
+
+      let apiMessage = "Gọi API thất bại!";
+
+      if (error && typeof error === "object") {
+        const errObj = error as {
+          response?: { data?: { detail?: string; message?: string } };
+          message?: string;
         };
 
-        const data: ApiResponse = await createNodeAttribute(body);
-
-        // ✅ Kiểm tra nếu API có message
-        if (data?.message) {
-          NotificationExtension.Success(data.message);
-        }
-
-        if (data?.data && Array.isArray(data.data)) {
-          const allPhases: string[] = data.data.flatMap(
-            (item: NodeAttributeItem) =>
-              String(item.layer7 || "")
-                .split(";")
-                .map((z) => z.trim())
-                .filter(Boolean)
-          );
-
-          // 🆕 BƯỚC LỌC MỚI: Loại bỏ các phase có giá trị là "skip" (không phân biệt chữ hoa/thường)
-          const filteredPhases = allPhases.filter((phase) => phase.toLowerCase() !== "skip");
-
-          const uniquePhases = Array.from(new Set(filteredPhases));
-
-          const sortedPhases = uniquePhases.sort((a, b) => {
-            const numA = a.match(/\d+/)?.[0];
-            const numB = b.match(/\d+/)?.[0];
-            if (numA && numB) return Number(numA) - Number(numB);
-            return a.localeCompare(b, "vi", { sensitivity: "base" });
-          });
-
-          const items: MenuItem[] = sortedPhases.map((phase) => ({
-            label: phase,
-          }));
-          setMenuItems(items);
-        } else {
-          console.warn("⚠️ Dữ liệu trả về không đúng định dạng:", data);
-          NotificationExtension.Fails("Dữ liệu trả về không hợp lệ từ API!");
-        }
-      } catch (error: unknown) {
-        console.error("❌ Lỗi khi gọi API:", error);
-
-        // ✅ Nếu backend trả về lỗi có message hoặc detail
-        let apiMessage = "Gọi API thất bại!";
-        if (error && typeof error === "object") {
-          const errObj = error as {
-            response?: { data?: { detail?: string; message?: string } };
-            message?: string;
-          };
-          apiMessage =
-            errObj.response?.data?.detail ||
-            errObj.response?.data?.message ||
-            errObj.message ||
-            apiMessage;
-        }
-
-        NotificationExtension.Fails(apiMessage);
-      } finally {
-        setLoading(false);
+        apiMessage =
+          errObj.response?.data?.detail ||
+          errObj.response?.data?.message ||
+          errObj.message ||
+          apiMessage;
       }
-    };
 
-    fetchData();
-  }, [project_id]);
+      NotificationExtension.Fails(apiMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [project_id, onModelsLoaded]);
+
 
   const handleNavigate = (layer7: string) => {
     if (!project_id) return;
