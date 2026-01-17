@@ -51,7 +51,7 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
         // ✅ callback load models (không phụ thuộc layer6)
         onModelsLoaded?.(
           data
-            .map((item) => item.building_code)
+            .map((item) => item.unit_code)
             .filter((code): code is string => Boolean(code))
         );
 

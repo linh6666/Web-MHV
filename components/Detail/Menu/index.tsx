@@ -14,11 +14,13 @@ interface MenuProps {
   project_id: string | null;
   initialLayer7?: string | null;
   onLayer7Change?: (layer7: string) => void;
+  onModelsLoaded?: (models: string[]) => void;
 }
 
 interface MenuItem {
   label: string;
   phase_vi: string;
+  unit_code?: string;
   building_type_vi: string;
 }
 
@@ -32,6 +34,7 @@ export default function Menu({
   project_id,
   initialLayer7,
   onLayer7Change,
+  onModelsLoaded,
 }: MenuProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -53,54 +56,60 @@ export default function Menu({
 
   // 📡 Gọi API danh sách nhà
   const fetchData = useCallback(async () => {
-    if (!project_id || !phase) return;
-    setLoading(true);
-    try {
-      const data = await createNodeAttribute({
-        project_id,
-        filters: [
-          { label: "layer8", values: ["ct","ct;ti"] },
-          { label: "layer7", values: [phase] },
-        ],
-      });
+  if (!project_id || !phase) return;
 
-      if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
-        const uniqueMap = new Map<string, MenuItem>();
+  setLoading(true);
 
-        data.data.forEach((item: NodeAttributeItem) => {
-          const buildingType = item.layer6 || "";
-          const groupValue = item.group;
+  try {
+    const data = await createNodeAttribute({
+      project_id,
+      filters: [
+        { label: "layer8", values: ["ct", "ct;ti"] },
+        { label: "layer7", values: [phase] },
+      ],
+    });
 
-          // 🆕 LOGIC LỌC: Bỏ qua nếu building_type_vi là "skip" (không phân biệt chữ hoa/thường)
-          if (buildingType.toLowerCase() === "skip") {
-            return; 
-          }
-
-          if (
-            buildingType.trim() &&
-            !buildingType.includes(";") &&
-            groupValue !== "ct;ti" &&
-            !uniqueMap.has(buildingType)
-          ) {
-            uniqueMap.set(buildingType, {
-              label: buildingType,
-              phase_vi: phase,
-              building_type_vi: buildingType,
-            });
-          }
-        });
-
-        setMenuItems(Array.from(uniqueMap.values()));
-      } else {
-        setMenuItems([]);
-      }
-    } catch (error) {
-      console.error("❌ Lỗi khi gọi API:", error);
+    if (!data?.data || !Array.isArray(data.data) || data.data.length === 0) {
       setMenuItems([]);
-    } finally {
-      setLoading(false);
+      return;
     }
-  }, [project_id, phase]);
+
+    const items = data.data as NodeAttributeItem[];
+    const uniqueMap = new Map<string, MenuItem>();
+
+    // ✅ GỌI 1 LẦN DUY NHẤT
+    onModelsLoaded?.(
+      items
+        .map((i: NodeAttributeItem) => i.unit_code)
+        .filter(Boolean) as string[]
+    );
+
+    items.forEach((item: NodeAttributeItem) => {
+      const buildingType = (item.layer6 || "").trim();
+      const groupValue = item.group;
+
+      if (!buildingType) return;
+      if (buildingType.toLowerCase() === "skip") return;
+      if (buildingType.includes(";")) return;
+      if (groupValue === "ct;ti") return;
+
+      if (!uniqueMap.has(buildingType)) {
+        uniqueMap.set(buildingType, {
+          label: buildingType,
+          phase_vi: phase,
+          building_type_vi: buildingType,
+        });
+      }
+    });
+
+    setMenuItems(Array.from(uniqueMap.values()));
+  } catch (error) {
+    console.error("❌ Lỗi khi gọi API:", error);
+    setMenuItems([]);
+  } finally {
+    setLoading(false);
+  }
+}, [project_id, phase, onModelsLoaded]);
 
   useEffect(() => {
     fetchData();
