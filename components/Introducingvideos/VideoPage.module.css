@@ -1,0 +1,37 @@
+.videoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin: 20px; */
+}
+
+.videoIframe {
+  width: 100%;
+  max-width: 1100px;
+  height: 550px;
+  border: 5px solid #752E0B; /* Viền cho khung video */
+  border-radius: 10px; /* Bo góc */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Bóng đổ */
+}
+
+.backButton {
+  align-self: flex-end; /* Căn nút sang phải */
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%; /* Hình tròn */
+  transition: all 0.3s ease;
+  background: #FFFAEE;
+  color: #752E0B;
+  border: 1.5px solid #752E0B;
+  margin-top: 10px; /* Khoảng cách phía trên */
+  cursor: pointer;
+}
+
+/* Hiệu ứng hover */
+.backButton:hover {
+  background:#FFFAEE;
+  color: #752E0B;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(117, 46, 11, 0.3);
+}

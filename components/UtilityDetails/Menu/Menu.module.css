@@ -1,0 +1,314 @@
+.logo {
+  height: 140px;
+  border: 1px solid #762f0b;
+  margin-bottom: 10px;
+  border-radius: 13px;
+  display: flex; /* bật flexbox */
+  justify-content: center; /* căn giữa ngang */
+  align-items: center; /* căn giữa dọc */
+}
+.imgea{
+  width: 170px;
+  height: auto;
+  object-fit: contain; /* giữ tỉ lệ ảnh */
+}
+.title {
+  height: 55px;
+  border: 1px solid #762f0b;
+  border-radius: 13px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title h1 {
+  font-weight: 700; /* hoặc bold */
+  font-size: 15px;  /* tùy chỉnh thêm nếu muốn chữ to hơn */
+  color: #762f0b;   /* tuỳ chọn: đổi màu cho đồng bộ */
+}
+/* nút chức năng */
+.Function {
+  height: 410px;
+  border: 1px solid #762f0b;
+  margin-bottom: 10px;
+  padding: 10px;
+border-radius: 15px;
+  display: flex;
+ align-items: center;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* 🟠 Căn giữa theo chiều dọc */
+  
+}
+.scroll {
+  height: 375px; /* Chiều cao cố định */
+  overflow-y: scroll; /* Cho phép scroll dọc */
+  scrollbar-width: none; /* Firefox: ẩn thanh cuộn */
+  -ms-overflow-style: none; /* IE 10+: ẩn thanh cuộn */
+}
+
+/* Chrome, Safari, Edge */
+.scroll::-webkit-scrollbar {
+  display: none; /* Ẩn thanh cuộn */
+}
+
+.btn {
+  background-color: #fff;
+  color:#762f0b ;
+ 
+
+    border-top-left-radius: 15px;   /* bo tròn bên trái trên */
+  border-bottom-left-radius: 0; /* bo tròn bên trái dưới */
+  border-top-right-radius: 0;      /* bên phải vuông */
+  border-bottom-right-radius: 15px;   /* bên phải vuông */
+
+  /* width: 150px;
+  height: 40px; */
+  /* 🔸 Chiều cao của nút */
+}
+
+/* .btn:hover {
+  background: linear-gradient(to bottom, #c57756, #b05b3e);
+} */
+
+/* hàng nút cuối cùng */
+.footer {
+  height: 90px;
+  border: 1px solid #762f0b;
+  display: flex;
+  border-radius: 13px;
+  flex-direction: column; /* sắp xếp theo chiều dọc */
+  justify-content: center;
+  align-items: center;
+  gap: 30px; /* khoảng cách giữa 2 hàng */
+  /* margin-top: 20px; */
+}
+
+/* Hàng nút trên */
+.modeRow {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modeBtn {
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid #d1d1d1;
+  background-color: #ffffff;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.modeBtn:hover {
+  background-color: #FFF1D2;
+}
+
+.modeBtn.active {
+  background:#FFF1D2;
+  color: #fff;
+  border: none;
+}
+
+/* Hàng nút tròn dưới */
+.controlRow {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.circleBtn {
+  width: 35px; /* 👈 chiều rộng */
+  height: 35px; /* 👈 chiều cao bằng width để thành hình tròn */
+  border-radius: 50%; /* 👈 bo tròn hoàn toàn */
+
+  display: flex; /* 👈 căn icon hoặc text ra giữa */
+  align-items: center;
+  justify-content: center;
+
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+  /* tuỳ chọn: viền */
+  transition: background-color 0.2s ease;
+}
+
+.circleBtn:hover {
+  background-color: #f2f2f2;
+}
+
+@media only screen and (max-width: 600px) {
+  .logo,
+  .Function,
+  .title,
+  .footer {
+    border: none; /* bỏ viền */
+  }
+
+  /* Logo + Function nằm chung hàng */
+  .box {
+    display: flex;
+    flex-direction: column; /* nếu muốn dọc vẫn giữ, đổi sang row nếu muốn ngang */
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo {
+    height: 100px; /* thu nhỏ logo trên mobile */
+  }
+
+  .Function {
+    width: 100%; /* chiếm full width mobile */
+    height: auto; /* để chiều cao tự động */
+    padding: 5px;
+   
+  }
+
+  /* Footer vẫn căn giữa, nút nhỏ hơn */
+  .footer {
+    width: 100%;
+    height: auto;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 120px; /* nút nhỏ hơn mobile */
+    height: 35px;
+  }
+
+  .circleBtn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .modeBtn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .imgea {
+    width: 200px; /* thu nhỏ chiều ngang */
+    height: auto; /* giữ tỉ lệ ảnh */
+  }
+}
+.btn.active {
+  background: #762f0b; /* màu nâu đậm khi active */
+  color: #fff;
+  border: none;
+}
+
+/* Hàng nút tròn dưới khi active */
+.circleBtn.active {
+  background-color: #762f0b;
+  color: #fff;
+  /* border: 2px solid #fff; */
+}
+
+/* Mobile vẫn hiển thị active đẹp */
+@media only screen and (max-width: 600px) {
+  .btn.active {
+    background: #762f0b;
+    color: #fff;
+  }
+
+  .circleBtn.active {
+    background-color: #762f0b;
+    color: #fff;
+    /* border: 2px solid #fff; */
+  }
+}
+/* .menuBtn {
+  display: inline-block;       
+  border: 1.5px solid #762f0b;
+  border-radius: 999px;         
+  background-color: #FFFAEE;
+  color: #762f0b;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 18px;           
+  width: auto;                 
+  height: auto;                
+  transition: all 0.2s ease;
+  white-space: nowrap;          
+}
+
+.menuBtn:hover {
+  background-color: #f5e7df; 
+}
+
+.menuBtn:active,
+.menuBtn:focus {
+  background-color: #762f0b;
+  color: #fff;
+  border-color: #762f0b;
+} */
+/* -----------------------
+   nút 5 cái trên (giữ trạng thái trước)
+   ----------------------- */
+.menuBtn {
+  /* nếu muốn giữ đều nhau, đặt width cụ thể, nếu muốn co giãn: chuyển sang width: fit-content */
+  width: 170px;  
+  height: 29px;              /* <-- giữ kích thước cố định cho 5 nút đầu */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1.5px solid #762f0b;
+  border-radius: 999px;
+  background-color: #FFFAEE;
+  color: #762f0b;
+  font-size: 11px;
+  padding: 6px 18px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* -----------------------
+   wrapper cho 2 nút cuối
+   ----------------------- */
+.bottomTwo {
+  display: flex;
+  flex-direction: column; /* nếu muốn dọc */
+  gap: 20px;
+  align-items: center;    /* căn giữa theo stack */
+  /* margin-top: 6px; */
+}
+
+/* -----------------------
+   2 nút cuối: co giãn theo text
+   ----------------------- */
+.menuBtnSmall {
+  height: 29px;
+  display: inline-block;   /* cho nút co theo text */
+  width: fit-content;      /* chính xác: vừa đủ cho text + padding */
+  min-width: unset;
+  border: 1.5px solid #762f0b;
+  border-radius: 999px;
+  background-color: #FFFAEE;
+  color: #762f0b;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 6px 18px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* hover / active (tùy chỉnh nếu muốn) */
+.menuBtn:hover,
+.menuBtnSmall:hover {
+  background-color: #FFF1D2;
+  color: #752E0B;
+}
+
+.menuBtn:active,
+.menuBtnSmall:active,
+.menuBtn:focus,
+.menuBtnSmall:focus {
+  background: linear-gradient(to top, #FFE09A,#FFF1D2);
+  color: #752E0B;
+  border-color: #762f0b;
+}
