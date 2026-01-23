@@ -36,6 +36,9 @@ export const API_ROUTE = {
     CREATE_PROJECTS:"/api/v1/projects/",
     UPDATE_PROJECTS:"/api/v1/projects/{project_id}",
     DELETE_PROJECTS:"/api/v1/projects/{project_id}",
+///Control
+    GET_LIST_CONTROL:"/api/v1/projects/control/",
+
 
 //RolePermission
     GET_LIST_ROLEPERMISSION:"/api/v1/RolePermission/permission",
@@ -55,6 +58,7 @@ export const API_ROUTE = {
     GET_LIST_USERPROJECTROLE:"/api/v1/UserProjectRole/assignments",
     CREATE_USERPROJECTROLE:"/api/v1/UserProjectRole/{project_id}",
    DELETE_USERPROJECTROLE:"/api/v1/UserProjectRole/{user_project_role_id}",
+   GET_USERPROJECTROLE:"/api/v1/UserProjectRole/{user_project_role_id}",
     UPDATE_USERPROJECTROLE:"/api/v1/UserProjectRole/{user_id}/{project_id}/{old_role_id}",
 
 ///Attributes
@@ -113,14 +117,25 @@ DELETE_REQUEST:"/api/v1/JoinProject/{project_id}/{request_id}",
 
 
 /////deltai home
-GET_LIST_DETAIL_HOME:"/api/v1/detal_unit/get_detal_units/{project_id}/{unit_code}",
-
-
+GET_LIST_DETAIL_HOME:"/api/v1/detail_unit/get_detal_units/{project_id}/{unit_code}",
+CREATE_IMG_DETAIL_HOME:"/api/v1/detail_unit/add_multiple_files/{project_id}/{unit_code}",
+UPDATE_IMG:"/api/v1/detail_unit/add_multiple_files/{project_id}/{detal_id}",
+Delete_IMG:"/api/v1/detail_unit/delete_detal_unit/{project_id}/{detal_id}",
 ////Project basic
 GET_LIST_PROJECT_BASIC:"/api/v1/projects/basic",
 
-///Control
-    GET_LIST_CONTROL:"/api/v1/projects/control/",
 
+//////favorites
+GET_LIST_FAVORITES:"/api/v1/favorites/me/{project_id}",
+CREATE_FAVORITES:"/api/v1/favorites/",
+DELETE_FAVORITES:"/api/v1/favorites/{favorite_id}",
+
+////Order
+CREATE_ORDER:"/api/v1/order/",
+GET_LIST_ORDER:"/api/v1/order/{project_id}",
+
+//Home
+EDIT_DETAILE_HOME:"/api/v1/node_attribute/node_by_leaf/{project_id}/{leaf_id}",
+GET_DETAILE_HOME:"/api/v1/node_attribute/node_by_leaf/{project_id}/{leaf_id}",
 
 }

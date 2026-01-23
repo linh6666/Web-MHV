@@ -24,6 +24,14 @@ const mainLinks = [
     link: "/tuong-tac",
     label: "MÔ HÌNH TƯƠNG TÁC",
   },
+    {
+    link: "/quan-tri-du-an",
+    label: "QUẢN TRỊ DỰ ÁN",
+  },
+    {
+    link: "/quan-ly-he-thong",
+    label: "QUẢN TRỊ HỆ THỐNG",
+  },
 ];
 
 export default function Header() {

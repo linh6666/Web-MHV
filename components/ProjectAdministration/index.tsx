@@ -1,0 +1,149 @@
+'use client';
+import { useState } from 'react';
+import {
+  IconGauge,
+  IconNotes,
+  IconUser,
+} from '@tabler/icons-react';
+import { ScrollArea } from '@mantine/core';
+import { LinksGroup } from './NavbarLinksGroup/NavbarLinksGroup';
+import classes from './NavbarSimple.module.css';
+import Project from './Project'; 
+import JionProject from './JionProject'; 
+import System from './System'; 
+import User from './User'; 
+import Roles from './Roles'; 
+import UserProjectRole from './UserProjectRole';
+import Order from './Order'; 
+import  ProjectDetails from './ProjectDetails';
+import HomeAdmin from '../HomeAdmin/index';  
+// import ProjectManagere from './ProjectManagere'; 
+
+const mockdata = [
+  { label: 'Báo cáo tổng quan', icon: IconGauge, link: 'home' },
+   {
+    label: 'Quản trị hệ thống',
+    icon: IconNotes,
+    initiallyOpened: true,
+    links: [
+      { label: 'Định danh trong vai trò hệ thống', link: 'System' },
+       { label: 'Phân Quyền người dùng trong hệ thống', link: 'User' },
+     
+    ],
+  },
+
+ {
+    label: 'Quản lý dự án',
+    icon: IconNotes,
+    initiallyOpened: true,
+    links: [
+      { label: 'Danh sách dự án', link: 'project' },
+         { label: 'Cập nhật dự án', link: 'projectdetails' },
+      
+      { label: 'Định danh vai trò người trong dự án', link: 'Roles' },
+       { label: 'Phân quyền người dùng trong dự án', link: 'UserProjectRole' },
+     
+    ],
+  },
+  {
+    label: 'Phân quyền người dùng trong dự án',
+    icon: IconUser,
+    initiallyOpened: true,
+    links: [
+      { label: 'Quản lý người dùng vào dự án', link: 'JionProject' },
+      { label: 'Quản lý đơn hàng', link: 'Order' },
+      { label: 'Duyệt đơn thanh toán kế tiếp', link: 'Test1' },
+      
+    ],
+  },
+];
+
+
+
+export function ProjectManagement() {
+  const [active, setActive] = useState<string>(''); // <-- thêm state để xử lý active
+
+  const combinedData = [...mockdata, ];
+
+  // Hàm render nội dung tương ứng với menu
+  const renderContent = () => {
+    switch (active) {
+       case 'System':
+              return <System/>;
+               case 'User':
+                      return <User/>;
+
+      case 'project':
+        return <Project/>;
+          case 'UserProjectRole':
+                return <UserProjectRole/>;
+           case 'Roles':
+                return <Roles/>;
+      case 'Order':
+        return <Order/>;
+      case 'permission':
+        return <div>Đây là trang dự án</div>;
+      case 'project-list':
+        return <div>Đây là trang dự án</div>;
+           case 'projectdetails':
+        return <ProjectDetails />;
+      case 'JionProject':
+       return <JionProject/>;
+      // case 'user-list':
+      //   return <UserProjectRole/>;
+         
+      default:
+         return <HomeAdmin/>;
+    }
+  };
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        width: '100%',
+        maxWidth: '1260px',
+        margin: '100px auto 10px auto',
+        border:
+          '1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
+      }}
+    >
+      {/* Sidebar */}
+      <nav className={classes.navbar}>
+        <div className={classes.header}>
+          <h3>QUẢN TRỊ DỰ ÁN</h3>
+        </div>
+
+        <ScrollArea className={classes.links}>
+          <div className={classes.linksInner}>
+            {combinedData.slice(0, mockdata.length).map((item) => (
+              <LinksGroup
+                {...item}
+                key={item.label}
+                active={active}
+                onActiveChange={setActive} // truyền hàm để đổi nội dung khi click
+              />
+            ))}
+          </div>
+
+       
+        </ScrollArea>
+      </nav>
+
+      {/* Phần nội dung hiển thị bên phải */}
+      <div
+        style={{ 
+          flex: 1, 
+          padding: 20, 
+          overflowY: 'auto', 
+          height: '800px',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none'
+        }}
+        className={classes.hidescrollbar}
+      >
+        {renderContent()}
+      </div>
+    </div>
+  );
+}
