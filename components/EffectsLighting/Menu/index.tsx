@@ -40,7 +40,7 @@ export default function Menu({ project_id }: MenuProps) {
   // 🧭 Quay lại trang điều khiển
   const handleBack = () => {
     if (!project_id) return;
-    router.push(`/Tuong-tac/Millennia-City?id=${project_id}`);
+    router.push(`/tuong-tac/Ciputra?id=${project_id}`);
   };
 
   // 🧠 Khi nhấp nút — gọi API
@@ -91,21 +91,19 @@ export default function Menu({ project_id }: MenuProps) {
         setLoadingOn(false);
       }
     };
-    const getButtonStyle = (isActive: boolean) => ({
-    width: 30,
+  const getButtonStyle = (isActive: boolean) => ({
+    width: 90,
     height: 30,
-    padding: 0,
     borderRadius: 40,
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
     transition: "background 0.3s",
-    background: isActive
-      ? "linear-gradient(to top, #FFE09A,#FFF1D2)"
-      : "#FFFAEE",
-    color: "#752E0B",
-    border: "1.5px solid #752E0B",
+    background: isActive ? "#C2923F" : "#234374",
+    color: isActive ? "#12223B" : "#EEEEEE",
+      border: isActive
+    ? "1.5px solid #C2923F"
+    : "1.5px solid #EEEEEE",
   });
 
 
@@ -114,7 +112,7 @@ export default function Menu({ project_id }: MenuProps) {
       {/* Logo */}
       <div className={styles.logo}>
         <Image
-          src="/Logo/logo-tt-city-millennia.png"
+          src="/logo.png"
           alt="Logo"
           className={styles.imgea}
         />
@@ -152,60 +150,48 @@ export default function Menu({ project_id }: MenuProps) {
       <div className={styles.footer}>
        < Stack align="center" gap="xs">
                 
-                  <Group gap="xs">
-                    {/* ✅ Nút ON có gọi API */}
-                  <Button
-          style={getButtonStyle(active === "on")}
-          onClick={() => {
-            if (active !== "on") {
-              setActive("on");
-              handleClickOn();
-            } else {
-              setActive(null); // nếu muốn tắt trạng thái ON
-            }
-          }}
-          disabled={loadingOn}
-        >
-          <Text style={{ fontSize: "13px" }}>ON</Text>
-        </Button>
-        
-                    {/* Nút OFF */}
-                  <Button
-          style={getButtonStyle(active === "off")}
-          onClick={() => {
-            if (active !== "off") {
-              setActive("off");
-              handleClickOFF();
-            } else {
-              setActive(null); // nếu muốn tắt trạng thái OFF
-            }
-          }}
-        >
-          <Text style={{ fontSize: "12px" }}>OFF</Text>
-        </Button>
+                          <Group gap="xs" wrap="nowrap" align="center">
+  <Button
+    style={getButtonStyle(active === "on")}
+    onClick={() =>
+      active !== "on" ? handleClickOn() : setActive(null)
+    }
+  >
+    <Text size="11px">BẬT TẤT CẢ</Text>
+  </Button>
+
+  <Button
+    style={getButtonStyle(active === "off")}
+    onClick={() =>
+      active !== "off" ? handleClickOFF() : setActive(null)
+    }
+  >
+    <Text size="11px">TẮT TẤT CẢ</Text>
+  </Button>
+
+ 
+</Group>
         
                     {/* Nút quay lại */}
-                    <Button
-                      onClick={handleBack}
-                      variant="filled"
-                      style={{
-                        width: 30,
-                        height: 30,
-                        padding: 0,
-                        borderRadius: 40,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        overflow: "hidden",
-                        transition: "background 0.3s",
-                        background: "#FFFAEE",
-                        color: "#752E0B",
-                        border: "1.5px solid #752E0B",
-                      }}
-                    >
-                      <IconArrowLeft size={18} color="#752E0B" />
-                    </Button>
-                  </Group>
+                  <Button
+                    onClick={handleBack}
+                    variant="filled"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      padding: 0,
+                      borderRadius: 40,
+                      background: "#234374",
+                      border: "1.5px solid #EEEEEE",
+                      flexShrink: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <IconArrowLeft size={18} color="#EEEEEE" />
+                  </Button>
+             
                 </Stack>
       </div>
     </div>
