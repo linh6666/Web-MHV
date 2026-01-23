@@ -10,6 +10,7 @@ import { createNodeAttribute } from "../../../api/apifiterutilities";
 interface MenuProps {
   project_id: string | null;
   onModelsLoaded?: (models: string[]) => void;
+  onSelectModel?: (modelName: string) => void;
 }
 
 interface MenuItem {
@@ -18,11 +19,15 @@ interface MenuItem {
 
 interface NodeAttributeItem {
   layer6?: string | null;
-  building_code?: string;
+  unit_code?: string;
   [key: string]: unknown;
 }
 
-export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
+export default function Menu({
+  project_id,
+  onModelsLoaded,
+  onSelectModel,
+}: MenuProps) {
   const router = useRouter();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,28 +53,24 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
 
         const data: NodeAttributeItem[] = res.data;
 
-        // ✅ callback load models (không phụ thuộc layer6)
+        // callback load models
         onModelsLoaded?.(
           data
             .map((item) => item.unit_code)
             .filter((code): code is string => Boolean(code))
         );
 
-        // ✅ xử lý zone từ layer6
-        const zones: string[] = [];
+        // xử lý zone từ layer6
         const zoneSet = new Set<string>();
+        const zones: string[] = [];
 
         data.forEach((item) => {
-          if (!item.layer6) return; // ❌ null | undefined | ""
+          if (!item.layer6) return;
 
           item.layer6
             .split(";")
             .map((z) => z.trim())
-            .filter(
-              (z) =>
-                z &&
-                z.toLowerCase() !== "skip" // ❌ loại skip
-            )
+            .filter((z) => z && z.toLowerCase() !== "skip")
             .forEach((z) => {
               if (!zoneSet.has(z)) {
                 zoneSet.add(z);
@@ -89,6 +90,26 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
 
     fetchData();
   }, [project_id, onModelsLoaded]);
+
+  // ✅ CHỈ SỬA ĐOẠN CLICK
+  const handleSelectModel = async (modelName: string) => {
+    if (!project_id) return;
+
+    try {
+      const result = await createNodeAttribute({
+        project_id,
+        filters: [
+          { label: "layer8", values: ["ti", "ct;ti"] },
+             { label: "layer7", values: [modelName] }
+          
+        ],
+      });
+
+      console.log("📦 Dữ liệu model cụ thể:", result);
+    } catch (error) {
+      console.error("❌ Lỗi khi gọi lại API model:", error);
+    }
+  };
 
   const handleBack = () => {
     if (!project_id) return;
@@ -117,6 +138,10 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
               <Button
                 key={index}
                 className={styles.menuBtn}
+                onClick={() => {
+                  handleSelectModel(item.label);
+                  onSelectModel?.(item.label);
+                }}
                 variant="outline"
                 style={{ margin: "8px", fontSize: "9px" }}
               >
@@ -145,7 +170,6 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              overflow: "hidden",
               background: "#234374",
               color: "#EEEEEE",
               border: "1.5px solid #EEEEEE",

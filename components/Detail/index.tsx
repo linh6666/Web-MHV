@@ -19,7 +19,8 @@ interface ZoningSystemProps {
 export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   const [currentLayer7, setCurrentLayer7] = useState<string>("");
    const [activeModels, setActiveModels] = useState<string[]>([]);
-  const [selectedModel] = useState<string | null>(null);
+    const [selectedModel, setSelectedModel] = useState<string | null>(null);
+
 
   const transformRef = useRef<ReactZoomPanPinchRef | null>(null);
 
@@ -83,6 +84,12 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   
     return result;
   }, [activeModels, selectedModel]);
+    const handleModelSelect = (modelName: string) => {
+    setSelectedModel((prev) => (prev === modelName ? null : modelName));
+
+    // Zoom vào vùng SVG tương ứng (giả sử có id là modelName)
+ 
+  };
 
   return (
     <div className={styles.box}>
@@ -132,6 +139,8 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           initialLayer7={currentLayer7}
           onLayer7Change={handleLayer7Change}
            onModelsLoaded={setActiveModels}
+             onSelectModel={handleModelSelect} 
+
         />
       </div>
     </div>

@@ -14,30 +14,69 @@ interface ZoningSystemProps {
 
 export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   const [activeModels, setActiveModels] = useState<string[]>([]);
+   const [selectedModel, setSelectedModel] = useState<string | null>(null);
         const filteredPaths = useMemo(() => {
-           if (!activeModels || activeModels.length === 0) return [];
-    
-     const result = pathsData.map((item: SvgItem) => {
-          const parser = new DOMParser();
-          const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
-    
-          Array.from(svgDoc.querySelectorAll("rect, path")).forEach((el) => {
-            const elPrefix = el.id?.split(".").slice(0, 2).join(".");
-            if (!elPrefix || !activeModels.includes(elPrefix)) {
-              el.setAttribute("style", "display:none");
-            } else {
-              el.removeAttribute("style");
-            }
+          if (!activeModels || activeModels.length === 0) {
+            console.log("❌ Không có activeModels → Không hiển thị SVG");
+            return [];
+          }
+        
+          console.log("👉 activeModels từ API:", activeModels);
+        
+          const result = pathsData.map((item: SvgItem) => {
+            console.log("🟦 SVG đang xử lý:", item.id);
+        
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
+        
+            Array.from(svgDoc.querySelectorAll("rect, path,circle")).forEach((el) => {
+              const elId = el.id || "";
+              const cleanElId = elId.replace(/\s+/g, "_").toUpperCase();
+        
+              // So sánh với activeModels → chuẩn hóa tên
+              const isMatch = activeModels.some((model) => {
+                const cleanModel = (model || "").replace(/\s+/g, "_").toUpperCase();
+                return cleanElId.includes(cleanModel) || cleanModel.includes(cleanElId);
+              });
+        
+              if (elId) {
+                console.log(
+                  isMatch ? "✅ MATCH → SVG hiển thị:" : "⛔ HIDE →",
+                  elId
+                );
+              }
+        
+              if (isMatch) {
+                el.removeAttribute("style");
+                if (selectedModel && cleanElId.includes(selectedModel.replace(/\s+/g, "_").toUpperCase())) {
+                  el.setAttribute("fill", "#bb8d38");
+                  el.setAttribute("stroke", "white");
+                } else {
+                  const originalFill =
+                    el.getAttribute("data-original-fill") || el.getAttribute("fill") || "#fff";
+                  if (!el.hasAttribute("data-original-fill")) el.setAttribute("data-original-fill", originalFill);
+                  el.setAttribute("fill", originalFill);
+                  el.removeAttribute("stroke");
+                }
+              } else {
+                el.setAttribute("style", "display:none");
+              }
+            });
+        
+            return {
+              ...item,
+              svg: svgDoc.documentElement.outerHTML,
+            };
           });
-    
-          return {
-            ...item,
-            svg: svgDoc.documentElement.outerHTML,
-          };
-        });
-    
-        return result;
-      }, [activeModels]);
+        
+          return result;
+        }, [activeModels, selectedModel]);
+            const handleModelSelect = (modelName: string) => {
+    setSelectedModel((prev) => (prev === modelName ? null : modelName));
+
+    // Zoom vào vùng SVG tương ứng (giả sử có id là modelName)
+ 
+  };
   return (
     <div className={styles.box}>
       <div className={styles.left}>
@@ -76,6 +115,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         {/* 👇 Truyền project_id sang Menu */}
         <Menu project_id={project_id} 
            onModelsLoaded={setActiveModels}
+             onSelectModel={handleModelSelect} 
         />
       </div>
     </div>
