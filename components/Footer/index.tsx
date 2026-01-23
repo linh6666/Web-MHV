@@ -11,25 +11,25 @@ export default function Footer() {
       <div className={classes.footerOverlay} >
          <Box className={classes.company}>
   <Title order={5}>
-    Công ty TNHH Phát triển Khu Đô thị Nam Thăng Long – Trung Tâm Thông Tin Và Tiếp
-    Thị Ciputra Hà Nội.
+    Công ty cổ phần tập đoàn Sunshine
   </Title>
 
   <Text>
-    Địa chỉ văn phòng: Khu đô thị Nam Thăng Long, Xuân Đỉnh, Bắc Từ Liêm, Hà Nội
+    Trụ sở Hà Nội: Tầng 12, tòa nhà Sunshine Center, 16 Phạm Hùng, P. Từ Liêm, TP. Hà Nội, Việt Nam.
   </Text>
 
   <Group justify="center" gap="md" mt={6}>
-    <Text size="sm">Tel: 024-3 7576268</Text>
-    <Text size="sm">Fax: 024-3 7576282</Text>
+    <Text size="sm">Tel: 024 730 52 999</Text>
+   
     <Text size="sm">
       Email:{" "}
       <Anchor
-        href="mailto:enquiry@ciputrahanoi.com"
+        href="mailto:info@sunshinegroup.vn"
         c="inherit"
         underline="hover"
       >
-        enquiry@ciputrahanoi.com
+        
+info@sunshinegroup.vn
       </Anchor>
     </Text>
   </Group>

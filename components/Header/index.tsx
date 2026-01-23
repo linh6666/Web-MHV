@@ -8,7 +8,7 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPhoneCall, IconShoppingCart } from "@tabler/icons-react";
+import { IconPhoneCall} from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";

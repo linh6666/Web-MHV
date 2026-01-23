@@ -104,7 +104,7 @@ export default function Menu({ project_id, onModelsLoaded }: MenuProps) {
 
       {/* Title */}
       <div className={styles.title}>
-        <h1>TIỆN ÍCH TIÊU BIÊU</h1>
+        <h1>TIỆN ÍCH TIÊU BIỂU</h1>
       </div>
 
       {/* Menu */}

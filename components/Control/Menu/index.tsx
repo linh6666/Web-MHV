@@ -18,12 +18,12 @@ export default function Menu({ project_id }: MenuProps) {
   // 🧠 Tạo sẵn link kèm project_id (nếu có)
   const menuItems = [
    
-      { label: "GIỚI THIỆU TỔNG THỂ", link: `/Tuong-tac/Ciputra/Gioi-thieu-du-an${project_id ? `?id=${project_id}` : ""}` },
+      { label: "GIỚI THIỆU TỔNG THỂ", link: `/tuong-tac/Ciputra/Gioi-thieu-du-an${project_id ? `?id=${project_id}` : ""}` },
     { label: "DỰ ÁN TIÊU BIÊU", link: `/tuong-tac/Ciputra/Du-an-tieu-bieu${project_id ? `?id=${project_id}` : ""}` },
      { label: "TIỆN ÍCH TIÊU BIÊU", link: `/tuong-tac/Ciputra/Tien-ich${project_id ? `?id=${project_id}` : ""}` } ,
-    { label: "HIỆU ỨNG ÁNH SÁNG", link: `/Tuong-tac/Ciputra/Hieu-ung-anh-sang${project_id ? `?id=${project_id}` : ""}` },
-    { label: "THƯ VIỆN", link: `/Tuong-tac/Ciputra/Thu-vien-anh${project_id ? `?id=${project_id}` : ""}` },
-    { label: "MÔ HÌNH", link: `/Tuong-tac/Ciputra/Mo-hinh${project_id ? `?id=${project_id}` : ""}` },
+    { label: "HIỆU ỨNG ÁNH SÁNG", link: `/tuong-tac/Ciputra/Hieu-ung-anh-sang${project_id ? `?id=${project_id}` : ""}` },
+    { label: "THƯ VIỆN", link: `/tuong-tac/Ciputra/Thu-vien-anh${project_id ? `?id=${project_id}` : ""}` },
+    { label: "MÔ HÌNH", link: `/tuong-tac/Ciputra/Mo-hinh${project_id ? `?id=${project_id}` : ""}` },
   
   ];
 
@@ -82,7 +82,7 @@ export default function Menu({ project_id }: MenuProps) {
         <Group gap="xs">
           <Sun project_id={project_id} />
          <Button
-  onClick={() => router.push("/Tuong-tac")} // ← Quay về trang /Tuong-tac
+  onClick={() => router.push("/tuong-tac")} // ← Quay về trang /Tuong-tac
   variant="filled"
   style={{
     width: 30,

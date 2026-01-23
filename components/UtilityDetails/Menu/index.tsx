@@ -1,19 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "./Menu.module.css";
-import { Button, Group, Image, Loader, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Image,
+  Loader,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifiterutilities";
-import { createON } from "../../../api/apiON"; 
+import { createON } from "../../../api/apiON";
 import { createOFF } from "../../../api/apiOFF";
 import Function from "./Function";
 
 interface MenuProps {
   project_id: string | null;
   initialBuildingType?: string | null;
-    onModelsLoaded?: (models: string[]) => void;
+  onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
 }
 
@@ -25,24 +32,32 @@ interface MenuItem {
 
 interface NodeAttributeItem {
   model_building_vi?: string;
+  building_code?: string;
   group?: string;
   [key: string]: unknown;
 }
 
-export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
-  onSelectModel, }: MenuProps) {
+export default function Menu({
+  project_id,
+  initialBuildingType,
+  onModelsLoaded,
+  onSelectModel,
+}: MenuProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const phaseFromQuery = searchParams.get("building") || initialBuildingType;
+  const phaseFromQuery =
+    searchParams.get("building") || initialBuildingType;
 
   const [active, setActive] = useState<"on" | "off" | null>(null);
-  const [isMultiMode, setIsMultiMode] = useState<"single" | "multi" | null>(null); // ✅ ban đầu null
+  const [isMultiMode, setIsMultiMode] = useState<
+    "single" | "multi" | null
+  >(null);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingOn, setLoadingOn] = useState(false);
 
-  // ✅ Hàm fetch dữ liệu
-  const fetchData = async () => {
+  // ✅ FIX: bọc fetchData bằng useCallback
+  const fetchData = useCallback(async () => {
     if (!project_id || !phaseFromQuery) return;
 
     setLoading(true);
@@ -56,13 +71,16 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
       });
 
       if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
-         onModelsLoaded?.(
-          data.data.map((i: NodeAttributeItem) => i.building_code)
+        onModelsLoaded?.(
+          data.data.map(
+            (i: NodeAttributeItem) => i.building_code as string
+          )
         );
+
         const uniqueMap = new Map<string, MenuItem>();
 
         data.data.forEach((item: NodeAttributeItem) => {
-          const subzone: string = item.model_building_vi || "";
+          const subzone = item.model_building_vi || "";
 
           if (
             subzone.trim() &&
@@ -88,13 +106,15 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     } finally {
       setLoading(false);
     }
-  };
+  }, [project_id, phaseFromQuery, onModelsLoaded]);
 
+  // ✅ FIX: dependency array giờ chỉ còn fetchData
   useEffect(() => {
     fetchData();
-  }, [project_id, phaseFromQuery,onModelsLoaded]);
+  }, [fetchData]);
 
-  // ✅ Xử lý khi nhấn 1 nút model
+  // ================= HANDLERS =================
+
   const handleMenuClick = async (subzoneLabel: string) => {
     if (!project_id || !phaseFromQuery) return;
 
@@ -114,15 +134,12 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     }
   };
 
-  // ✅ Quay lại trang tiện ích
   const handleBack = () => {
     if (!project_id) return;
     router.push(`/Tuong-tac/Millennia-City/Tien-ich?id=${project_id}`);
   };
 
-  // ✅ Khi nhấn MULTI
   const handleMultiModeClick = () => {
-    // Bấm lần đầu: kích hoạt multi, bấm lại thì tắt (null)
     setIsMultiMode(prev => (prev === "multi" ? null : "multi"));
     fetchData();
   };
@@ -135,8 +152,6 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",
-    transition: "background 0.3s",
     background: isActive
       ? "linear-gradient(to top, #FFE09A,#FFF1D2)"
       : "#FFFAEE",
@@ -144,14 +159,12 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     border: "1.5px solid #752E0B",
   });
 
-  // ✅ ON/OFF API
   const handleClickOn = async () => {
     if (!project_id) return;
     setActive("on");
     setLoadingOn(true);
     try {
-      const res = await createON({ project_id });
-      console.log("✅ API ON result:", res);
+      await createON({ project_id });
     } catch (err) {
       console.error("❌ Lỗi khi gọi API ON:", err);
     } finally {
@@ -164,8 +177,7 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     setActive("off");
     setLoadingOn(true);
     try {
-      const res = await createOFF({ project_id });
-      console.log("✅ API OFF result:", res);
+      await createOFF({ project_id });
     } catch (err) {
       console.error("❌ Lỗi khi gọi API OFF:", err);
     } finally {
@@ -173,9 +185,10 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     }
   };
 
+  // ================= UI =================
+
   return (
     <div className={styles.box}>
-      {/* Logo */}
       <div className={styles.logo}>
         <Image
           src="/Logo/logo-tt-city-millennia.png"
@@ -184,32 +197,22 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
         />
       </div>
 
-      {/* Title */}
       <div className={styles.title}>
         <h1>{phaseFromQuery?.toUpperCase()}</h1>
       </div>
 
-      {/* Menu danh sách */}
       <div className={styles.Function}>
         {loading ? (
           <Loader color="orange" />
         ) : menuItems.length > 0 ? (
-          <div className={styles.scroll} style={{ marginTop: "5px" }}>
+          <div className={styles.scroll} style={{ marginTop: 5 }}>
             {menuItems.map((item, index) => (
               <Button
                 key={index}
                 className={styles.menuBtn}
-                onClick={() => {handleMenuClick(item.label);
+                onClick={() => {
+                  handleMenuClick(item.label);
                   onSelectModel?.(item.label);
-                }}
-                variant="filled"
-                color="orange"
-                style={{
-                  marginBottom: "10px",
-                  background:
-                    isMultiMode === "multi"
-                      ? "linear-gradient(to top, #FFE09A,#FFF1D2)"
-                      : undefined,
                 }}
                 disabled={isMultiMode === "multi"}
               >
@@ -224,7 +227,6 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
         )}
       </div>
 
-      {/* Footer */}
       <div className={styles.footer}>
         <Stack align="center" gap="xs">
           <Function
@@ -233,49 +235,26 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
             onMultiModeClick={handleMultiModeClick}
           />
           <Group gap="xs">
-            {/* Nút ON */}
             <Button
               style={getButtonStyle(active === "on")}
-              onClick={() => {
-                if (active !== "on") handleClickOn();
-                setActive(active === "on" ? null : "on");
-              }}
+              onClick={handleClickOn}
               disabled={loadingOn}
             >
-              <Text style={{ fontSize: "13px" }}>ON</Text>
+              <Text size="xs">ON</Text>
             </Button>
 
-            {/* Nút OFF */}
             <Button
               style={getButtonStyle(active === "off")}
-              onClick={() => {
-                if (active !== "off") handleClickOFF();
-                setActive(active === "off" ? null : "off");
-              }}
+              onClick={handleClickOFF}
             >
-              <Text style={{ fontSize: "12px" }}>OFF</Text>
+              <Text size="xs">OFF</Text>
             </Button>
 
-            {/* Nút quay lại */}
             <Button
               onClick={handleBack}
-              variant="filled"
-              style={{
-                width: 30,
-                height: 30,
-                padding: 0,
-                borderRadius: 40,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-                transition: "background 0.3s",
-                background: "#FFFAEE",
-                color: "#752E0B",
-                border: "1.5px solid #752E0B",
-              }}
+              style={getButtonStyle(false)}
             >
-              <IconArrowLeft size={18} color="#752E0B" />
+              <IconArrowLeft size={18} />
             </Button>
           </Group>
         </Stack>
@@ -283,4 +262,3 @@ export default function Menu({ project_id, initialBuildingType,onModelsLoaded,
     </div>
   );
 }
-

@@ -14,7 +14,7 @@ export default function VideoPage() {
 
   const handleBack = () => {
     if (!project_id) return;
-    router.push(`/Tuong-tac/Millennia-City?id=${project_id}`);
+    router.push(`/tuong-tac/Ciputra?id=${project_id}`);
   };
 
   // 🟢 Khi trang vừa load, tự động gọi API
@@ -47,7 +47,7 @@ export default function VideoPage() {
     <Container className={styles.videoContainer}>
       <iframe
         className={styles.videoIframe}
-        src="https://www.youtube.com/embed/KwxqLtMP4jk?autoplay=1&mute=1"
+        src="https://www.youtube.com/embed/AqJ79mQDtZA?autoplay=1&mute=1"
         title="Video giới thiệu"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -59,7 +59,7 @@ export default function VideoPage() {
         onClick={handleBack}
         variant="filled"
       >
-        <IconArrowLeft size={18} color="#752E0B" />
+        <IconArrowLeft size={18} color="#EEEEEE" />
       </Button>
     </Container>
   );
