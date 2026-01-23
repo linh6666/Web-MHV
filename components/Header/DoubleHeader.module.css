@@ -41,14 +41,15 @@
     border-color 100ms ease,
     color 100ms ease;
 
-  @mixin hover {
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-    text-decoration: none;
-  }
+ @mixin hover {
+  color: #c2923f;
+  text-decoration: none;
+}
 
-  &[data-active] {
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-  }
+&[data-active] {
+  color: #c2923f;
+}
+
 }
 
 .secondaryLink {

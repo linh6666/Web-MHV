@@ -22,8 +22,8 @@ export default function Menu({ project_id }: MenuProps) {
     { label: "DỰ ÁN TIÊU BIÊU", link: `/tuong-tac/Ciputra/Du-an-tieu-bieu${project_id ? `?id=${project_id}` : ""}` },
      { label: "TIỆN ÍCH TIÊU BIÊU", link: `/tuong-tac/Ciputra/Tien-ich${project_id ? `?id=${project_id}` : ""}` } ,
     { label: "HIỆU ỨNG ÁNH SÁNG", link: `/tuong-tac/Ciputra/Hieu-ung-anh-sang${project_id ? `?id=${project_id}` : ""}` },
-    { label: "THƯ VIỆN", link: `/tuong-tac/Ciputra/Thu-vien-anh${project_id ? `?id=${project_id}` : ""}` },
-    { label: "MÔ HÌNH", link: `/tuong-tac/Ciputra/Mo-hinh${project_id ? `?id=${project_id}` : ""}` },
+    { label: "THƯ VIỆN ẢNH", link: `/tuong-tac/Ciputra/Thu-vien-anh${project_id ? `?id=${project_id}` : ""}` },
+    { label: "HƯỚNG DẪN SỬ DỤNG", link: `/tuong-tac/Ciputra/Mo-hinh${project_id ? `?id=${project_id}` : ""}` },
   
   ];
 
@@ -45,37 +45,20 @@ export default function Menu({ project_id }: MenuProps) {
       </div>
 
       {/* Danh sách nút */}
-      <div className={styles.Function}>
-        <Stack align="center" style={{ gap: "20px", marginTop: "30px" }}>
-          {/* 5 nút đầu */}
-          {menuItems.slice(0, 4).map((item) => (
-            <Button
-              key={item.link}
-              className={styles.menuBtn}
-              onClick={() => router.push(item.link)}
-              variant="outline"
-            >
-              {item.label}
-            </Button>
-          ))}
-
-          {/* 2 nút cuối */}
-          <div className={styles.bottomTwo}>
-            {menuItems.slice(4).map((item) => (
-              <Button
-                key={item.link}
-                className={styles.menuBtnSmall}
-                onClick={() => router.push(item.link)}
-                variant="outline"
-                w="auto"
-                style={{ display: "inline-block" }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </div>
-        </Stack>
-      </div>
+     <div className={styles.Function}>
+  <Stack align="center" style={{ gap: "20px", marginTop: "30px" }}>
+    {menuItems.map((item) => (
+      <Button
+        key={item.link}
+        className={styles.menuBtn}
+        onClick={() => router.push(item.link)}
+        variant="outline"
+      >
+        {item.label}
+      </Button>
+    ))}
+  </Stack>
+</div>
 
       {/* Footer */}
       <div className={styles.footer}>

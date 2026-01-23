@@ -36,9 +36,11 @@ export default function Header() {
       key={item.label}
       href={item.link}
       className={classes.mainLink}
-      data-active={
-        !item.external && pathname === item.link ? true : undefined
-      }
+     data-active={
+  !item.external && pathname.startsWith(item.link)
+    ? true
+    : undefined
+}
       onClick={close}
       target={item.external ? "_blank" : undefined}
       rel={item.external ? "noopener noreferrer" : undefined}
@@ -109,10 +111,6 @@ export default function Header() {
             <IconCircle>
               <IconPhoneCall size={17} color="#fff" stroke={1.5} />
             </IconCircle>
-
-            {/* <IconCircle>
-              <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-            </IconCircle> */}
 
             <UserIcon />
           </Box>

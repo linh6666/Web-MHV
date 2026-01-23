@@ -3,8 +3,8 @@ import { Metadata } from "next";
 
 import PageInteract from "../../../components/Interact";
 export const metadata: Metadata = {
-  title: "Điều khiển mô hình T&T Group",
-  description: "Điều khiển mô hinh T&T Group",
+  title: "Tập đoàn SunShineGroup",
+  description: "Tập đoàn SunShineGroup",
 };
 
 export default function quantrihethong() {
