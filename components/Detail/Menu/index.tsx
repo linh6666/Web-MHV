@@ -8,6 +8,7 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifilter";
 import { createON } from "../../../api/apiON";
 import { createOFF } from "../../../api/apiOFF";
+import ModalItem from "./ModalItem"; 
 
 interface MenuProps {
   project_id: string | null;
@@ -22,6 +23,30 @@ interface MenuItem {
   phase_vi: string;
   unit_code?: string;
   building_type_vi: string;
+}
+interface DataDetail {
+ id: number;
+  unit_code: string;
+  layer1?: string;
+  layer2?: string;
+  layer3?: string;
+  zone?: string;
+  building_type?: string;
+  bedroom?: number | string;
+  bathroom?: number | string;
+  view?: string;
+  status_unit?: string;
+  price?: number;
+  describe?: string;
+  describe_vi?: string;
+  main_door_direction?: string;
+  balcony_direction?: string;
+  direction?: string;
+  url?: string;
+  name_vi?: string;
+  name_en?: string;
+  description_en?: string;
+ 
 }
 
 interface NodeAttributeItem {
@@ -46,6 +71,9 @@ export default function Menu({
   const [phase, setPhase] = useState<string>(layer7Value || "");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
+
+   const [opened, setOpened] = useState(false);
+     const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
 
   useEffect(() => {
     if (layer7Value && layer7Value !== phase) {
@@ -240,6 +268,12 @@ export default function Menu({
           </Button>
         </Stack>
       </div>
+        <ModalItem
+        opened={opened}
+        onClose={() => setOpened(false)}
+        data={selectedData}
+        projectId={project_id}
+      />
     </div>
   );
 }

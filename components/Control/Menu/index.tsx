@@ -23,7 +23,7 @@ export default function Menu({ project_id }: MenuProps) {
      { label: "TIỆN ÍCH TIÊU BIÊU", link: `/tuong-tac/Ciputra/Tien-ich${project_id ? `?id=${project_id}` : ""}` } ,
     { label: "HIỆU ỨNG ÁNH SÁNG", link: `/tuong-tac/Ciputra/Hieu-ung-anh-sang${project_id ? `?id=${project_id}` : ""}` },
     { label: "THƯ VIỆN ẢNH", link: `/tuong-tac/Ciputra/Thu-vien-anh${project_id ? `?id=${project_id}` : ""}` },
-    { label: "HƯỚNG DẪN SỬ DỤNG", link: `/tuong-tac/Ciputra/Mo-hinh${project_id ? `?id=${project_id}` : ""}` },
+    { label: "HƯỚNG DẪN SỬ DỤNG", link: `/tuong-tac/Ciputra/Huong-dan-su-dung${project_id ? `?id=${project_id}` : ""}` },
   
   ];
 

@@ -1,0 +1,24 @@
+.pdfContainer{
+    width: 100%;
+    max-width: 1300px;
+  margin: 90px auto auto auto;
+}
+.backButton {
+  align-self: flex-end; /* Căn nút sang phải */
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%; /* Hình tròn */
+  transition: all 0.3s ease;
+  background: #234374;
+  color: #EEEEEE;
+  border: 1.5px solid #EEEEEE;
+  margin-top: 10px; /* Khoảng cách phía trên */
+  cursor: pointer;
+}
+.backButton:hover {
+  background:#234374;
+  color: #234374;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(117, 46, 11, 0.3);
+}

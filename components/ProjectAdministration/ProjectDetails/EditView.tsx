@@ -15,11 +15,9 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useEffect, useCallback, useRef } from "react";
-
 import { API_ROUTE } from "../../../const/apiRouter";
 import { api } from "../../../libray/axios";
 import { CreateUserPayload } from "../../../api/apidetailhome";
-
 import { NotificationExtension } from "../../../extension/NotificationExtension";
 
 /* =======================

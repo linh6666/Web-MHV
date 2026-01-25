@@ -24,7 +24,6 @@ export const getListProject = async ({
          lang,
     },
   });
-
   return {
     data: response.data.data,
     total: response.data.count, // Sửa từ `total` thành `count`

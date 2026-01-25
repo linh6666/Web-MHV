@@ -1,7 +1,7 @@
 "use client";
 
 import { Image } from "@mantine/core";
-import React, { useMemo, useState,useRef } from "react";
+import React, { useMemo, useState,useRef, useEffect, useCallback } from "react";
 import styles from "./ZoningSystem.module.css";
 import Menu from "./Menu/index";
 import {
@@ -10,7 +10,9 @@ import {
   ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
 import { pathsData,SvgItem } from "./Data";
+import { useSearchParams } from "next/navigation";
 
+import InfoModal from "./Infomodal/index";
 interface ZoningSystemProps {
   project_id: string | null;
   layer7?: string | null;
@@ -18,10 +20,25 @@ interface ZoningSystemProps {
 
 export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   const [currentLayer7, setCurrentLayer7] = useState<string>("");
-   const [activeModels, setActiveModels] = useState<string[]>([]);
-    const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [activeModels, setActiveModels] = useState<string[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
+// cái này cop
 
+  const searchParams = useSearchParams();
+  const urlPhase = searchParams.get("layer3");
+  const urlLayer2 = searchParams.get("layer2");
+
+  const [currentLayer2, setCurrentLayer2] = useState(urlLayer2 || "");
+  const [currentPhase, setCurrentPhase] = useState(urlPhase || "");
+
+  const [activeMode, setActiveMode] = useState<"single" | "multi" | null>(null);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+
+  const [opened, setOpened] = useState(false);
+  const [clickedModel, setClickedModel] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState(project_id);
+//
   const transformRef = useRef<ReactZoomPanPinchRef | null>(null);
 
   // ✅ Chỉ update state, KHÔNG pan
@@ -84,14 +101,80 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   
     return result;
   }, [activeModels, selectedModel]);
-    const handleModelSelect = (modelName: string) => {
+  /* ===========================
+     ZOOM FUNCTION
+  ============================ */
+  const zoomToModel = (modelId: string) => {
+    // ✅ ép kiểu về HTMLElement để giữ zoom tự động
+    const el = document.querySelector(
+      `[data-model="${modelId}"]`
+    ) as HTMLElement | null;
+
+    if (el && transformRef.current) {
+      transformRef.current.zoomToElement(el, 1.5, 300);
+    }
+  };
+
+
+  useEffect(() => {
+    if (!transformRef.current) return;
+
+    if (selectedModel) {
+      requestAnimationFrame(() => {
+        zoomToModel(selectedModel);
+      });
+      return;
+    }
+
+    if (!selectedModel && activeModels.length > 0) {
+      requestAnimationFrame(() => {
+        zoomToModel(activeModels[0]);
+      });
+    }
+  }, [filteredPaths, selectedModel, activeModels]);
+
+  const handleSvgClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const model = (e.target as SVGElement).getAttribute("data-model");
+    if (!model) return;
+
+    setOpened(false);
+
+    requestAnimationFrame(() => {
+      setClickedModel(model);
+      setSelectedProjectId(project_id);
+      setOpened(true);
+      zoomToModel(model);
+    });
+  };
+
+  const handleModelSelect = (modelName: string | null) => {
+    setHasUserInteracted(true);
+    setActiveMode("single");
+
+    if (!modelName) {
+      setSelectedModel(null);
+      setActiveModels([]);
+      return;
+    }
+
     setSelectedModel((prev) => (prev === modelName ? null : modelName));
+  };
+
+
 
     // Zoom vào vùng SVG tương ứng (giả sử có id là modelName)
  
-  };
-
   return (
+    <>
+      <InfoModal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        clickedModel={clickedModel}
+        projectId={selectedProjectId}
+        initialPhase={currentPhase}
+        initialLayer2={currentLayer2}
+      />
+
     <div className={styles.box}>
       <div className={styles.left}>
         <TransformWrapper
@@ -138,12 +221,13 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           project_id={project_id}
           initialLayer7={currentLayer7}
           onLayer7Change={handleLayer7Change}
-           onModelsLoaded={setActiveModels}
-             onSelectModel={handleModelSelect} 
-
+          onModelsLoaded={setActiveModels}
+          onSelectModel={handleModelSelect} 
+          // onPhaseChange={handlePhaseChange}
         />
       </div>
     </div>
+        </>
   );
 }
 
