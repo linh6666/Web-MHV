@@ -17,7 +17,7 @@ export default function PdfViewer() {
   return (
     <div  className={styles.pdfContainer}>
          <iframe
-      src="/huong-dan/hdsd_ciputra.pdf"
+      src="/huong-dan/hdsd_ciputra_nen.pdf"
       width="100%"
       height="700px"
       style={{ border: "none" }}
