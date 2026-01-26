@@ -117,10 +117,10 @@ DELETE_REQUEST:"/api/v1/JoinProject/{project_id}/{request_id}",
 
 
 /////deltai home
-GET_LIST_DETAIL_HOME:"/api/v1/detail_unit/get_detal_units/{project_id}/{unit_code}",
+GET_LIST_DETAIL_HOME:"/api/v1/detail_unit/get_detail_units/{project_id}/{unit_code}",
 CREATE_IMG_DETAIL_HOME:"/api/v1/detail_unit/add_multiple_files/{project_id}/{unit_code}",
 UPDATE_IMG:"/api/v1/detail_unit/add_multiple_files/{project_id}/{detal_id}",
-Delete_IMG:"/api/v1/detail_unit/delete_detal_unit/{project_id}/{detal_id}",
+Delete_IMG:"/api/v1/detail_unit/delete_detail_unit/{project_id}/{detal_id}",
 ////Project basic
 GET_LIST_PROJECT_BASIC:"/api/v1/projects/basic",
 

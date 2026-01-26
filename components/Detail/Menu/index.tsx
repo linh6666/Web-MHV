@@ -141,24 +141,29 @@ export default function Menu({
   }, [fetchData]);
 
   // ✅ CHỈ SỬA ĐOẠN LỖI CLICK NÚT
-  const handleSelectModel = async (modelName: string) => {
-    if (!project_id || !phase) return;
+ const handleSelectModel = async (modelName: string) => {
+  if (!project_id || !phase) return;
 
-    try {
-      const result = await createNodeAttribute({
-        project_id,
-        filters: [
-          { label: "layer8", values: ["ct", "ct;ti"] },
-          { label: "layer7", values: [phase] },
-          { label: "layer6", values: [modelName] },
-        ],
-      });
+  try {
+    const result = await createNodeAttribute({
+      project_id,
+      filters: [
+        { label: "layer8", values: ["ct", "ct;ti"] },
+        { label: "layer7", values: [phase] },
+        { label: "layer6", values: [modelName] },
+      ],
+    });
 
-      console.log("📦 Dữ liệu model cụ thể:", result);
-    } catch (error) {
-      console.error("❌ Lỗi khi gọi lại API model:", error);
-    }
-  };
+    const detail = result?.data?.[0];
+    if (!detail) return;
+
+    setSelectedData(detail); // ✅ GÁN DATA
+    setOpened(true);         // ✅ MỞ MODAL
+  } catch (error) {
+    console.error("❌ Lỗi khi gọi lại API model:", error);
+  }
+};
+
 
   const handleBack = () => {
     if (!project_id) return;
