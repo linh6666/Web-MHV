@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Anchor,
   Box,
@@ -8,8 +9,9 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPhoneCall} from "@tabler/icons-react";
+import { IconPhoneCall } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
 
@@ -24,31 +26,91 @@ const mainLinks = [
     link: "/tuong-tac",
     label: "MÔ HÌNH TƯƠNG TÁC",
   },
-    {
+  {
     link: "/quan-tri-du-an",
     label: "QUẢN TRỊ DỰ ÁN",
   },
-    {
+  {
     link: "/quan-ly-he-thong",
     label: "QUẢN TRỊ HỆ THỐNG",
   },
 ];
 
+/* ============ Token interface ============ */
+interface DecodedToken {
+  is_superuser?: boolean;
+  exp?: number;
+  iat?: number;
+  [key: string]: unknown;
+}
+
 export default function Header() {
   const [opened, { toggle, close }] = useDisclosure(false);
   const pathname = usePathname();
 
-  /* ============ Render menu items ============ */
-  const mainItems = mainLinks.map((item) => (
+  /* ============ Auth state ============ */
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSuperUser, setIsSuperUser] = useState(false);
+
+  /* ============ Check token ============ */
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") ||
+      localStorage.getItem("access_token");
+
+    if (!token) {
+      setIsLoggedIn(false);
+      setIsSuperUser(false);
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+
+      // ❗ token hết hạn → coi như chưa đăng nhập
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("access_token");
+        setIsLoggedIn(false);
+        setIsSuperUser(false);
+        return;
+      }
+
+      setIsLoggedIn(true);
+      setIsSuperUser(decoded?.is_superuser === true);
+    } catch {
+      setIsLoggedIn(false);
+      setIsSuperUser(false);
+    }
+  }, []);
+
+  /* ============ Filter menu (LOGIC CHUẨN THEO YÊU CẦU) ============ */
+  const publicLabels = [
+    "GIỚI THIỆU",
+    "MÔ HÌNH TƯƠNG TÁC",
+  ];
+
+  const visibleLinks = mainLinks.filter((link) => {
+    // ❌ Không phải superuser (kể cả chưa login) → chỉ 2 menu
+    if (!isSuperUser) {
+      return publicLabels.includes(link.label);
+    }
+
+    // 👑 Superuser → tất cả
+    return true;
+  });
+
+  /* ============ Render menu ============ */
+  const mainItems = visibleLinks.map((item) => (
     <Anchor
       key={item.label}
       href={item.link}
       className={classes.mainLink}
-     data-active={
-  !item.external && pathname.startsWith(item.link)
-    ? true
-    : undefined
-}
+      data-active={
+        !item.external && pathname.startsWith(item.link)
+          ? true
+          : undefined
+      }
       onClick={close}
       target={item.external ? "_blank" : undefined}
       rel={item.external ? "noopener noreferrer" : undefined}
@@ -83,10 +145,7 @@ export default function Header() {
             <IconPhoneCall size={17} color="#fff" stroke={1.5} />
           </IconCircle>
 
-          {/* <IconCircle>
-            <IconShoppingCart size={17} color="#fff" stroke={1.5} />
-          </IconCircle> */}
-
+          {/* UserIcon vẫn hiển thị, nếu muốn ẩn khi chưa login thì mình sửa thêm */}
           <UserIcon />
         </Box>
 
