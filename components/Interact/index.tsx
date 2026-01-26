@@ -88,7 +88,12 @@ export default function DetailInteractive() {
     <>
       <div className={styles.background}>
         <div className={styles.container}>
-          <div className={styles.cardGrid}>
+         <div
+  className={`${styles.cardGrid} ${
+    projects.length < 4 ? styles.centerGrid : ""
+  }`}
+>
+
              
 
             {projects.map((project) => (
