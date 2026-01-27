@@ -120,12 +120,12 @@ export default function LargeFixedTable() {
 
     const body = {
       project_id: templateId,
-      filters: [
-        {
-          label: "type_info",
-          values: ["bh"],
-        },
-      ],
+     filters: [
+  {
+    label: "layer8",
+    values: ["ct", "ti"],
+  },
+],
     };
 
     try {
