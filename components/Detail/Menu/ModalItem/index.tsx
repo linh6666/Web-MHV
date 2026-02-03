@@ -7,6 +7,9 @@ import { Getlisthome } from "../../../../api/apiGetListHome";
 interface DataDetail {
   id: number;
   unit_code: string;
+
+layer6?:string;
+
   layer1?: string;
   layer2?: string;
   layer3?: string;
@@ -99,9 +102,10 @@ export default function ModalItem({ opened, onClose, data, projectId }: ModalIte
           {/* ================= LEFT ================= */}
           <div style={{ flex: 1 }}>
             <Text fw={700} mb={12} fz={18}>
-              Chi tiết căn hộ: {data.unit_code}
+              Chi tiết căn hộ: {data.layer6
+}
             </Text>
-            <Text>Tòa: {data.layer3}</Text>
+            {/* <Text>Tòa: {data.layer3}</Text>
             <Text>
               {data.building_type
                 ? `Loại công trình: ${data.building_type}`
@@ -118,7 +122,7 @@ export default function ModalItem({ opened, onClose, data, projectId }: ModalIte
             <Text>Trạng thái: {data.status_unit}</Text>
             <Text>
               Giá: {data.price ? `${data.price.toLocaleString()}đ` : "Chưa có"}
-            </Text>
+            </Text> */}
             <Text mt={8}>
               <b>Mô tả:</b> {data.describe_vi || data.describe}
             </Text>

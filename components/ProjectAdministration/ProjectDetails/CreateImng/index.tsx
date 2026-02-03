@@ -5,24 +5,29 @@ import {
   FileInput,
   Group,
   LoadingOverlay,
+  TextInput,
 } from "@mantine/core";
 import { IconCheck, IconPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { NotificationExtension } from "../../../../extension/NotificationExtension";
 import { createImg } from "../../../../api/apiCreateImg";
 
-
 interface Props {
   unitCode: string;
   projectId: string;
-    idItem?: string[];
+  idItem?: string[];
   onSearch: () => void;
   onClose?: () => void;
 }
 
 const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
   const [visible, { open, close }] = useDisclosure(false);
+
+  // danh sách file
   const [files, setFiles] = useState<(File | null)[]>([null]);
+
+  // RID / description_en
+  const [descriptionEn, setDescriptionEn] = useState("");
 
   const handleFileChange = (index: number, file: File | null) => {
     const updated = [...files];
@@ -36,18 +41,27 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
 
   const handleSubmit = async () => {
     const validFiles = files.filter((f): f is File => f !== null);
+
     if (validFiles.length === 0) {
       NotificationExtension.Fails("Vui lòng chọn ít nhất một ảnh.");
       return;
     }
 
+    if (!descriptionEn.trim()) {
+      NotificationExtension.Fails("Vui lòng nhập RID (description_en).");
+      return;
+    }
+
     open();
     try {
-      // ✅ truyền đúng kiểu payload: { files: File[] }
-      await createImg(projectId, unitCode, { files: validFiles });
+      await createImg(projectId, unitCode, {
+        files: validFiles,
+        description_vi: descriptionEn.trim(),
+      });
 
       NotificationExtension.Success("Tạo ảnh chi tiết nhà thành công!");
       setFiles([null]);
+      setDescriptionEn("");
       onSearch();
       onClose?.();
     } catch (error) {
@@ -69,6 +83,17 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
     >
       <LoadingOverlay visible={visible} />
 
+      {/* ===== RID / description_en ===== */}
+      <TextInput
+        label="Mô tả"
+        placeholder="Nhập Mô Tả"
+        value={descriptionEn}
+        onChange={(e) => setDescriptionEn(e.currentTarget.value)}
+        withAsterisk
+        mt="md"
+      />
+
+      {/* ===== File inputs ===== */}
       {files.map((file, index) => (
         <FileInput
           key={index}
@@ -93,7 +118,7 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
           Thêm ảnh
         </Button>
 
-       <Button
+        <Button
           type="submit"
           color="#3598dc"
           loading={visible}
