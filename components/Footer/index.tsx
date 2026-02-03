@@ -11,7 +11,7 @@ export default function Footer() {
       <div className={classes.footerOverlay} >
          <Box className={classes.company}>
   <Title order={5}>
-    Công ty cổ phần tập đoàn Sunshine
+    Công ty cổ phần Tập Đoàn Sunshine
   </Title>
 
   <Text>

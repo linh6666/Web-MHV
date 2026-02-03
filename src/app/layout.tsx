@@ -10,7 +10,7 @@ import Footer from "../../components/Footer";
 import { Nunito_Sans } from "next/font/google";
 
 export const metadata: Metadata = {
-  title: "Tập đoàn SunShineGroup",
+  title: "SunShineGroup",
   description: "Chào mừng bạn đến với trang web điều khiển mô hình của Ciputra",
 };
 

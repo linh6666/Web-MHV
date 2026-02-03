@@ -3,8 +3,8 @@ import { Metadata } from "next";
 
 import PageAdmin from "../../../components/Admin";
 export const metadata: Metadata = {
-  title: "Quản trị T&T Group",
-  description: "Quản trị  về T&T Group",
+  title: "Quản trị ",
+  description: "Quản trị ",
 };
 
 export default function quantrihethong() {
