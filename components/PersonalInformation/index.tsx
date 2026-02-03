@@ -124,7 +124,7 @@ export default function ProfilePage() {
                 <IconUser size={18} /> Tài khoản của bạn
               </button>
             </li>
-            <li>
+            {/* <li>
               <button
                 onClick={() => setActiveTab("orders")}
                 className={`${styles.menuItem} ${
@@ -133,8 +133,8 @@ export default function ProfilePage() {
               >
                 <IconHeartFilled size={18} /> Danh sách yêu thích
               </button>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <button
                 onClick={() => setActiveTab("bookings")}
                 className={`${styles.menuItem} ${
@@ -143,8 +143,8 @@ export default function ProfilePage() {
               >
                 <IconCalendar size={18} /> Dự án của tôi 
               </button>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <button
                 onClick={() => setActiveTab("membership")}
                 className={`${styles.menuItem} ${
@@ -153,8 +153,8 @@ export default function ProfilePage() {
               >
                 <IconBuildingWarehouse size={18} /> Tổng quan bán hàng
               </button>
-            </li>
-                <li>
+            </li> */}
+                {/* <li>
               <button
                 onClick={() => setActiveTab("listcustomer")}
                 className={`${styles.menuItem} ${
@@ -164,7 +164,7 @@ export default function ProfilePage() {
                 <IconList
  size={18} /> Danh sách khách hàng
               </button>
-            </li>
+            </li> */}
                  <li>
               <button
                 onClick={() => setActiveTab("ResetPassword")}

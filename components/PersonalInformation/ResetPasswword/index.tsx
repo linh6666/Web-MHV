@@ -70,7 +70,7 @@ export default function ProfileInfo() {
 
   return (
     <Container size="sm" py="xl">
-      <Title order={2} c="#762f0b" ta="center" mb="lg">
+      <Title order={2} c="#053c74" ta="center" mb="lg">
         Đổi mật khẩu tài khoản
       </Title>
       <PasswordInput
@@ -94,8 +94,8 @@ export default function ProfileInfo() {
       <Button 
         onClick={handleChangePassword} // Mở modal khi nhấn nút
         style={{ 
-          backgroundColor: '#ffbe00',  // Màu nền
-          color: '#762f0b',              // Màu chữ
+          backgroundColor: '#053c74',  // Màu nền
+          color: '#ffffff',              // Màu chữ
         }}
         // disabled={isButtonDisabled} // Điều kiện disable nút
       >
