@@ -120,3 +120,22 @@
   background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
 }
+
+/* Tablet & small desktop: add side padding so logo/buttons don't hug edges */
+@media (width: 1024px) and (height: 768px) {
+  .inner {
+    padding: 0 50px;
+  }
+}
+
+@media (width: 1280px) and (height: 800px) {
+  .inner {
+    padding: 0 32px;
+  }
+}
+
+@media (width: 1366px) and (height: 1024px) {
+  .inner {
+    padding: 0 36px;
+  }
+}
