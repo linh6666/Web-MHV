@@ -64,16 +64,10 @@
   border-top-right-radius: 0;      /* bên phải vuông */
   border-bottom-right-radius: 15px;   /* bên phải vuông */
 
-  /* width: 150px;
-  height: 40px; */
-  /* 🔸 Chiều cao của nút */
+
 }
 
-/* .btn:hover {
-  background: linear-gradient(to bottom, #c57756, #b05b3e);
-} */
 
-/* hàng nút cuối cùng */
 .footer {
   height: 80px;
   border: 1px solid #EEEEEE;
@@ -223,50 +217,40 @@
     /* border: 2px solid #fff; */
   }
 }
-/* .menuBtn {
-  display: inline-block;       
-  border: 1.5px solid #762f0b;
-  border-radius: 999px;         
-  background-color: #FFFAEE;
-  color: #762f0b;
-  font-weight: 600;
-  font-size: 13px;
-  padding: 6px 18px;           
-  width: auto;                 
-  height: auto;                
-  transition: all 0.2s ease;
-  white-space: nowrap;          
-}
 
-.menuBtn:hover {
-  background-color: #f5e7df; 
-}
-
-.menuBtn:active,
-.menuBtn:focus {
-  background-color: #762f0b;
-  color: #fff;
-  border-color: #762f0b;
-} */
-/* -----------------------
-   nút 5 cái trên (giữ trạng thái trước)
-   ----------------------- */
 .menuBtn {
-  /* nếu muốn giữ đều nhau, đặt width cụ thể, nếu muốn co giãn: chuyển sang width: fit-content */
-  width: 170px;  
-  height: 29px;              /* <-- giữ kích thước cố định cho 5 nút đầu */
-  display: inline-flex;
+  width: 170px;
+
+  /* ❗ CỰC QUAN TRỌNG */
+  height: auto;         /* bỏ height cố định */
+  min-height: 29px;     /* giữ chiều cao tối thiểu */
+
+  display: flex;        /* đổi inline-flex → flex */
   justify-content: center;
   align-items: center;
+
   border: 1.5px solid #EEEEEE;
   border-radius: 999px;
   background-color: #234374;
   color: #EEEEEE;
+
   font-size: 11px;
-  padding: 6px 18px;
+  padding: 6px 14px;
+  line-height: 1.35;
+
+  /* ✅ cho phép xuống dòng */
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
+
+/* Giảm bo góc cho nút có nhiều chữ */
+.menuBtnLong {
+  border-radius: 12px;
+}
+
 
 /* -----------------------
    wrapper cho 2 nút cuối
@@ -313,3 +297,14 @@
   color: #12223B;
   border-color: #EEEEEE;
 }
+.menuBtn :global(.mantine-Button-label) {
+  white-space: normal;
+    border-radius: 10px;
+  word-break: break-word;
+  text-align: center;
+  line-height: 1.35;
+}
+/* .menuBtn:global(.mantine-Button-root) {
+  border-radius: 8px !important;
+} */
+

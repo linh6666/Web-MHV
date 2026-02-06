@@ -209,9 +209,9 @@ export default function Menu({
         <Image src="/logo.png" alt="Logo" className={styles.imgea} />
       </div>
 
-      <div className={styles.title}>
-        <h1>{phase?.toUpperCase()}</h1>
-      </div>
+    <div className={styles.title}>
+  <h1 style={{ fontSize: 12 }}>{phase?.toUpperCase()}</h1>
+</div>
 
       <div className={styles.Function}>
         {loading ? (
