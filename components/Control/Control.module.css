@@ -76,6 +76,66 @@
   }
 }
 
+
+
+/* Tablet gi? layout desktop (gi?ng m?y t?nh) */
+@media (width: 1024px) and (height: 768px) {
+  .box {
+    flex-direction: row;
+    max-width: 1260px;
+    padding: 10px;
+    margin-top: 80px;
+  }
+
+  .left {
+    flex: 3;
+  }
+
+  .right {
+    width: 210px;
+    font-size: 18px;
+    padding: 10px;
+  }
+}
+
+@media (width: 1280px) and (height: 800px) {
+  .box {
+    flex-direction: row;
+    max-width: 1260px;
+    padding: 10px;
+    margin-top: 80px;
+  }
+
+  .left {
+    flex: 3;
+  }
+
+  .right {
+    width: 240px;
+    font-size: 18px;
+    padding: 10px;
+  }
+}
+
+@media (width: 1366px) and (height: 1024px) {
+  .box {
+    flex-direction: row;
+    max-width: 1260px;
+    padding: 10px;
+    margin-top: 80px;
+  }
+
+  .left {
+    flex: 3;
+  }
+
+  .right {
+    width: 240px;
+    font-size: 18px;
+    padding: 10px;
+  }
+}
+
 @media (max-width: 768px) {
   .box {
     flex-direction: column;

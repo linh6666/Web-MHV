@@ -46,7 +46,7 @@ export default function Menu({ project_id }: MenuProps) {
 
       {/* Danh sách nút */}
      <div className={styles.Function}>
-  <Stack align="center" style={{ gap: "20px", marginTop: "30px" }}>
+  <Stack align="center" className={styles.menuStack}>
     {menuItems.map((item) => (
       <Button
         key={item.link}
