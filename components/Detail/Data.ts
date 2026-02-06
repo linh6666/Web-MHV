@@ -48,7 +48,7 @@ export const pathsData: SvgItem[] = [
     <path id="NC.S1" d="M-17205.166-22446.152l.979-13.982-13.76-.963.7-9.953,20.178-.111,7.293,8.572-1.131,16.168Z" transform="matrix(0.998, -0.07, 0.07, 0.998, 19672.719, 21525.283)" fill="#0082c0" opacity="0.6"/>
     <path id="NC.S2" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18077.824 22790.863)" fill="#0082c0" opacity="0.6"/>
     <path id="NC.S3" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18041.824 22795.863)" fill="#0082c0" opacity="0.6"/>
-    <path id="NC.S4" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18005.824 22801)" fill="#0082c0" opacity="0.6"/>
+    <path id="NCS4" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18005.824 22801)" fill="#0082c0" opacity="0.6"/>
     <path id="NC.S5" d="M-17213.793-22443.061h11.027v-17.074l12.8-1.777v-12.1l-19.918,2.846-7.115,9.25v18.852Z" transform="translate(18010 22800)" fill="#0082c0" opacity="0.6"/>
   </g>
   <path id="NOBLE_CRYSTAL_TAY_HO_WORLDHOTELS_RESIDENCES-2" data-name="NOBLE CRYSTAL TAY HO WORLDHOTELS RESIDENCES" d="M-17224.354-22467l5.443,27.883,27.943-3.951,86.65-13.83,59.555-10.1-3.877-31.658-6.047-5.334-160.064,25.254Z" transform="translate(17993.328 22723.959)" fill="#ab2522" stroke="#fffefb" stroke-width="1" opacity="0.6"/>
