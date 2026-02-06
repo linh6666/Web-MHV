@@ -161,7 +161,9 @@ useEffect(() => {
             {menuItems.map((item) => (
               <Button
                 key={item.label}
-                className={styles.menuBtn}
+                className={`${styles.menuBtn} ${
+                  item.label.length >= 20 ? styles.menuBtnLong : ""
+                }`}
                 onClick={() => handleNavigate(item.label)}
                 variant="outline"
               >

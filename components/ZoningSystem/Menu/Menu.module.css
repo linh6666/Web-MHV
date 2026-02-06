@@ -248,7 +248,7 @@
 
 /* Giảm bo góc cho nút có nhiều chữ */
 .menuBtnLong {
-  border-radius: 12px;
+  border-radius: 23px;
 }
 
 
@@ -299,12 +299,13 @@
 }
 .menuBtn :global(.mantine-Button-label) {
   white-space: normal;
-    border-radius: 10px;
+  
   word-break: break-word;
   text-align: center;
   line-height: 1.35;
 }
-/* .menuBtn:global(.mantine-Button-root) {
-  border-radius: 8px !important;
-} */
+
+.menuBtn :global(.mantine-Button-root) {
+  border-radius: 100px;
+}
 
