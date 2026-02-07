@@ -130,7 +130,7 @@
 
 @media (width: 1280px) and (height: 800px) {
   .inner {
-    padding: 0 32px;
+    padding: 0 200px;
   }
 }
 
@@ -142,6 +142,6 @@
 
 @media (width: 1180px) and (height: 820px) {
   .inner {
-    padding: 0 30px;
+    padding: 0 100px;
   }
 }
