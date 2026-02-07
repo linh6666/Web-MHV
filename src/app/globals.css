@@ -37,6 +37,9 @@ body {
 
 main {
   flex: 1;               /* ✅ chiếm hết khoảng trống, đẩy footer xuống dưới */
+
+  padding: 0 10px;
+  padding-top: 80px;
 }
 
 * {
