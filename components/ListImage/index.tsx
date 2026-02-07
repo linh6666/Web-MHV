@@ -399,7 +399,7 @@ export default function GalleryByFolder({ project_id }: ListImageProps) {
    
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: "100px",
+    // marginTop: "100px",
   }}
 >
   <SimpleGrid cols={3} spacing="lg">
@@ -458,7 +458,7 @@ export default function GalleryByFolder({ project_id }: ListImageProps) {
    
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: "100px",
+    // marginTop: "100px",
     paddingBottom: "20px",
   }}
 >
