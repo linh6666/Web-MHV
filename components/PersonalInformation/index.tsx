@@ -192,7 +192,7 @@ export default function ProfilePage() {
       </aside>
 
       {/* Nội dung bên phải */}
-      <main className={styles.content}>{renderContent()}</main>
+      <div className={styles.content}>{renderContent()}</div>
     </div>
   );
 }
