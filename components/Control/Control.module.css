@@ -10,7 +10,7 @@
 /* FIX CHÍNH Ở ĐÂY */
 .left {
   flex: 3;
-    /* ✅ không cho ảnh tràn khi zoom */
+  /* ✅ không cho ảnh tràn khi zoom */
 }
 
 .right {
@@ -25,14 +25,16 @@
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
   width: 100%;
-  height: 100%;           /* ✅ fill toàn bộ vùng left */
+  height: 100%;
+  /* ✅ fill toàn bộ vùng left */
 }
 
 /* nếu bạn có class mapImage */
 .mapImage {
   width: 100%;
   height: 100%;
-  object-fit: contain;    /* ✅ giữ đúng tỉ lệ ảnh */
+  object-fit: contain;
+  /* ✅ giữ đúng tỉ lệ ảnh */
 }
 
 @media (max-width: 1024px) {
@@ -82,24 +84,14 @@
 
 
 
-/* Tablet gi? layout desktop (gi?ng m?y t?nh) */
+/* Tablet giữ layout desktop (giống máy tính) */
 @media (width: 1024px) and (height: 768px) {
   .box {
     flex-direction: row;
-    max-width: 1260px;
+    max-width: 1000px;
+    /* Giảm max-width để ảnh nhỏ lại */
     padding: 10px;
     padding-top: 60px;
-    margin-top: 0;
-  }
-
-
-
-@media (width: 1180px) and (height: 820px) {
-  .box {
-    flex-direction: row;
-    max-width: 1260px;
-    padding: 10px;
-    padding-top: 100px;
     margin-top: 0;
   }
 
@@ -108,28 +100,39 @@
   }
 
   .right {
-    width: 240px;
-    font-size: 18px;
-    padding: 10px;
+    width: 200px;
+    /* Thu nhỏ menu container */
+    font-size: 14px;
+    padding: 8px;
   }
 }
+
+@media (width: 1180px) and (height: 820px) {
+  .box {
+    flex-direction: row;
+    max-width: 1100px;
+    padding: 10px;
+    /* padding-top: 70px; */
+    margin-top: 0;
+  }
+
   .left {
     flex: 3;
   }
 
   .right {
     width: 210px;
-    font-size: 18px;
-    padding: 10px;
+    font-size: 15px;
+    padding: 8px;
   }
 }
 
 @media (width: 1280px) and (height: 800px) {
   .box {
     flex-direction: row;
-    max-width: 1260px;
+    max-width: 1150px;
     padding: 10px;
-    padding-top: 60px;
+    padding-top: 0px;
     margin-top: 0;
   }
 
@@ -138,8 +141,8 @@
   }
 
   .right {
-    width: 240px;
-    font-size: 18px;
+    width: 220px;
+    font-size: 16px;
     padding: 10px;
   }
 }
@@ -147,9 +150,9 @@
 @media (width: 1366px) and (height: 1024px) {
   .box {
     flex-direction: row;
-    max-width: 1260px;
+    max-width: 1200px;
     padding: 10px;
-    padding-top: 60px;
+    padding-top: 80px;
     margin-top: 0;
   }
 
@@ -158,8 +161,8 @@
   }
 
   .right {
-    width: 240px;
-    font-size: 18px;
+    width: 230px;
+    font-size: 16px;
     padding: 10px;
   }
 }

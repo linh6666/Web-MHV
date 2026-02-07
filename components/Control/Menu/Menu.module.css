@@ -3,15 +3,21 @@
   border: 1px solid #FFFFFF;
   margin-bottom: 10px;
   border-radius: 13px;
-  display: flex; /* bật flexbox */
-  justify-content: center; /* căn giữa ngang */
-  align-items: center; /* căn giữa dọc */
+  display: flex;
+  /* bật flexbox */
+  justify-content: center;
+  /* căn giữa ngang */
+  align-items: center;
+  /* căn giữa dọc */
 }
-.imgea{
+
+.imgea {
   width: 150px;
   height: auto;
-  object-fit: contain; /* giữ tỉ lệ ảnh */
+  object-fit: contain;
+  /* giữ tỉ lệ ảnh */
 }
+
 .title {
   height: 50px;
   border: 1px solid #FFFFFF;
@@ -23,23 +29,27 @@
 }
 
 .title h1 {
-  font-weight: 700; /* hoặc bold */
-  font-size: 14px;  /* tùy chỉnh thêm nếu muốn chữ to hơn */
-  color: #C2923F;   /* tuỳ chọn: đổi màu cho đồng bộ */
+  font-weight: 700;
+  /* hoặc bold */
+  font-size: 14px;
+  /* tùy chỉnh thêm nếu muốn chữ to hơn */
+  color: #C2923F;
+  /* tuỳ chọn: đổi màu cho đồng bộ */
 }
+
 /* nút chức năng */
 .Function {
-  height: 390px;
+  height: 410px;
   border: 1px solid #FFFFFF;
   margin-bottom: 10px;
   padding: 10px;
-border-radius: 15px;
+  border-radius: 15px;
   display: flex;
- align-items: center;
+  align-items: center;
   flex-direction: column;
   /* justify-content: center; */
   /* 🟠 Căn giữa theo chiều dọc */
-  
+
 }
 
 
@@ -48,15 +58,20 @@ border-radius: 15px;
   gap: 20px;
   margin-top: 30px;
 }
+
 .btn {
   background-color: #fff;
-  color:#762f0b ;
- 
+  color: #762f0b;
 
-    border-top-left-radius: 15px;   /* bo tròn bên trái trên */
-  border-bottom-left-radius: 0; /* bo tròn bên trái dưới */
-  border-top-right-radius: 0;      /* bên phải vuông */
-  border-bottom-right-radius: 15px;   /* bên phải vuông */
+
+  border-top-left-radius: 15px;
+  /* bo tròn bên trái trên */
+  border-bottom-left-radius: 0;
+  /* bo tròn bên trái dưới */
+  border-top-right-radius: 0;
+  /* bên phải vuông */
+  border-bottom-right-radius: 15px;
+  /* bên phải vuông */
 
   /* width: 150px;
   height: 40px; */
@@ -73,10 +88,12 @@ border-radius: 15px;
   border: 1px solid #FFFFFF;
   display: flex;
   border-radius: 13px;
-  flex-direction: column; /* sắp xếp theo chiều dọc */
+  flex-direction: column;
+  /* sắp xếp theo chiều dọc */
   justify-content: center;
   align-items: center;
-  gap: 30px; /* khoảng cách giữa 2 hàng */
+  gap: 30px;
+  /* khoảng cách giữa 2 hàng */
   /* margin-top: 20px; */
 }
 
@@ -104,7 +121,7 @@ border-radius: 15px;
 }
 
 .modeBtn.active {
-  background:#FFF1D2;
+  background: #FFF1D2;
   color: #fff;
   border: none;
 }
@@ -117,11 +134,15 @@ border-radius: 15px;
 }
 
 .circleBtn {
-  width: 35px; /* 👈 chiều rộng */
-  height: 35px; /* 👈 chiều cao bằng width để thành hình tròn */
-  border-radius: 50%; /* 👈 bo tròn hoàn toàn */
+  width: 35px;
+  /* 👈 chiều rộng */
+  height: 35px;
+  /* 👈 chiều cao bằng width để thành hình tròn */
+  border-radius: 50%;
+  /* 👈 bo tròn hoàn toàn */
 
-  display: flex; /* 👈 căn icon hoặc text ra giữa */
+  display: flex;
+  /* 👈 căn icon hoặc text ra giữa */
   align-items: center;
   justify-content: center;
 
@@ -139,92 +160,278 @@ border-radius: 15px;
 
 
 /* Tablet t?i ?u: thu nh? logo/n?t/kho?ng c?ch */
+/* Tablet tối ưu: thu nhỏ logo/nút/khoảng cách */
 @media (width: 1024px) and (height: 768px) {
-  .menuStack { gap: 14px; margin-top: 16px; }
-  .logo { height: 88px; }
-  .imgea { width: 120px; }
-  .title { height: 36px; }
-  .title h1 { font-size: 11px; }
-  .Function { height: 320px; padding: 6px; }
-  .footer { height: 54px; gap: 8px; }
-  .menuBtn { width: 145px; height: 22px; font-size: 8px; padding: 4px 10px; }
-  .menuBtnSmall { height: 22px; font-size: 8px; padding: 4px 10px; }
-  .modeBtn { font-size: 10px; padding: 4px 6px; }
-  .circleBtn { width: 26px; height: 26px; }
-  .controlRow { gap: 6px; }
+  .menuStack {
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .logo {
+    height: 80px;
+  }
+
+  .imgea {
+    width: 100px;
+  }
+
+  .title {
+    height: 32px;
+  }
+
+  .title h1 {
+    font-size: 10px;
+  }
+
+  .Function {
+    height: 280px;
+    padding: 4px;
+  }
+
+  .footer {
+    height: 50px;
+    gap: 6px;
+  }
+
+  .menuBtn {
+    width: 140px;
+    height: 20px;
+    font-size: 8px;
+    padding: 3px 8px;
+  }
+
+  .menuBtnSmall {
+    height: 20px;
+    font-size: 8px;
+    padding: 3px 8px;
+  }
+
+  .modeBtn {
+    font-size: 9px;
+    padding: 3px 5px;
+  }
+
+  .circleBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .controlRow {
+    gap: 5px;
+  }
 }
-
-
 
 @media (width: 1180px) and (height: 820px) {
-  .menuStack { gap: 15px; margin-top: 17px; }
-  .logo { height: 120px; }
-  .imgea { width: 130px; }
-  .title { height: 60px; }
-  .title h1 { font-size: 15px; }
-  .Function { height: 350px; padding: 6px; }
-  .footer { height: 65px; gap: 10px; }
-  .menuBtn { width: 148px; height: 22px; font-size: 8px; padding: 4px 10px; }
-  .menuBtnSmall { height: 22px; font-size: 8px; padding: 4px 10px; }
-  .modeBtn { font-size: 10px; padding: 4px 6px; }
-  .circleBtn { width: 26px; height: 26px; }
-  .controlRow { gap: 6px; }
+  .menuStack {
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .logo {
+    height: 110px;
+  }
+
+  .imgea {
+    width: 130px;
+  }
+
+  .title {
+    height: 50px;
+  }
+
+  .title h1 {
+    font-size: 14px;
+  }
+
+  .Function {
+    height: 330px;
+    padding: 5px;
+  }
+
+  .footer {
+    height: 70px;
+    gap: 8px;
+  }
+
+  .menuBtn {
+    width: 140px;
+    height: 22px;
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .menuBtnSmall {
+    height: 22px;
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .modeBtn {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .circleBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .controlRow {
+    gap: 5px;
+  }
 }
+
 @media (width: 1280px) and (height: 800px) {
-  .menuStack { gap: 16px; margin-top: 18px; }
-  .logo { height: 130px; }
-  .imgea { width: 150px; }
-  .title { height: 60px; }
-  .title h1 { font-size: 15px; }
-  .Function { height: 380px; padding: 6px; }
-  .footer { height: 80px; gap: 8px; }
-  .menuBtn { width: 150px; height: 23px; font-size: 8px; padding: 4px 10px; }
-  .menuBtnSmall { height: 23px; font-size: 8px; padding: 4px 10px; }
-  .modeBtn { font-size: 10px; padding: 4px 6px; }
-  .circleBtn { width: 26px; height: 26px; }
-  .controlRow { gap: 6px; }
+  .menuStack {
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .logo {
+    height: 110px;
+  }
+
+  .imgea {
+    width: 130px;
+  }
+
+  .title {
+    height: 50px;
+  }
+
+  .title h1 {
+    font-size: 13px;
+  }
+
+  .Function {
+    height: 350px;
+    padding: 5px;
+  }
+
+  .footer {
+    height: 70px;
+    gap: 8px;
+  }
+
+  .menuBtn {
+    width: 140px;
+    height: 22px;
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .menuBtnSmall {
+    height: 22px;
+    font-size: 9px;
+    padding: 4px 8px;
+  }
+
+  .modeBtn {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .circleBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .controlRow {
+    gap: 5px;
+  }
 }
 
 @media (width: 1366px) and (height: 1024px) {
-  .menuStack { gap: 16px; margin-top: 18px; }
-  .logo { height: 98px; }
-  .imgea { width: 130px; }
-  .title { height: 38px; }
-  .title h1 { font-size: 11px; }
-  .Function { height: 290px; padding: 7px; }
-  .footer { height: 58px; gap: 10px; }
-  .menuBtn { width: 155px; height: 23px; font-size: 8px; padding: 4px 10px; }
-  .menuBtnSmall { height: 23px; font-size: 8px; padding: 4px 10px; }
-  .modeBtn { font-size: 10px; padding: 4px 6px; }
-  .circleBtn { width: 26px; height: 26px; }
-  .controlRow { gap: 6px; }
+  .menuStack {
+    gap: 14px;
+    margin-top: 15px;
+  }
+
+  .logo {
+    height: 95px;
+  }
+
+  .imgea {
+    width: 120px;
+  }
+
+  .title {
+    height: 38px;
+  }
+
+  .title h1 {
+    font-size: 12px;
+  }
+
+  .Function {
+    height: 310px;
+    padding: 6px;
+  }
+
+  .footer {
+    height: 55px;
+    gap: 8px;
+  }
+
+  .menuBtn {
+    width: 150px;
+    height: 24px;
+    font-size: 9px;
+    padding: 4px 9px;
+  }
+
+  .menuBtnSmall {
+    height: 24px;
+    font-size: 9px;
+    padding: 4px 9px;
+  }
+
+  .modeBtn {
+    font-size: 11px;
+    padding: 5px 7px;
+  }
+
+  .circleBtn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .controlRow {
+    gap: 6px;
+  }
 }
 
 @media only screen and (max-width: 600px) {
+
   .logo,
   .Function,
   .title,
   .footer {
-    border: none; /* bỏ viền */
+    border: none;
+    /* bỏ viền */
   }
 
   /* Logo + Function nằm chung hàng */
   .box {
     display: flex;
-    flex-direction: column; /* nếu muốn dọc vẫn giữ, đổi sang row nếu muốn ngang */
+    flex-direction: column;
+    /* nếu muốn dọc vẫn giữ, đổi sang row nếu muốn ngang */
     align-items: center;
     gap: 10px;
   }
 
   .logo {
-    height: 100px; /* thu nhỏ logo trên mobile */
+    height: 100px;
+    /* thu nhỏ logo trên mobile */
   }
 
   .Function {
-    width: 100%; /* chiếm full width mobile */
-    height: auto; /* để chiều cao tự động */
+    width: 100%;
+    /* chiếm full width mobile */
+    height: auto;
+    /* để chiều cao tự động */
     padding: 5px;
-   
+
   }
 
   /* Footer vẫn căn giữa, nút nhỏ hơn */
@@ -235,7 +442,8 @@ border-radius: 15px;
   }
 
   .btn {
-    width: 120px; /* nút nhỏ hơn mobile */
+    width: 120px;
+    /* nút nhỏ hơn mobile */
     height: 35px;
   }
 
@@ -249,14 +457,19 @@ border-radius: 15px;
     padding: 6px 8px;
   }
 }
+
 @media only screen and (max-width: 600px) {
   .imgea {
-    width: 200px; /* thu nhỏ chiều ngang */
-    height: auto; /* giữ tỉ lệ ảnh */
+    width: 200px;
+    /* thu nhỏ chiều ngang */
+    height: auto;
+    /* giữ tỉ lệ ảnh */
   }
 }
+
 .btn.active {
-  background: #762f0b; /* màu nâu đậm khi active */
+  background: #762f0b;
+  /* màu nâu đậm khi active */
   color: #fff;
   border: none;
 }
@@ -281,6 +494,7 @@ border-radius: 15px;
     /* border: 2px solid #fff; */
   }
 }
+
 /* .menuBtn {
   display: inline-block;       
   border: 1.5px solid #762f0b;
@@ -311,8 +525,9 @@ border-radius: 15px;
    ----------------------- */
 .menuBtn {
   /* nếu muốn giữ đều nhau, đặt width cụ thể, nếu muốn co giãn: chuyển sang width: fit-content */
-  width: 170px;  
-  height: 29px;              /* <-- giữ kích thước cố định cho 5 nút đầu */
+  width: 170px;
+  height: 29px;
+  /* <-- giữ kích thước cố định cho 5 nút đầu */
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -331,9 +546,11 @@ border-radius: 15px;
    ----------------------- */
 .bottomTwo {
   display: flex;
-  flex-direction: column; /* nếu muốn dọc */
+  flex-direction: column;
+  /* nếu muốn dọc */
   gap: 20px;
-  align-items: center;    /* căn giữa theo stack */
+  align-items: center;
+  /* căn giữa theo stack */
   /* margin-top: 6px; */
 }
 
@@ -342,8 +559,10 @@ border-radius: 15px;
    ----------------------- */
 .menuBtnSmall {
   height: 29px;
-  display: inline-block;   /* cho nút co theo text */
-  width: fit-content;      /* chính xác: vừa đủ cho text + padding */
+  display: inline-block;
+  /* cho nút co theo text */
+  width: fit-content;
+  /* chính xác: vừa đủ cho text + padding */
   min-width: unset;
   border: 1.5px solid #EEEEEE;
   border-radius: 999px;
