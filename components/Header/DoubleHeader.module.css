@@ -1,7 +1,6 @@
 .header {
   background-color: #053c74;
-  border-bottom: 1px solid
-    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   position: fixed;
   top: 0;
   left: 0;
@@ -13,10 +12,14 @@
 .inner {
   display: flex;
   align-items: center;
+  width: 100%;
   max-width: 1260px;
+  /* Giữ giới hạn chiều rộng giống layout cũ */
   margin: auto;
   justify-content: space-between;
-  
+  padding: 0 clamp(10px, 2vw, 20px);
+  /* Padding nhẹ để không dính lề khi màn hình nhỏ */
+  box-sizing: border-box;
 }
 
 .links {
@@ -41,14 +44,14 @@
     border-color 100ms ease,
     color 100ms ease;
 
- @mixin hover {
-  color: #c2923f;
-  text-decoration: none;
-}
+  @mixin hover {
+    color: #c2923f;
+    text-decoration: none;
+  }
 
-&[data-active] {
-  color: #c2923f;
-}
+  &[data-active] {
+    color: #c2923f;
+  }
 
 }
 
@@ -78,6 +81,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -122,26 +126,5 @@
 }
 
 /* Tablet & small desktop: add side padding so logo/buttons don't hug edges */
-@media (width: 1024px) and (height: 768px) {
-  .inner {
-    padding: 0 50px;
-  }
-}
-
-@media (width: 1280px) and (height: 800px) {
-  .inner {
-    padding: 0 200px;
-  }
-}
-
-@media (width: 1366px) and (height: 1024px) {
-  .inner {
-    padding: 0 36px;
-  }
-}
-
-@media (width: 1180px) and (height: 820px) {
-  .inner {
-    padding: 0 100px;
-  }
-}
+/* Đã xóa các media query fix cứng độ phân giải.
+   Padding giờ được xử lý tự động bởi clamp() trong .inner ở trên. */

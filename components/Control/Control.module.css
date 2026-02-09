@@ -5,8 +5,8 @@
   display: flex;
   aspect-ratio: 16/9;
   /* Tỉ lệ khung hình linh hoạt */
-  max-height: calc(100vh - 100px);
-  /* Trừ đi header (80px) + padding */
+  max-height: calc(100vh - 220px);
+  /* Trừ Header (80px) + Footer (~140px) */
   /* Không vượt quá chiều cao màn hình */
   box-sizing: border-box;
   overflow: hidden;
