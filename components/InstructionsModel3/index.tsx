@@ -15,21 +15,21 @@ export default function PdfViewer() {
   };
 
   return (
-    <div  className={styles.pdfContainer}>
-         <iframe
-      src="/huong-dan/hdsd_ciputra_nen.pdf"
-      width="100%"
-      height="700px"
-      style={{ border: "none" }}
-    ></iframe>
+    <div className={styles.pdfContainer}>
+      <iframe
+        src="/huong-dan/hdsd_ciputra_nen.pdf"
+        width="100%"
+        className={styles.pdfFrame}
+        style={{ border: "none" }}
+      ></iframe>
       <Group justify="flex-end">
-    <Button
-        className={styles.backButton}
-        onClick={handleBack}
-        variant="filled"
-      >
-        <IconArrowLeft size={18} color="#EEEEEE" />
-      </Button>
+        <Button
+          className={styles.backButton}
+          onClick={handleBack}
+          variant="filled"
+        >
+          <IconArrowLeft size={18} color="#EEEEEE" />
+        </Button>
       </Group>
     </div>
     
