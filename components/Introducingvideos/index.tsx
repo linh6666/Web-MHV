@@ -49,8 +49,7 @@ export default function VideoPage() {
         className={styles.videoIframe}
         src="https://www.youtube.com/embed/AqJ79mQDtZA?autoplay=1&mute=1"
         title="Video giới thiệu"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
         allowFullScreen
       ></iframe>
 
