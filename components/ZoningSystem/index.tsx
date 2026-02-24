@@ -96,10 +96,6 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
     <div
       key={item.id}
       className={styles.overlaySvg}
-      style={{
-        top: `${item.topPercent}%`,
-        left: `${item.leftPercent}%`,
-      }}
       dangerouslySetInnerHTML={{ __html: item.svg }}
     />
   );

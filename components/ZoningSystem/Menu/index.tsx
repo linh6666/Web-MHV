@@ -157,7 +157,7 @@ useEffect(() => {
         {loading ? (
           <Loader color="orange" />
         ) : menuItems.length > 0 ? (
-          <Stack align="center" style={{ gap: "20px", marginTop: "15px" }}>
+          <Stack align="center" className={styles.menuStack}>
             {menuItems.map((item) => (
               <Button
                 key={item.label}
