@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./Menu.module.css";
-import { Button, Group, Image, Loader, Text } from "@mantine/core";
+import { Button, Group, Image, Loader, Text, Stack } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifiterutilities";
@@ -132,24 +132,25 @@ export default function Menu({
       <div className={styles.Function}>
         {loading ? (
           <Loader color="orange" />
-        ) : menuItems.length > 0 ? (
-          <div className={styles.scroll} style={{ marginTop: "5px" }}>
-            {menuItems.map((item, index) => (
-              <Button
-                key={index}
-                className={styles.menuBtn}
-                onClick={() => {
-                  handleSelectModel(item.label);
-                  onSelectModel?.(item.label);
-                }}
-                variant="outline"
-                style={{ margin: "8px", fontSize: "9px" }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </div>
-        ) : (
+         ) : menuItems.length > 0 ? (
+           <Stack align="center" className={styles.menuStack}>
+             {menuItems.map((item, index) => (
+               <Button
+                 key={index}
+                 className={`${styles.menuBtn} ${
+                   item.label.length >= 20 ? styles.menuBtnLong : ""
+                 }`}
+                 onClick={() => {
+                   handleSelectModel(item.label);
+                   onSelectModel?.(item.label);
+                 }}
+                 variant="outline"
+               >
+                 {item.label}
+               </Button>
+             ))}
+           </Stack>
+         ) : (
           <Text mt="md" c="dimmed">
             Không có dữ liệu hiển thị
           </Text>
