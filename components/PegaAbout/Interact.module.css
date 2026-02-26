@@ -41,26 +41,16 @@
    CARD GRID
 ========================= */
 .cardGrid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
-  grid-template-columns: repeat(1, 1fr);
-}
-
-/* Tablet */
-@media (min-width: 768px) {
-  .cardGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-  .cardGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  justify-content: center;
+  width: 100%;
 }
 
 .card {
+  width: 100%;
+  max-width: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
