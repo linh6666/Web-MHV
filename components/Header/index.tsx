@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import {
-  Anchor,
   Box,
   Burger,
   Group,
@@ -11,6 +10,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconPhoneCall } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
@@ -18,9 +18,8 @@ import UserIcon from "./User/index";
 /* ============ Menu config ============ */
 const mainLinks = [
   {
-    link: "https://sunshinegroup.vn/",
+    link: "/gioi-thieu",
     label: "GIỚI THIỆU",
-    external: true,
   },
   {
     link: "/tuong-tac",
@@ -67,7 +66,6 @@ export default function Header() {
     try {
       const decoded = jwtDecode<DecodedToken>(token);
 
-      // ❗ token hết hạn → coi như chưa đăng nhập
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem("token");
         localStorage.removeItem("access_token");
@@ -84,39 +82,30 @@ export default function Header() {
     }
   }, []);
 
-  /* ============ Filter menu (LOGIC CHUẨN THEO YÊU CẦU) ============ */
+  /* ============ Filter menu ============ */
   const publicLabels = [
     "GIỚI THIỆU",
     "MÔ HÌNH TƯƠNG TÁC",
   ];
 
   const visibleLinks = mainLinks.filter((link) => {
-    // ❌ Không phải superuser (kể cả chưa login) → chỉ 2 menu
     if (!isSuperUser) {
       return publicLabels.includes(link.label);
     }
-
-    // 👑 Superuser → tất cả
     return true;
   });
 
   /* ============ Render menu ============ */
   const mainItems = visibleLinks.map((item) => (
-    <Anchor
+    <Link
       key={item.label}
       href={item.link}
       className={classes.mainLink}
-      data-active={
-        !item.external && pathname.startsWith(item.link)
-          ? true
-          : undefined
-      }
+      data-active={pathname.startsWith(item.link) ? true : undefined}
       onClick={close}
-      target={item.external ? "_blank" : undefined}
-      rel={item.external ? "noopener noreferrer" : undefined}
     >
       {item.label}
-    </Anchor>
+    </Link>
   ));
 
   return (
@@ -145,7 +134,6 @@ export default function Header() {
             <IconPhoneCall size={17} color="#fff" stroke={1.5} />
           </IconCircle>
 
-          {/* UserIcon vẫn hiển thị, nếu muốn ẩn khi chưa login thì mình sửa thêm */}
           <UserIcon />
         </Box>
 
