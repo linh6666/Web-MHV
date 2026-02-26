@@ -71,13 +71,13 @@ export default function DetailInteractive() {
             </Center>
           ) : (
             projects.map((project) => (
-              <a
-                key={project.id}
-                href={project.link || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
-              >
+              // <a
+              //   key={project.id}
+              //   href={project.link || "#"}
+              //   target="_blank"
+              //   rel="noopener noreferrer"
+              //   style={{ textDecoration: "none" }}
+              // >
                 <Card
                   shadow="sm"
                   radius="md"
@@ -139,7 +139,7 @@ export default function DetailInteractive() {
                     )}
                   </Stack>
                 </Card>
-              </a>
+              // </a>
             ))
           )}
         </div>
