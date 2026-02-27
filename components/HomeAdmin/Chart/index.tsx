@@ -1,5 +1,5 @@
 // import { BarChart } from '@mantine/charts';
-import { data } from './Data';
+// import { data } from './Data';
 
 export default function Demo() {
   return (

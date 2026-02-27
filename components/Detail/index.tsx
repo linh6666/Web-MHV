@@ -23,29 +23,41 @@ interface ZoningSystemProps {
   layer7?: string | null;
 }
 
-export default function ZoningSystem({ project_id }: ZoningSystemProps) {
-  const [currentLayer7, setCurrentLayer7] = useState<string>("");
-  const [activeModels, setActiveModels] = useState<string[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+export default function ZoningSystem({
+  project_id,
+}: ZoningSystemProps) {
+  const [currentLayer7, setCurrentLayer7] =
+    useState<string>("");
 
-  // ===== URL PARAMS =====
+  const [activeModels, setActiveModels] = useState<string[]>(
+    []
+  );
+
+  const [selectedModel, setSelectedModel] =
+    useState<string | null>(null);
+
+  const [hasUserInteracted, setHasUserInteracted] =
+    useState(false);
+
+  const [opened, setOpened] = useState(false);
+  const [clickedModel, setClickedModel] =
+    useState<string | null>(null);
+
+  const [selectedProjectId, setSelectedProjectId] =
+    useState(project_id);
+
+  const transformRef =
+    useRef<ReactZoomPanPinchRef | null>(null);
+
+  // =============================
+  // URL PARAMS
+  // =============================
   const searchParams = useSearchParams();
   const urlPhase = searchParams.get("layer3");
   const urlLayer2 = searchParams.get("layer2");
 
   const [currentLayer2] = useState(urlLayer2 || "");
   const [currentPhase] = useState(urlPhase || "");
-
-  const [activeMode, setActiveMode] =
-    useState<"single" | "multi" | null>(null);
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
-
-  const [opened, setOpened] = useState(false);
-  const [clickedModel, setClickedModel] = useState<string | null>(null);
-  const [selectedProjectId, setSelectedProjectId] =
-    useState(project_id);
-
-  const transformRef = useRef<ReactZoomPanPinchRef | null>(null);
 
   // =============================
   // LAYER 7 CHANGE
@@ -59,7 +71,9 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   // =============================
   const filteredPaths = useMemo(() => {
     if (!activeModels || activeModels.length === 0) {
-      console.log("❌ Không có activeModels → Không hiển thị SVG");
+      console.log(
+        "❌ Không có activeModels → Không hiển thị SVG"
+      );
       return [];
     }
 
@@ -74,6 +88,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         svgDoc.querySelectorAll("rect, path, circle")
       ).forEach((el) => {
         const elId = el.id || "";
+
         const cleanElId = elId
           .replace(/\s+/g, "_")
           .toUpperCase();
@@ -82,6 +97,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           const cleanModel = (model || "")
             .replace(/\s+/g, "_")
             .toUpperCase();
+
           return (
             cleanElId.includes(cleanModel) ||
             cleanModel.includes(cleanElId)
@@ -91,7 +107,6 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         if (isMatch) {
           el.removeAttribute("style");
 
-          // ✅ ADD — BẮT BUỘC để zoom & click
           el.setAttribute("data-model", elId);
           el.setAttribute("cursor", "pointer");
 
@@ -111,7 +126,9 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
               el.getAttribute("fill") ||
               "#fff";
 
-            if (!el.hasAttribute("data-original-fill")) {
+            if (
+              !el.hasAttribute("data-original-fill")
+            ) {
               el.setAttribute(
                 "data-original-fill",
                 originalFill
@@ -136,7 +153,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   }, [activeModels, selectedModel]);
 
   // =============================
-  // ZOOM FUNCTION (GIỮ NGUYÊN)
+  // ZOOM FUNCTION
   // =============================
   const zoomToModel = (modelId: string) => {
     const el = document.querySelector(
@@ -149,7 +166,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   };
 
   // =============================
-  // ZOOM KHI SELECT MODEL (GIỮ NGUYÊN)
+  // ZOOM KHI SELECT MODEL
   // =============================
   useEffect(() => {
     if (!transformRef.current) return;
@@ -169,7 +186,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   }, [filteredPaths, selectedModel, activeModels]);
 
   // =============================
-  // ✅ ADD: AUTO ZOOM VÀO RECT / PATH / CIRCLE ĐANG HIỂN THỊ
+  // AUTO ZOOM FIRST ELEMENT
   // =============================
   useEffect(() => {
     if (!transformRef.current) return;
@@ -199,6 +216,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
     const model = (e.target as SVGElement).getAttribute(
       "data-model"
     );
+
     if (!model) return;
 
     setOpened(false);
@@ -214,9 +232,10 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   // =============================
   // MENU SELECT MODEL
   // =============================
-  const handleModelSelect = (modelName: string | null) => {
+  const handleModelSelect = (
+    modelName: string | null
+  ) => {
     setHasUserInteracted(true);
-    setActiveMode("single");
 
     if (!modelName) {
       setSelectedModel(null);
@@ -244,6 +263,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
       />
 
       <div className={styles.box}>
+        {/* LEFT */}
         <div className={styles.left}>
           <TransformWrapper
             ref={transformRef}
@@ -278,6 +298,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           </TransformWrapper>
         </div>
 
+        {/* RIGHT */}
         <div className={styles.right}>
           <Menu
             project_id={project_id}
@@ -291,4 +312,3 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
     </>
   );
 }
-

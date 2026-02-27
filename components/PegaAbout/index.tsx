@@ -70,77 +70,62 @@ export default function DetailInteractive() {
               <Loader />
             </Center>
           ) : (
-            projects.map((project) => (
-              // <a
-              //   key={project.id}
-              //   href={project.link || "#"}
-              //   target="_blank"
-              //   rel="noopener noreferrer"
-              //   style={{ textDecoration: "none" }}
-              // >
-                <Card
-                  shadow="sm"
-                  radius="md"
-                  withBorder
-                  padding="0"
-                  className={styles.card}
-                >
-                  {/* ===== Ảnh ===== */}
-                  <Image
-                    src={
-                      project.overview_image ??
-                      "/image/default-project.jpg"
-                    }
-                    height={180}
-                    alt={project.name}
-                    fallbackSrc="/image/default-project.jpg"
-                    style={{
-                      borderTopLeftRadius: "var(--mantine-radius-md)",
-                      borderTopRightRadius: "var(--mantine-radius-md)",
-                    }}
-                  />
+           projects.map((project) => (
+  <Card
+    key={project.id}
+    shadow="sm"
+    radius="md"
+    withBorder
+    padding="0"
+    className={styles.card}
+  >
+    {/* ===== Ảnh ===== */}
+    <Image
+      src={
+        project.overview_image ??
+        "/image/default-project.jpg"
+      }
+      height={180}
+      alt={project.name}
+      fallbackSrc="/image/default-project.jpg"
+      style={{
+        borderTopLeftRadius: "var(--mantine-radius-md)",
+        borderTopRightRadius: "var(--mantine-radius-md)",
+      }}
+    />
 
-                  {/* ===== Nội dung ===== */}
-                  <Stack gap={6} p="md" style={{ flexGrow: 1 }}>
-                    {/* Tên */}
-                    <Text fw={600} size="md" lineClamp={1}>
-                      {project.name}
-                    </Text>
+    {/* ===== Nội dung ===== */}
+    <Stack gap={6} p="md" style={{ flexGrow: 1 }}>
+      <Text fw={600} size="md" lineClamp={1}>
+        {project.name}
+      </Text>
 
-                    {/* Loại dự án */}
-                    <Text size="sm">
-                      <Text span c="dimmed">
-                        Loại dự án: {project.type ?? "Thông tin chưa có"}
-                      </Text>
-                     
-                    </Text>
+      <Text size="sm">
+        <Text span c="dimmed">
+          Loại dự án: {project.type ?? "Thông tin chưa có"}
+        </Text>
+      </Text>
 
-                    {/* Địa chỉ */}
-                    <Text size="sm">
-                      <Text span c="dimmed">
-                        Địa chỉ:  {project.address ?? "Địa chỉ chưa có"}
-                      </Text>
-                   
-                    </Text>
+      <Text size="sm">
+        <Text span c="dimmed">
+          Địa chỉ: {project.address ?? "Địa chỉ chưa có"}
+        </Text>
+      </Text>
 
-                    {/* Nhà đầu tư */}
-                    <Text size="sm">
-                      <Text span c="dimmed">
-                        Nhà đầu tư: {project.investor ?? "Thông tin chưa có"}
-                      </Text>
-                     
-                    </Text>
+      <Text size="sm">
+        <Text span c="dimmed">
+          Nhà đầu tư: {project.investor ?? "Thông tin chưa có"}
+        </Text>
+      </Text>
 
-                    {/* Rank nếu có */}
-                    {project.rank_name && (
-                      <Badge mt={4} size="sm" variant="light" color="blue">
-                        Hạng: {project.rank_name}
-                      </Badge>
-                    )}
-                  </Stack>
-                </Card>
-              // </a>
-            ))
+      {project.rank_name && (
+        <Badge mt={4} size="sm" variant="light" color="blue">
+          Hạng: {project.rank_name}
+        </Badge>
+      )}
+    </Stack>
+  </Card>
+))
           )}
         </div>
 

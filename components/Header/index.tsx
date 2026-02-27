@@ -17,22 +17,10 @@ import UserIcon from "./User/index";
 
 /* ============ Menu config ============ */
 const mainLinks = [
-  {
-    link: "/gioi-thieu",
-    label: "GIỚI THIỆU",
-  },
-  {
-    link: "/tuong-tac",
-    label: "MÔ HÌNH TƯƠNG TÁC",
-  },
-  {
-    link: "/quan-tri-du-an",
-    label: "QUẢN TRỊ DỰ ÁN",
-  },
-  {
-    link: "/quan-ly-he-thong",
-    label: "QUẢN TRỊ HỆ THỐNG",
-  },
+  { link: "/gioi-thieu", label: "GIỚI THIỆU" },
+  { link: "/tuong-tac", label: "MÔ HÌNH TƯƠNG TÁC" },
+  { link: "/quan-tri-du-an", label: "QUẢN TRỊ DỰ ÁN" },
+  { link: "/quan-ly-he-thong", label: "QUẢN TRỊ HỆ THỐNG" },
 ];
 
 /* ============ Token interface ============ */
@@ -48,7 +36,6 @@ export default function Header() {
   const pathname = usePathname();
 
   /* ============ Auth state ============ */
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSuperUser, setIsSuperUser] = useState(false);
 
   /* ============ Check token ============ */
@@ -58,7 +45,6 @@ export default function Header() {
       localStorage.getItem("access_token");
 
     if (!token) {
-      setIsLoggedIn(false);
       setIsSuperUser(false);
       return;
     }
@@ -66,18 +52,16 @@ export default function Header() {
     try {
       const decoded = jwtDecode<DecodedToken>(token);
 
+      // Check token expiration
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem("token");
         localStorage.removeItem("access_token");
-        setIsLoggedIn(false);
         setIsSuperUser(false);
         return;
       }
 
-      setIsLoggedIn(true);
       setIsSuperUser(decoded?.is_superuser === true);
     } catch {
-      setIsLoggedIn(false);
       setIsSuperUser(false);
     }
   }, []);
@@ -101,7 +85,9 @@ export default function Header() {
       key={item.label}
       href={item.link}
       className={classes.mainLink}
-      data-active={pathname.startsWith(item.link) ? true : undefined}
+      data-active={
+        pathname.startsWith(item.link) ? true : undefined
+      }
       onClick={close}
     >
       {item.label}
@@ -123,22 +109,36 @@ export default function Header() {
 
         {/* ============ Menu desktop ============ */}
         <Box className={classes.links} visibleFrom="sm">
-          <Group gap="md" justify="flex-end" className={classes.mainLinks}>
+          <Group
+            gap="md"
+            justify="flex-end"
+            className={classes.mainLinks}
+          >
             {mainItems}
           </Group>
         </Box>
 
         {/* ============ Icons desktop ============ */}
-        <Box visibleFrom="sm" style={{ display: "flex", gap: "20px" }}>
+        <Box
+          visibleFrom="sm"
+          style={{ display: "flex", gap: "20px" }}
+        >
           <IconCircle>
-            <IconPhoneCall size={17} color="#fff" stroke={1.5} />
+            <IconPhoneCall
+              size={17}
+              color="#fff"
+              stroke={1.5}
+            />
           </IconCircle>
 
           <UserIcon />
         </Box>
 
         {/* ============ Burger mobile ============ */}
-        <Box hiddenFrom="sm" style={{ paddingLeft: 12, paddingRight: 12 }}>
+        <Box
+          hiddenFrom="sm"
+          style={{ paddingLeft: 12, paddingRight: 12 }}
+        >
           <Burger
             opened={opened}
             onClick={toggle}
@@ -151,8 +151,13 @@ export default function Header() {
 
       {/* ============ Menu mobile ============ */}
       {opened && (
-        <Box className={classes.mobileMenu} hiddenFrom="sm">
-          <Box className={classes.mobileLinks}>{mainItems}</Box>
+        <Box
+          className={classes.mobileMenu}
+          hiddenFrom="sm"
+        >
+          <Box className={classes.mobileLinks}>
+            {mainItems}
+          </Box>
 
           <Box
             style={{
@@ -164,7 +169,11 @@ export default function Header() {
             }}
           >
             <IconCircle>
-              <IconPhoneCall size={17} color="#fff" stroke={1.5} />
+              <IconPhoneCall
+                size={17}
+                color="#fff"
+                stroke={1.5}
+              />
             </IconCircle>
 
             <UserIcon />
@@ -176,7 +185,11 @@ export default function Header() {
 }
 
 /* ============ Icon wrapper dùng chung ============ */
-function IconCircle({ children }: { children: React.ReactNode }) {
+function IconCircle({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Box
       style={{
