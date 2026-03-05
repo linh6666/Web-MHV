@@ -1,34 +1,15 @@
 "use client";
 
-import { Image, Modal, Text } from "@mantine/core";
+import { Image, Modal, Text, Loader, Center } from "@mantine/core";
 import React, { useEffect, useState, useCallback } from "react";
 import { Getlisthome } from "../../../../api/apiGetListHome";
 
 interface DataDetail {
   id: number;
   unit_code: string;
-
-layer6?:string;
-
-  layer1?: string;
-  layer2?: string;
-  layer3?: string;
-  zone?: string;
-  building_type?: string;
-  bedroom?: number | string;
-  bathroom?: number | string;
-  view?: string;
-  status_unit?: string;
-  price?: number;
+  layer6?: string;
   describe?: string;
   describe_vi?: string;
-  main_door_direction?: string;
-  balcony_direction?: string;
-  direction?: string;
-  url?: string;
-  name_vi?: string;
-  name_en?: string;
-  description_en?: string;
 }
 
 interface HomeDetailItem {
@@ -36,13 +17,9 @@ interface HomeDetailItem {
   unit_code: string;
   name_vi?: string;
   name_en?: string;
-  describe_vi?: string;
+  description_vi?: string;
   description_en?: string;
   url?: string;
-  direction?: string;
-  bedroom?: number;
-  bathroom?: string;
-  price?: number;
 }
 
 interface ModalItemProps {
@@ -52,92 +29,94 @@ interface ModalItemProps {
   projectId: string | null;
 }
 
-export default function ModalItem({ opened, onClose, data, projectId }: ModalItemProps) {
+export default function ModalItem({
+  opened,
+  onClose,
+  data,
+  projectId,
+}: ModalItemProps) {
   const [homeData, setHomeData] = useState<HomeDetailItem[]>([]);
   const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  // Lọc ảnh từ data.url
-  const imageData = data?.url?.match(/\.(jpg|jpeg|png|gif)$/i)
-    ? [data]
-    : [];
-
-  // Call API Getlisthome
+  // ================= FETCH API =================
   const fetchHomeData = useCallback(async () => {
     if (!projectId || !data?.unit_code) return;
 
     try {
+      setLoading(true);
+
       const response = await Getlisthome({
         project_id: projectId,
         unit_code: data.unit_code,
       });
-      setHomeData(response as HomeDetailItem[]);
+
+      setHomeData(response || []);
     } catch (error) {
-      console.error("❌ Getlisthome error:", error);
+      console.error("Getlisthome error:", error);
       setHomeData([]);
+    } finally {
+      setLoading(false);
     }
   }, [projectId, data?.unit_code]);
 
   useEffect(() => {
     if (!opened || !data) return;
+
     fetchHomeData();
-    setIndex(0); // reset slider khi mở modal
+    setIndex(0);
   }, [opened, data, fetchHomeData]);
+
+  // ================= IMAGE DATA =================
+  const imageData = homeData.filter((item) =>
+    item.url?.match(/\.(jpg|jpeg|png|gif)$/i)
+  );
 
   const currentImage = imageData[index];
 
+  // ================= SLIDER =================
   const goNext = () => {
-    if (index < imageData.length - 1) setIndex((prev) => prev + 1);
+    if (index < imageData.length - 1) {
+      setIndex((prev) => prev + 1);
+    }
   };
 
   const goPrev = () => {
-    if (index > 0) setIndex((prev) => prev - 1);
+    if (index > 0) {
+      setIndex((prev) => prev - 1);
+    }
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Chi tiết dữ liệu" size="70%">
+    <Modal opened={opened} onClose={onClose} title="Chi tiết căn hộ" size="70%">
       {!data ? (
-        <Text size="lg" fw={500}>Không có dữ liệu</Text>
+        <Text size="lg" fw={500}>
+          Không có dữ liệu
+        </Text>
       ) : (
-        <div style={{ display: "flex", gap: "20px", height: "80vh" }}>
+        <div style={{ display: "flex", gap: 20, height: "80vh" }}>
           {/* ================= LEFT ================= */}
           <div style={{ flex: 1 }}>
             <Text fw={700} mb={12} fz={18}>
-              Chi tiết căn hộ: {data.layer6
-}
-            </Text>
-            {/* <Text>Tòa: {data.layer3}</Text>
-            <Text>
-              {data.building_type
-                ? `Loại công trình: ${data.building_type}`
-                : `Vị trí: ${data.layer2}`}
-            </Text>
-            <Text>Phòng ngủ: {data.bedroom}</Text>
-            <Text>
-              Phòng tắm:{" "}
-              {data.bathroom?.toString().trim().toLowerCase() === "skip"
-                ? "chưa có"
-                : data.bathroom}
-            </Text>
-            <Text>Cảnh quan: {data.view}</Text>
-            <Text>Trạng thái: {data.status_unit}</Text>
-            <Text>
-              Giá: {data.price ? `${data.price.toLocaleString()}đ` : "Chưa có"}
-            </Text> */}
-            <Text mt={8}>
-              <b>Mô tả:</b> {data.describe_vi || data.describe}
+              Chi tiết căn hộ: {data.layer6}
             </Text>
 
-            {/* ====== Getlisthome ====== */}
-            {homeData.length > 0 && (
-              <div style={{ marginTop: "12px" }}>
+            <Text mt={8}>
+              <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
+            </Text>
+
+            {/* ===== thông tin bổ sung ===== */}
+            {/* {homeData.length > 0 && (
+              <div style={{ marginTop: 16 }}>
                 <Text fw={600}>Thông tin bổ sung:</Text>
-                {homeData.map((h) => (
-                  <Text key={h.id}>
-                    👉 {h.name_vi || h.name_en}
+
+                {homeData.map((item) => (
+                  <Text key={item.id}>
+                    👉 {item.name_vi || item.name_en || "Không có tên"}
                   </Text>
                 ))}
               </div>
-            )}
+            )} */}
           </div>
 
           {/* ================= RIGHT ================= */}
@@ -149,56 +128,92 @@ export default function ModalItem({ opened, onClose, data, projectId }: ModalIte
               alignItems: "center",
             }}
           >
-            {currentImage && (
-              <div style={{ position: "relative", marginBottom: "20px" }}>
-                <Image
-                  src={currentImage.url || ""}
-                  alt={currentImage.description_en || ""}
-                  width={800}
-                  height={600}
-                  style={{ maxWidth: "100%", height: "auto", borderRadius: "8px" }}
-                />
+            {loading ? (
+              <Center style={{ height: "400px" }}>
+                <Loader />
+              </Center>
+            ) : (
+              <>
+                {/* ====== IMAGE ====== */}
+                {currentImage && (
+                  <div style={{ position: "relative", marginBottom: 20 }}>
+                    <Image
+                      src={currentImage.url || ""}
+                      alt=""
+                      width={800}
+                      height={600}
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        borderRadius: 8,
+                      }}
+                    />
 
-                <button
-                  onClick={goPrev}
-                  disabled={index === 0}
-                  style={{ position: "absolute", left: 10, top: "50%" }}
-                >
-                  ◀
-                </button>
+                    {/* prev */}
+                    <button
+                      onClick={goPrev}
+                      disabled={index === 0}
+                      style={{
+                        position: "absolute",
+                        left: 10,
+                        top: "50%",
+                        cursor: "pointer",
+                      }}
+                    >
+                      ◀
+                    </button>
 
-                <button
-                  onClick={goNext}
-                  disabled={index === imageData.length - 1}
-                  style={{ position: "absolute", right: 10, top: "50%" }}
-                >
-                  ▶
-                </button>
-              </div>
-            )}
+                    {/* next */}
+                    <button
+                      onClick={goNext}
+                      disabled={index === imageData.length - 1}
+                      style={{
+                        position: "absolute",
+                        right: 10,
+                        top: "50%",
+                        cursor: "pointer",
+                      }}
+                    >
+                      ▶
+                    </button>
+                  </div>
+                )}
 
-            {/* ====== THUMBNAIL ====== */}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              {imageData.map((img, i) => (
+                {/* ===== THUMBNAIL ===== */}
                 <div
-                  key={img.id}
-                  onClick={() => setIndex(i)}
                   style={{
-                    border: i === index ? "2px solid blue" : "1px solid #ccc",
-                    cursor: "pointer",
-                    borderRadius: "4px",
+                    display: "flex",
+                    gap: 10,
+                    flexWrap: "wrap",
+                    justifyContent: "center",
                   }}
                 >
-                  <Image
-                    src={img.url || ""}
-                    width={80}
-                    height={60}
-                    alt=""
-                    style={{ objectFit: "cover" }}
-                  />
+                  {imageData.map((img, i) => (
+                    <div
+                      key={img.id}
+                      onClick={() => setIndex(i)}
+                      style={{
+                        border:
+                          i === index
+                            ? "2px solid #3d6985"
+                            : "1px solid #ccc",
+                        cursor: "pointer",
+                        borderRadius: 4,
+                        padding: 2,
+                      }}
+                    >
+                      <Image
+                        src={img.url || ""}
+                        width={80}
+                        height={60}
+                        alt=""
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </div>
         </div>
       )}
