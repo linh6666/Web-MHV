@@ -1,0 +1,20 @@
+.thumbScroll {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.thumbScroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.thumbScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thumbScroll::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+.thumbScroll::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}

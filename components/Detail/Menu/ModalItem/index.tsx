@@ -3,6 +3,7 @@
 import { Image, Modal, Text, Loader, Center } from "@mantine/core";
 import React, { useEffect, useState, useCallback } from "react";
 import { Getlisthome } from "../../../../api/apiGetListHome";
+import styles from "./ModalItem.module.css";
 
 interface DataDetail {
   id: number;
@@ -105,21 +106,10 @@ export default function ModalItem({
               <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
             </Text>
 
-            {/* ===== thông tin bổ sung ===== */}
-            {/* {homeData.length > 0 && (
-              <div style={{ marginTop: 16 }}>
-                <Text fw={600}>Thông tin bổ sung:</Text>
-
-                {homeData.map((item) => (
-                  <Text key={item.id}>
-                    👉 {item.name_vi || item.name_en || "Không có tên"}
-                  </Text>
-                ))}
-              </div>
-            )} */}
+        
           </div>
 
-          {/* ================= RIGHT ================= */}
+    
           <div
             style={{
               flex: 2,
@@ -137,18 +127,19 @@ export default function ModalItem({
                 {/* ====== IMAGE ====== */}
                 {currentImage && (
                   <div style={{ position: "relative", marginBottom: 20 }}>
-                    <Image
-                      src={currentImage.url || ""}
-                      alt=""
-                      width={800}
-                      height={600}
-                      style={{
-                        maxWidth: "100%",
-                        height: "auto",
-                        borderRadius: 8,
-                      }}
-                    />
-
+      <Image
+  src={currentImage.url || ""}
+  alt=""
+  width={800}
+  height={500}
+  style={{
+    width: "800px",
+    height: "500px",
+    objectFit: "contain",
+    borderRadius: 8,
+    background: "#f5f5f5",
+  }}
+/>
                     {/* prev */}
                     <button
                       onClick={goPrev}
@@ -179,39 +170,40 @@ export default function ModalItem({
                   </div>
                 )}
 
-                {/* ===== THUMBNAIL ===== */}
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                  }}
-                >
-                  {imageData.map((img, i) => (
-                    <div
-                      key={img.id}
-                      onClick={() => setIndex(i)}
-                      style={{
-                        border:
-                          i === index
-                            ? "2px solid #3d6985"
-                            : "1px solid #ccc",
-                        cursor: "pointer",
-                        borderRadius: 4,
-                        padding: 2,
-                      }}
-                    >
-                      <Image
-                        src={img.url || ""}
-                        width={80}
-                        height={60}
-                        alt=""
-                        style={{ objectFit: "cover" }}
-                      />
-                    </div>
-                  ))}
-                </div>
+               
+{/* ===== THUMBNAIL ===== */}
+<div
+  className={styles.thumbScroll}
+  style={{
+    display: "flex",
+    gap: 10,
+    overflowX: "auto",
+    maxWidth: "100%",
+    paddingBottom: 10,
+  }}
+>
+  {imageData.map((img, i) => (
+    <div
+      key={img.id}
+      onClick={() => setIndex(i)}
+      style={{
+        border: i === index ? "2px solid #3d6985" : "1px solid #ccc",
+        cursor: "pointer",
+        borderRadius: 4,
+        padding: 2,
+        flex: "0 0 auto",
+      }}
+    >
+      <Image
+        src={img.url || ""}
+        width={80}
+        height={60}
+        alt=""
+        style={{ objectFit: "cover" }}
+      />
+    </div>
+  ))}
+</div>
               </>
             )}
           </div>
