@@ -11,6 +11,7 @@ interface MenuProps {
   project_id: string | null;
   onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
+  onHighlightCodes?: (codes: string[]) => void;
 }
 
 interface MenuItem {
@@ -27,6 +28,7 @@ export default function Menu({
   project_id,
   onModelsLoaded,
   onSelectModel,
+  onHighlightCodes,
 }: MenuProps) {
   const router = useRouter();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -100,14 +102,20 @@ export default function Menu({
         project_id,
         filters: [
           { label: "layer8", values: ["ti", "ct;ti"] },
-             { label: "layer7", values: [modelName] }
-          
+          { label: "layer7", values: [modelName] },
         ],
       });
 
-      console.log("📦 Dữ liệu model cụ thể:", result);
+      if (result?.data && Array.isArray(result.data)) {
+        const codes = result.data
+          .map((item: NodeAttributeItem) => item.unit_code)
+          .filter((code: string | undefined): code is string => Boolean(code));
+
+        // CHỈ gửi codes để highlight, KHÔNG gọi onModelsLoaded để tránh làm ẩn các SVG khác
+        onHighlightCodes?.(codes);
+      }
     } catch (error) {
-      console.error("❌ Lỗi khi gọi lại API model:", error);
+      console.error("❌ Lỗi khi lọc theo tiện ích:", error);
     }
   };
 

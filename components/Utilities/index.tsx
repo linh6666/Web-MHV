@@ -14,84 +14,80 @@ interface ZoningSystemProps {
 
 export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   const [activeModels, setActiveModels] = useState<string[]>([]);
-   const [selectedModel, setSelectedModel] = useState<string | null>(null);
-        const filteredPaths = useMemo(() => {
-          if (!activeModels || activeModels.length === 0) {
-            console.log("❌ Không có activeModels → Không hiển thị SVG");
-            return [];
-          }
-        
-          console.log("👉 activeModels từ API:", activeModels);
-        
-          const result = pathsData.map((item: SvgItem) => {
-            console.log("🟦 SVG đang xử lý:", item.id);
-        
-            const parser = new DOMParser();
-            const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
-        
-            Array.from(svgDoc.querySelectorAll("rect, path,circle")).forEach((el) => {
-              const elId = el.id || "";
-              const cleanElId = elId.replace(/\s+/g, "_").toUpperCase();
-        
-              // So sánh với activeModels → chuẩn hóa tên
-              const isMatch = activeModels.some((model) => {
-                const cleanModel = (model || "").replace(/\s+/g, "_").toUpperCase();
-                return cleanElId.includes(cleanModel) || cleanModel.includes(cleanElId);
-              });
-        
-              if (elId) {
-                console.log(
-                  isMatch ? "✅ MATCH → SVG hiển thị:" : "⛔ HIDE →",
-                  elId
-                );
-              }
-        
-              if (isMatch) {
-                el.removeAttribute("style");
-                if (selectedModel && cleanElId.includes(selectedModel.replace(/\s+/g, "_").toUpperCase())) {
-                  el.setAttribute("fill", "#bb8d38");
-                  el.setAttribute("stroke", "white");
-                } else {
-                  const originalFill =
-                    el.getAttribute("data-original-fill") || el.getAttribute("fill") || "#fff";
-                  if (!el.hasAttribute("data-original-fill")) el.setAttribute("data-original-fill", originalFill);
-                  el.setAttribute("fill", originalFill);
-                  el.removeAttribute("stroke");
-                }
-              } else {
-                el.setAttribute("style", "display:none");
-              }
-            });
-        
-            return {
-              ...item,
-              svg: svgDoc.documentElement.outerHTML,
-            };
-          });
-        
-          return result;
-        }, [activeModels, selectedModel]);
-            const handleModelSelect = (modelName: string) => {
-    setSelectedModel((prev) => (prev === modelName ? null : modelName));
+  const [highlightedCodes, setHighlightedCodes] = useState<string[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
-    // Zoom vào vùng SVG tương ứng (giả sử có id là modelName)
- 
+  const filteredPaths = useMemo(() => {
+    if (!activeModels || activeModels.length === 0) {
+      return [];
+    }
+
+    return pathsData.map((item: SvgItem) => {
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
+
+      Array.from(svgDoc.querySelectorAll("rect, path, circle")).forEach((el) => {
+        const elId = el.id || "";
+        const cleanElId = elId.replace(/\s+/g, "_").toUpperCase();
+
+        // Kiểm tra xem ID có thuộc danh sách hiển thị chung không
+        const isMatch = activeModels.some((model) => {
+          const cleanModel = (model || "").trim().replace(/\s+/g, "_").toUpperCase();
+          return cleanElId.includes(cleanModel) || cleanModel.includes(cleanElId);
+        });
+
+        // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
+        const isHighlighted = highlightedCodes.some((code) => {
+          const cleanCode = (code || "").trim().replace(/\s+/g, "_").toUpperCase();
+          return cleanElId.includes(cleanCode) || cleanCode.includes(cleanElId);
+        });
+
+        if (isMatch) {
+          el.removeAttribute("style"); // Luôn hiển thị nếu thuộc activeModels
+          
+          if (isHighlighted) {
+            // Tô màu vàng nhạt cho phần được chọn
+            el.setAttribute("fill", "#FFF59D");
+            el.setAttribute("stroke", "#C2923F");
+            el.setAttribute("stroke-width", "2");
+          } else {
+            // Trả về màu gốc nếu không được chọn
+            const originalFill =
+              el.getAttribute("data-original-fill") || el.getAttribute("fill") || "#fff";
+            if (!el.hasAttribute("data-original-fill")) el.setAttribute("data-original-fill", originalFill);
+            el.setAttribute("fill", originalFill);
+            el.removeAttribute("stroke");
+          }
+        } else {
+          el.setAttribute("style", "display:none");
+        }
+      });
+
+      return {
+        ...item,
+        svg: svgDoc.documentElement.outerHTML,
+      };
+    });
+  }, [activeModels, highlightedCodes]);
+
+  const handleModelSelect = (modelName: string) => {
+    setSelectedModel((prev) => (prev === modelName ? null : modelName));
   };
+
   return (
     <div className={styles.box}>
       <div className={styles.left}>
         <TransformWrapper
           initialScale={1}
-     minScale={1} 
+          minScale={1}
           maxScale={5}
           wheel={{ step: 0.2 }}
           doubleClick={{ disabled: true }}
         >
           <TransformComponent>
-        <div className={styles.imageWrapper}>
-          <Image src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
-
-       {filteredPaths.length > 0 ? (
+            <div className={styles.imageWrapper}>
+              <Image src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
+              {filteredPaths.length > 0 ? (
                 filteredPaths.map((item) => (
                   <div
                     key={item.id}
@@ -102,16 +98,17 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
               ) : (
                 <p>Không có SVG nào để hiển thị.</p>
               )}
-        </div>
-           </TransformComponent>
+            </div>
+          </TransformComponent>
         </TransformWrapper>
       </div>
 
       <div className={styles.right}>
-        {/* 👇 Truyền project_id sang Menu */}
-        <Menu project_id={project_id} 
-           onModelsLoaded={setActiveModels}
-             onSelectModel={handleModelSelect} 
+        <Menu
+          project_id={project_id}
+          onModelsLoaded={setActiveModels} // Dùng để load danh sách ban đầu
+          onHighlightCodes={setHighlightedCodes} // Dùng để highlight khi click nút
+          onSelectModel={handleModelSelect}
         />
       </div>
     </div>
