@@ -142,28 +142,34 @@ export default function Menu({
   }, [fetchData]);
 
   // ✅ CHỈ SỬA ĐOẠN LỖI CLICK NÚT
- const handleSelectModel = async (modelName: string) => {
-  if (!project_id || !phase) return;
+  const handleSelectModel = async (modelName: string) => {
+    if (!project_id || !phase) return;
 
-  try {
-    const result = await createNodeAttribute({
-      project_id,
-      filters: [
-        { label: "layer8", values: ["ct", "ct;ti"] },
-        { label: "layer7", values: [phase] },
-        { label: "layer6", values: [modelName] },
-      ],
-    });
+    try {
+      const result = await createNodeAttribute({
+        project_id,
+        filters: [
+          { label: "layer8", values: ["ct", "ct;ti"] },
+          { label: "layer7", values: [phase] },
+          { label: "layer6", values: [modelName] },
+        ],
+      });
 
-    const detail = result?.data?.[0];
-    if (!detail) return;
+      const detail = result?.data?.[0];
+      if (!detail) return;
 
-    setSelectedData(detail); // ✅ GÁN DATA
-    setOpened(true);         // ✅ MỞ MODAL
-  } catch (error) {
-    console.error("❌ Lỗi khi gọi lại API model:", error);
-  }
-};
+      setSelectedData(detail); 
+      setOpened(true);         
+      // ✅ Truyền unit_code để highlight đúng block SVG
+      if (detail.unit_code) {
+        onSelectModel?.(detail.unit_code);
+      } else {
+        onSelectModel?.(modelName);
+      }
+    } catch (error) {
+      console.error("❌ Lỗi khi gọi lại API model:", error);
+    }
+  };
 
 
   const handleBack = () => {
@@ -222,10 +228,7 @@ export default function Menu({
               <Button
                 key={index}
                 className={styles.menuBtn}
-                onClick={() => {
-                  handleSelectModel(item.label);
-                  onSelectModel?.(item.label);
-                }}
+                onClick={() => handleSelectModel(item.label)}
                 variant="filled"
                 color="orange"
                 style={{ marginBottom: "10px" }}
