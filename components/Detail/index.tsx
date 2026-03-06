@@ -88,36 +88,27 @@ export default function ZoningSystem({
         svgDoc.querySelectorAll("rect, path, circle")
       ).forEach((el) => {
         const elId = el.id || "";
-
-        const cleanElId = elId
-          .replace(/\s+/g, "_")
-          .toUpperCase();
+        // Chuẩn hóa: xóa sạch toàn bộ ký tự không phải chữ và số
+        const cleanElId = elId.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
 
         const isMatch = activeModels.some((model) => {
           const cleanModel = (model || "")
-            .replace(/\s+/g, "_")
+            .replace(/[^a-zA-Z0-9]/g, "")
             .toUpperCase();
-
-          return (
-            cleanElId.includes(cleanModel) ||
-            cleanModel.includes(cleanElId)
-          );
+          // SO SÁNH BẰNG TUYỆT ĐỐI
+          return cleanElId === cleanModel;
         });
 
         if (isMatch) {
           el.removeAttribute("style");
-
           el.setAttribute("data-model", elId);
           el.setAttribute("cursor", "pointer");
 
-          if (
-            selectedModel &&
-            cleanElId.includes(
-              selectedModel
-                .replace(/\s+/g, "_")
-                .toUpperCase()
-            )
-          ) {
+          const cleanSelected = selectedModel 
+            ? selectedModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase() 
+            : null;
+
+          if (cleanSelected && cleanElId === cleanSelected) {
             el.setAttribute("fill", "#bb8d38");
             el.setAttribute("stroke", "white");
           } else {
@@ -126,13 +117,8 @@ export default function ZoningSystem({
               el.getAttribute("fill") ||
               "#fff";
 
-            if (
-              !el.hasAttribute("data-original-fill")
-            ) {
-              el.setAttribute(
-                "data-original-fill",
-                originalFill
-              );
+            if (!el.hasAttribute("data-original-fill")) {
+              el.setAttribute("data-original-fill", originalFill);
             }
 
             el.setAttribute("fill", originalFill);
