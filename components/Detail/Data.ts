@@ -13,11 +13,23 @@ export const pathsData: SvgItem[] = [
     svg: `
 <svg xmlns="http://www.w3.org/2000/svg" width="975" height="880" viewBox="0 0 1517.492 928.682">
   <g id="SUNSHINE_EMPIRE" data-name="SUNSHINE EMPIRE" transform="translate(-16.672 -76.041)">
-    <path id="SE.T5" d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" transform="matrix(0.951, 0.309, -0.309, 0.951, 292.484, -148.137)" fill="#ffed95" opacity="0.6"/>
-    <rect id="SE.T4" width="32" height="32" transform="translate(330 655)" fill="#ffed95" opacity="0.6"/>
-    <rect id="SE.T3" width="32" height="32" transform="translate(330 688)" fill="#ffed95" opacity="0.6"/>
-    <path id="SE.T2" d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" fill="#ffed95" opacity="0.6"/>
-    <path id="SE.T1" d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" transform="matrix(0.951, 0.309, -0.309, 0.951, 292.484, -58.137)" fill="#ffed95" opacity="0.6"/>
+    <path id="SE.T5" 
+    d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" 
+    transform="matrix(0.951, 0.309, -0.309, 0.951, 300.484, -153.137)" 
+    fill="#ffed95" opacity="0.6"/>
+    <rect id="SE.T4" width="32" height="32" transform="translate(340 655)" fill="#ffed95" opacity="0.6"/>
+    <rect id="SE.T3" 
+    width="32" height="32" 
+    transform="translate(340 688)" 
+    fill="#ffed95" opacity="0.6"/>
+    <path id="SE.T2" 
+    d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z"
+    transform="translate(10,-5)"
+     fill="#ffed95" opacity="0.6"/>
+    <path id="SE.T1" 
+    d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" 
+    transform="matrix(0.951, 0.309, -0.309, 0.951, 300.484, -61.137)" 
+    fill="#ffed95" opacity="0.6"/>
   </g>
   <path id="SUNSHINE_EMPIRE-2" data-name="SUNSHINE EMPIRE" d="M-17681.09-22147.248c-1.066,1.424-17.072,91.77-16.006,97.105s15.65,19.918,43.039,24.188,59.756.713,67.582-37.7-18.141-97.816-30.234-100.307-52.287,7.824-55.488,9.959S-17680.023-22148.672-17681.09-22147.248Z" transform="translate(17992.328 22726.813)" fill="#64bc4e" stroke="#fffefb" stroke-width="1" opacity="0.6"/>
   <g id="SUNSHINE_CITY" data-name="SUNSHINE CITY" transform="translate(-16.672 -76.041)">
@@ -26,7 +38,10 @@ export const pathsData: SvgItem[] = [
     <path id="SC.S3" d="M-13685.929-22398.09c7.684,4.107,16.564,13.078,16.564,13.078l-10.462,12.328s-6.1-7.775-12.706-11.662a30.122,30.122,0,0,0-13.727-3.883v-14.584S-13693.612-22402.2-13685.929-22398.09Z" transform="translate(14078.921 22796)" fill="#0082c0" opacity="0.6"/>
     <path id="SC.S4" d="M-13685.929-22398.09c7.684,4.107,16.564,13.078,16.564,13.078l-10.462,12.328s-6.1-7.775-12.706-11.662a30.122,30.122,0,0,0-13.727-3.883v-14.584S-13693.612-22402.2-13685.929-22398.09Z" transform="translate(-5736.977 25948.525) rotate(45)" fill="#0082c0" opacity="0.6"/>
     <path id="SC.S5" d="M-13701.99-22402.812h15.295v14.584h-19.563v-14.584Z" transform="translate(-24181.035 9639.047) rotate(101)" fill="#0082c0" opacity="0.6"/>
-    <path id="SC.S6" d="M-13701.99-22402.812h15.295v14.584h-19.563v-14.584Z" transform="matrix(-0.407, 0.914, -0.914, -0.407, -25622.438, 3892.479)" fill="#0082c0" opacity="0.6"/>
+    <path id="SC.S6" 
+    d="M-13701.99-22402.812h15.295v14.584h-19.563v-14.584Z" 
+    transform="matrix(-0.407, 0.914, -0.914, -0.407, -25635.438, 3892.479)" 
+    fill="#0082c0" opacity="0.6"/>
     <path id="SC.LK1" d="M-13702.571-22381.52v30.939s12.207-1.684,14.943,7.156,0,13.471,0,13.471l46.937,24.836s29.676-38.727,5.051-66.51S-13702.571-22381.52-13702.571-22381.52Z" transform="translate(14030 22800)" fill="#ffed95" opacity="0.6"/>
   </g>
   <path id="SUNSHINE_CITY-2" data-name="SUNSHINE CITY" d="M-17651.062-22410.635c-16.646,1.387-30.521,3.236-32.832,5.549s-5.086,6.934-3.236,17.57,5.549,35.605,5.549,35.605,5.549-2.311,11.1,3.238,5.547,10.174,5.086,13.41,62.887,41.152,65.662,39.766,37.918-61.5,12.023-92.02S-17634.416-22412.021-17651.062-22410.635Z" transform="translate(17993.328 22723.959)" fill="#01ac88" stroke="#fffefb" stroke-width="1" opacity="0.6"/>
@@ -45,7 +60,10 @@ export const pathsData: SvgItem[] = [
   </g>
   <path id="NOBLE_PALACE_TAY_HO_-_PHÂN_KHU_THE_BOUTIQUE_MANSION-2" data-name="NOBLE PALACE TAY HO - PHÂN KHU THE BOUTIQUE MANSION" d="M-17337.832-22459.342s-37.211,5.471-39.4,6.84-7.934-.82-3.283,26.268,3.283,34.477,6.566,33.107,120.664-18.334,128.051-19.975,19.055-3.742,16.965-22.436-4.928-42.137-19.154-38.854S-17337.832-22459.342-17337.832-22459.342Z" transform="translate(17993.328 22723.959)" fill="#8c5889" stroke="#fffefb" stroke-width="1" opacity="0.6"/>
   <g id="NOBLE_CRYSTAL_TAY_HO_WORLDHOTELS_RESIDENCES" data-name="NOBLE CRYSTAL TAY HO WORLDHOTELS RESIDENCES" transform="translate(-16.672 -76.041)">
-    <path id="NC.S1" d="M-17205.166-22446.152l.979-13.982-13.76-.963.7-9.953,20.178-.111,7.293,8.572-1.131,16.168Z" transform="matrix(0.998, -0.07, 0.07, 0.998, 19672.719, 21525.283)" fill="#0082c0" opacity="0.6"/>
+    <path id="NC.S1"
+     d="M-17205.166-22446.152l.979-13.982-13.76-.963.7-9.953,20.178-.111,7.293,8.572-1.131,16.168Z" 
+     transform="matrix(0.998, -0.07, 0.07, 0.998, 19685.719, 21530.283)" 
+     fill="#0082c0" opacity="0.6"/>
     <path id="NC.S2" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18077.824 22790.863)" fill="#0082c0" opacity="0.6"/>
     <path id="NC.S3" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18041.824 22795.863)" fill="#0082c0" opacity="0.6"/>
     <path id="NC.S4" d="M-17185.334-22474.7v10.154l35.361-5.262v-9.682Z" transform="translate(18005.824 22801)" fill="#0082c0" opacity="0.6"/>
