@@ -73,9 +73,9 @@
 /* SVG overlay — fill toàn bộ imageWrapper */
 .overlaySvg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 2;
+  left: 10;
+  width: 98%;
   height: 100%;
   z-index: 2;
   pointer-events: none;

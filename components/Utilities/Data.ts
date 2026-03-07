@@ -11,7 +11,7 @@ export const pathsData: SvgItem[] = [
   {
     id: "svg_2",
     svg: `
-<svg xmlns="http://www.w3.org/2000/svg" width="975" height="880" viewBox="0 0 1517.492 928.682">
+<svg xmlns="http://www.w3.org/2000/svg" width="975" height="500" viewBox="0 0 1517.492 928.682">
   <g id="SUNSHINE_EMPIRE" data-name="SUNSHINE EMPIRE" transform="translate(-16.672 -76.041)">
     <path id="SE.T5" d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" transform="matrix(0.951, 0.309, -0.309, 0.951, 292.484, -148.137)" fill="#ffed95" opacity="0.6"/>
     <rect id="SE.T4" width="32" height="32" transform="translate(330 655)" fill="#ffed95" opacity="0.6"/>
