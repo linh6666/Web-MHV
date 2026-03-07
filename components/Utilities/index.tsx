@@ -106,8 +106,9 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
       <div className={styles.right}>
         <Menu
           project_id={project_id}
-          onModelsLoaded={setActiveModels} // Dùng để load danh sách ban đầu
-          onHighlightCodes={setHighlightedCodes} // Dùng để highlight khi click nút
+          selectedModel={selectedModel} // Truyền state xuống đây
+          onModelsLoaded={setActiveModels}
+          onHighlightCodes={setHighlightedCodes}
           onSelectModel={handleModelSelect}
         />
       </div>

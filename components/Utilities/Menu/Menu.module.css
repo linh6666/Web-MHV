@@ -284,6 +284,12 @@
   transition: all 0.2s ease;
 }
 
+.activeBtn {
+  background-color: #C2923F !important;
+  color: #12223B !important;
+  border-color: #EEEEEE !important;
+}
+
 /* Giảm bo góc cho nút có nhiều chữ */
 .menuBtnLong {
   border-radius: 23px;
@@ -318,20 +324,25 @@
   transition: all 0.2s ease;
 }
 
-/* hover / active */
-.menuBtn:hover,
-.menuBtnSmall:hover {
-  background-color: #C2923F;
-  color: #12223B;
+/* CSS Reset cho Button để không bị kẹt màu */
+.menuBtn:focus,
+.menuBtn:active,
+.menuBtn:focus-within,
+.menuBtn[data-active] {
+  background-color: #234374 !important;
+  color: #EEEEEE !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.menuBtn:active,
-.menuBtnSmall:active,
-.menuBtn:focus,
-.menuBtnSmall:focus {
-  background: #C2923F;
-  color: #12223B;
-  border-color: #EEEEEE;
+.activeBtn {
+  background-color: #C2923F !important;
+  color: #12223B !important;
+  border-color: #EEEEEE !important;
+}
+
+.activeBtn:hover {
+  background-color: #e2af5a !important;
 }
 
 .menuBtn :global(.mantine-Button-label) {

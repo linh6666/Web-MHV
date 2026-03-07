@@ -9,6 +9,7 @@ import { createNodeAttribute } from "../../../api/apifiterutilities";
 
 interface MenuProps {
   project_id: string | null;
+  selectedModel?: string | null; // Thêm prop này
   onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
   onHighlightCodes?: (codes: string[]) => void;
@@ -26,6 +27,7 @@ interface NodeAttributeItem {
 
 export default function Menu({
   project_id,
+  selectedModel, // Nhận vào từ props
   onModelsLoaded,
   onSelectModel,
   onHighlightCodes,
@@ -93,10 +95,22 @@ export default function Menu({
     fetchData();
   }, [project_id, onModelsLoaded]);
 
-  // ✅ CHỈ SỬA ĐOẠN CLICK
+  // ✅ SỬA LOGIC CLICK ĐỂ TOGGLE VÀ TRÁNH CALL API LẦN 2
   const handleSelectModel = async (modelName: string) => {
     if (!project_id) return;
 
+    const normalizedModel = modelName.trim();
+    
+    // Nếu nhấp vào cái đang chọn -> Tắt highlight và không call API
+    if (selectedModel?.trim() === normalizedModel) {
+      onHighlightCodes?.([]); // Xóa danh sách highlight
+      onSelectModel?.(modelName); // Toggle về null trong parent
+      return;
+    }
+
+    onSelectModel?.(modelName); // Set model mới trong parent
+
+    // Nếu nhấp vào cái mới -> Call API
     try {
       const result = await createNodeAttribute({
         project_id,
@@ -111,7 +125,6 @@ export default function Menu({
           .map((item: NodeAttributeItem) => item.unit_code)
           .filter((code: string | undefined): code is string => Boolean(code));
 
-        // CHỈ gửi codes để highlight, KHÔNG gọi onModelsLoaded để tránh làm ẩn các SVG khác
         onHighlightCodes?.(codes);
       }
     } catch (error) {
@@ -147,12 +160,10 @@ export default function Menu({
                  key={index}
                  className={`${styles.menuBtn} ${
                    item.label.length >= 20 ? styles.menuBtnLong : ""
-                 }`}
+                 } ${selectedModel === item.label ? styles.activeBtn : ""}`} // Thêm class activeBtn
                  onClick={() => {
                    handleSelectModel(item.label);
-                   onSelectModel?.(item.label);
                  }}
-                 variant="outline"
                >
                  {item.label}
                </Button>
