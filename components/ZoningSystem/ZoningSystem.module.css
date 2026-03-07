@@ -51,19 +51,20 @@
 .imageWrapper {
   width: 100%;
   height: 100%;
-  /* ✅ fill toàn bộ vùng left */
+  aspect-ratio: 1517.492 / 928.682;
+  /* Khớp với viewBox của SVG */
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 }
 
 /* Ảnh nền */
 .img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  /* Lấp đầy toàn bộ khung */
+  object-fit: fill;
+  /* Ép ảnh giãn đúng bằng khung của SVG */
   display: block;
   position: absolute;
   top: 0;

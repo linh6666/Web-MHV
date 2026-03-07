@@ -89,17 +89,17 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           <TransformComponent>
         <div className={styles.imageWrapper}>
           <Image src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
-           {filteredPaths.map((item) => {
-  console.log("🟩 SVG được render lên UI:", item.id);
+            {filteredPaths.map((item) => {
+              console.log("🟩 SVG được render lên UI:", item.id);
 
-  return (
-    <div
-      key={item.id}
-      className={styles.overlaySvg}
-      dangerouslySetInnerHTML={{ __html: item.svg }}
-    />
-  );
-})}
+              return (
+                <div
+                  key={item.id}
+                  className={styles.overlaySvg}
+                  dangerouslySetInnerHTML={{ __html: item.svg }}
+                />
+              );
+            })}
 
           {/* SVG 1 */}
     
