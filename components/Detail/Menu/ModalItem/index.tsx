@@ -122,7 +122,7 @@ export default function ModalItem({
           {/* ================= LEFT ================= */}
           <div className={styles.leftPanel}>
             <Text fw={700} mb={12} className={styles.unitTitle}>
-              Chi tiết căn hộ: {data.layer6}
+              Chi tiết: {data.layer6}
             </Text>
 
             <Text className={styles.descriptionText}>

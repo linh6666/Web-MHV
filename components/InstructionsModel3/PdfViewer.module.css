@@ -1,32 +1,33 @@
 .pdfContainer {
   max-width: 1260px;
   width: 100%;
-  margin: auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  /* ✅ Đặt tỉ lệ 16/9 để khung hình giống các trang trước */
-  aspect-ratio: 16/9;
-  /* ✅ Đặt chiều cao bằng đúng các trang trước */
-  height: calc(100vh - 220px);
-  max-height: calc(100vh - 220px);
+  /* ✅ Đặt tỉ lệ 16/9 linh hoạt theo chiều ngang */
+  aspect-ratio: 16 / 9;
+  /* ✅ Chiều cao tối đa dựa trên viewport để không bao giờ bị che */
+  height: calc(100vh - 200px);
+  max-height: 80vh;
   box-sizing: border-box;
-  padding: 10px;
-  gap: 10px;
+  padding: clamp(10px, 1.5vw, 20px);
+  gap: clamp(8px, 1vh, 15px);
   position: relative;
 }
 
 .pdfFrame {
   flex: 1;
-  /* ✅ Lấp đầy toàn bộ phần còn lại của container */
   width: 100%;
   border: 1px solid #EEEEEE;
   border-radius: 13px;
   background-color: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .backButton {
-  width: 40px;
-  height: 40px;
+  /* ✅ Nút quay lại co giãn theo kích thước màn hình */
+  width: clamp(35px, 4vh, 45px);
+  height: clamp(35px, 4vh, 45px);
   padding: 0;
   border-radius: 50%;
   transition: all 0.2s ease;
@@ -37,22 +38,37 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* ✅ Đảm bảo nút nổi bật và không bị đẩy ra ngoài */
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .backButton:hover {
   background: #C2923F;
   color: #12223B;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
+/* Tối ưu cho màn hình Laptop nhỏ và Tablet */
 @media (max-width: 1024px) {
   .pdfContainer {
-    max-width: 100%;
+    max-width: 95%;
     aspect-ratio: auto;
-    /* Bỏ tỉ lệ trên mobile để scroll dọc */
-    height: 80vh;
-    padding-top: 60px;
+    /* Bỏ aspect-ratio để scroll tự nhiên */
+    height: 85vh;
+    max-height: none;
+    padding-top: 10px;
+  }
+}
+
+/* Tối ưu cho Mobile */
+@media (max-width: 600px) {
+  .pdfContainer {
+    max-width: 100%;
+    height: 100vh;
+    padding: 5px;
+  }
+
+  .pdfFrame {
+    border-radius: 8px;
   }
 }
