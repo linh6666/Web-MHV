@@ -32,13 +32,19 @@
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  justify-content: flex-start;
+  /* Giữ mọi thứ trong khung */
+  justify-content: center;
   min-width: 0;
+  height: 100%;
+  /* Cố định theo chiều cao container cha */
 }
 
 .imageWrapper {
   position: relative;
   width: 100%;
+  max-width: 900px;
+  /* Thu nhỏ ảnh nếu chiều cao màn hình quá thấp */
+  max-height: 55vh;
   aspect-ratio: 16 / 9;
   background: #f8f8f8;
   border-radius: 12px;
@@ -48,6 +54,8 @@
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin-bottom: 2vh;
+  flex-shrink: 1;
+  /* Cho phép khung ảnh thu nhỏ lại nếu thiếu không gian dọc */
 }
 
 .mainImage {
