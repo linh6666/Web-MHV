@@ -20,7 +20,7 @@ interface MenuItem {
 }
 
 interface NodeAttributeItem {
-  layer6?: string | null;
+  layer7?: string | null;
   unit_code?: string;
   [key: string]: unknown;
 }
@@ -69,9 +69,9 @@ export default function Menu({
         const zones: string[] = [];
 
         data.forEach((item) => {
-          if (!item.layer6) return;
+          if (!item.layer7) return;
 
-          item.layer6
+          item.layer7
             .split(";")
             .map((z) => z.trim())
             .filter((z) => z && z.toLowerCase() !== "skip")
