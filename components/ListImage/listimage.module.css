@@ -1,6 +1,114 @@
-.box{
-    /* background-color: red; */
+.box {
     width: 100%;
-    max-width: 1300px;
-    margin: auto;
+    max-width: 1226px;
+    margin: 0 auto;
+    padding: clamp(10px, 2vw, 20px);
+}
+
+.folderCard {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: #fff;
+}
+
+.folderCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.folderTitle {
+    font-size: clamp(16px, 2vh, 20px) !important;
+    color: #234374;
+}
+
+/* Image Gallery Styles */
+.galleryGrid {
+    margin-top: 20px;
+}
+
+.imageItem {
+    height: clamp(100px, 12vh, 150px);
+    cursor: pointer;
+    background: #f5f5f5;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: opacity 0.2s;
+}
+
+.imageItem:hover {
+    opacity: 0.9;
+}
+
+/* Modal Responsive Styles */
+.modalImageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2vh;
+    background: #f8f8f8;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+}
+
+.modalMainImage {
+    max-height: 60vh;
+    width: 100%;
+    object-fit: contain;
+}
+
+.thumbList {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: thin;
+}
+
+.thumbList::-webkit-scrollbar {
+    height: 4px;
+}
+
+.thumbList::-webkit-scrollbar-thumb {
+    background: #23437444;
+    border-radius: 10px;
+}
+
+.thumbItem {
+    height: clamp(50px, 6vh, 70px);
+    aspect-ratio: 4 / 3;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.thumbItemActive {
+    border-color: #234374;
+}
+
+.thumbImg {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Back Button Styles */
+.backBtn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background: #234374;
+    color: #EEEEEE;
+    border: 1.5px solid #EEEEEE;
+    transition: transform 0.2s;
+}
+
+.backBtn:hover {
+    background: #1a3256;
+    transform: scale(1.1);
 }

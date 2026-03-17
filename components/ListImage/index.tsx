@@ -226,7 +226,8 @@ import {
 } from "@mantine/core";
 import NextImage from "next/image";
 import { IconArrowLeft } from "@tabler/icons-react";
- import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import style from "./listimage.module.css";
 
 /* ===================== DATA ===================== */
  interface ListImageProps {
@@ -393,123 +394,86 @@ export default function GalleryByFolder({ project_id }: ListImageProps) {
   /* ===================== VIEW: FOLDER LIST ===================== */
   if (!selectedFolder) {
     return (
-     <div
-  style={{
-    width: "1226px",
-   
-    marginLeft: "auto",
-    marginRight: "auto",
-    // marginTop: "100px",
-  }}
->
-  <SimpleGrid cols={3} spacing="lg">
-    {Object.keys(FOLDERS).map((folder) => (
-      <Card
-        key={folder}
-        withBorder
-        shadow="sm"
-        padding="xl"
-        radius="md"
-        style={{ cursor: "pointer", textAlign: "center" }}
-        onClick={() => setSelectedFolder(folder)}
-      >
-        <Text fw={600} size="lg">
-          📁 {folder}
-        </Text>
-        <Text size="sm" c="dimmed">
-          {FOLDERS[folder].length} ảnh
-        </Text>
-      </Card>
-    ))}
-  </SimpleGrid>
-   <Group gap="xs" mt="md" justify="flex-end">
-        <Button
-           onClick={() =>
-             router.push(`/tuong-tac/Ciputra?id=${project_id}`)
-           }
-           variant="filled"
-           style={{
-             width: 30,
-             height: 30,
-             padding: 0,
-            borderRadius: 40,
-            display: "flex",
-             alignItems: "center",
-             justifyContent: "center",
-            background: "#234374",
-            color: "#EEEEEE",
-             border: "1.5px solid #EEEEEE",
-           }}
-         >
-           <IconArrowLeft size={18} color="#EEEEEE" />
-         </Button>
-       </Group>
-</div>
+      <div className={style.box}>
+        <SimpleGrid
+          cols={{ base: 1, sm: 2, md: 3 }}
+          spacing={{ base: "md", lg: "xl" }}
+        >
+          {Object.keys(FOLDERS).map((folder) => (
+            <Card
+              key={folder}
+              withBorder
+              shadow="sm"
+              padding="xl"
+              radius="md"
+              className={style.folderCard}
+              onClick={() => setSelectedFolder(folder)}
+            >
+              <Text fw={600} className={style.folderTitle}>
+                📁 {folder}
+              </Text>
+              <Text size="sm" c="dimmed">
+                {FOLDERS[folder].length} ảnh
+              </Text>
+            </Card>
+          ))}
+        </SimpleGrid>
 
-    
+        <Group gap="xs" mt="xl" justify="flex-end">
+          <Button
+            onClick={() => router.push(`/tuong-tac/Ciputra?id=${project_id}`)}
+            variant="filled"
+            className={style.backBtn}
+          >
+            <IconArrowLeft size={20} color="#EEEEEE" />
+          </Button>
+        </Group>
+      </div>
     );
   }
 
   /* ===================== VIEW: IMAGE GALLERY ===================== */
   return (
-     <div
-  style={{
-    width: "1226px",
-   
-    marginLeft: "auto",
-    marginRight: "auto",
-    // marginTop: "100px",
-    paddingBottom: "20px",
-  }}
->
+    <div className={style.box}>
       {/* Modal ảnh lớn */}
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
         centered
-        size="70%"
+        size="90%"
+        radius="md"
         withCloseButton
+        styles={{
+          body: { padding: "clamp(10px, 2vw, 20px)" },
+          title: { fontWeight: 700 },
+        }}
       >
         {selectedImage && (
-          <Image
-            src={selectedImage}
-            alt="Selected"
-            fit="contain"
-            style={{ maxHeight: "60vh", marginBottom: 16 }}
-          />
+          <div className={style.modalImageWrapper}>
+            <Image
+              src={selectedImage}
+              alt="Selected"
+              className={style.modalMainImage}
+            />
+          </div>
         )}
 
         {/* Thumbnail */}
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            overflowX: "auto",
-            paddingBottom: 8,
-          }}
-        >
+        <div className={style.thumbList}>
           {images.map((src, index) => (
             <div
               key={index}
               onClick={() => setSelectedImage(src)}
-              style={{
-                height: 60,
-                border:
-                  selectedImage === src
-                    ? "2px solid red"
-                    : "1px solid #ccc",
-                borderRadius: 5,
-                overflow: "hidden",
-                cursor: "pointer",
-                flexShrink: 0,
-              }}
+              className={`${style.thumbItem} ${
+                selectedImage === src ? style.thumbItemActive : ""
+              }`}
             >
               <NextImage
                 src={src}
                 alt={`thumb-${index}`}
                 width={100}
-                height={60}
-                style={{ objectFit: "cover", height: "100%" }}
+                height={75}
+                className={style.thumbImg}
               />
             </div>
           ))}
@@ -517,18 +481,16 @@ export default function GalleryByFolder({ project_id }: ListImageProps) {
       </Modal>
 
       {/* Grid ảnh */}
-      <SimpleGrid cols={5} spacing="md">
+      <SimpleGrid
+        cols={{ base: 2, sm: 3, md: 4, lg: 5 }}
+        spacing="md"
+        className={style.galleryGrid}
+      >
         {images.map((src, index) => (
           <div
             key={index}
             onClick={() => handleImageClick(src)}
-            style={{
-              height: 120,
-              cursor: "pointer",
-              background: "#f5f5f5",
-              borderRadius: 8,
-              overflow: "hidden",
-            }}
+            className={style.imageItem}
           >
             <Image src={src} alt="" fit="cover" h="100%" />
           </div>
@@ -536,11 +498,12 @@ export default function GalleryByFolder({ project_id }: ListImageProps) {
       </SimpleGrid>
 
       {/* Nút quay lại */}
-      <Group justify="flex-end" mt="md">
+      <Group justify="flex-end" mt="xl">
         <Button
           onClick={() => setSelectedFolder(null)}
           variant="outline"
           leftSection={<IconArrowLeft size={16} />}
+          radius="md"
         >
           Quay lại thư mục
         </Button>
