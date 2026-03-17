@@ -1,54 +1,138 @@
-/* .box {
-  max-width: 1320px;
-  padding: 10px;
-  margin: auto;
-  display: flex;
-} */
 .box {
   max-width: 1260px;
-  /* padding: 10px; */
-
+  width: 100%;
   margin: auto;
   display: flex;
-    /* margin-top: 80px; */
+  aspect-ratio: 16/9;
+  /* Tỉ lệ khung hình linh hoạt */
+  max-height: calc(100vh - 220px);
+  /* Trừ Header (80px) + Footer (~140px) */
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Tránh scrollbar */
 }
-/* Cột trái (ảnh) */
+
+/* FIX CHÍNH Ở ĐÂY */
 .left {
   flex: 3;
-}
-
-/* Wrapper để đặt SVG lên ảnh */
-.imageWrapper {
-  position: relative; /* ✅ để SVG có thể đặt lên ảnh */
-}
-
-/* Ảnh full kích thước */
-.img {
-  width: 100%;
+  /* ✅ không cho ảnh tràn khi zoom */
   height: 100%;
-  object-fit: cover;
-  display: block;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-.overlaySvg {
-  position: absolute;
-  top: 20px;
-  left: 60px;
-  pointer-events: none;
+/* Force react-zoom-pan-pinch components to fill height */
+.left :global(.react-transform-wrapper),
+.left :global(.react-transform-component) {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Cột phải (text) */
 .right {
   width: 240px;
   background-color: #234374;
-  justify-content: center;
-  color: #EEEEEE;
+  color: #762f0b;
   font-size: 18px;
   text-align: center;
-  padding: 10px;
+  padding: clamp(5px, 1.5vh, 10px);
+  /* Padding co giãn linh hoạt */
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  /* Đè lên nếu cần */
 }
 
-/* 📱 Mobile responsive */
+/* FIX CHÍNH Ở ĐÂY */
+.imageWrapper {
+  width: 100%;
+  height: 100%;
+  /* Khớp với viewBox của SVG */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ảnh nền */
+.img {
+  width: 100%;
+  height: 100%;
+  /* object-fit: contain; */
+  /* Ép ảnh giãn cùng tỉ lệ để luôn khớp với SVG (không móp méo) */
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* SVG overlay — fill toàn bộ imageWrapper */
+.overlaySvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* SVG bên trong co giãn theo wrapper */
+.overlaySvg :global(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .box {
+    max-width: 100%;
+    padding: 12px;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .right {
+    width: 220px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet dọc */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .box {
+    max-width: 100%;
+    padding: 12px;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .right {
+    width: 220px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet ngang */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .box {
+    max-width: 100%;
+    padding: 10px;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .right {
+    width: 200px;
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .box {
     flex-direction: column;
@@ -58,7 +142,7 @@
   .left {
     flex: none;
     width: 100%;
-    height: 300px;
+    height: clamp(260px, 45vw, 380px);
   }
 
   .right {
@@ -67,22 +151,11 @@
     padding: 20px;
     font-size: 16px;
   }
-
-  .img {
-    height: 100%;
-  }
-
-  .overlaySvg {
-    top: 10px;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-  }
 }
 
 @media (max-width: 480px) {
   .left {
-    height: 220px;
+    height: clamp(200px, 55vw, 280px);
   }
 
   .right {
@@ -90,29 +163,4 @@
     padding: 15px;
     margin-top: 10px;
   }
-
-  .overlaySvg {
-    top: 5px;
-    left: 5px;
-    width: 30px;
-    height: 30px;
-  }
-}
-.imageWrapper {
-  position: relative;
-  width: 100%;
-}
-
-.img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  display: block;
-}
-
-.overlaySvg {
-  position: absolute;
-  /* top: 2%;
-  left: 5%; */
-  pointer-events: auto; /* Đảm bảo SVG nhận sự kiện hover */
 }
