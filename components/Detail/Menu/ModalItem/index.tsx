@@ -89,35 +89,49 @@ export default function ModalItem({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Chi tiết căn hộ" size="70%">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      // title="Chi tiết căn hộ"
+      size="70%"
+      radius="md"
+      styles={{
+        title: {
+          fontSize: "calc(16px + 0.5vw)",
+          fontWeight: 700,
+        },
+        content: {
+          height: "auto",
+          maxHeight: "95vh",
+          display: "flex",
+          flexDirection: "column",
+        },
+        body: {
+          padding: "clamp(10px, 2vw, 24px)",
+          flex: 1,
+          overflow: "hidden",
+        },
+      }}
+    >
       {!data ? (
         <Text size="lg" fw={500}>
           Không có dữ liệu
         </Text>
       ) : (
-        <div style={{ display: "flex", gap: 20, height: "80vh" }}>
+        <div className={styles.container}>
           {/* ================= LEFT ================= */}
-          <div style={{ flex: 1 }}>
-            <Text fw={700} mb={12} fz={18}>
+          <div className={styles.leftPanel}>
+            <Text fw={700} mb={12} className={styles.unitTitle}>
               Chi tiết căn hộ: {data.layer6}
             </Text>
 
-            <Text mt={8}>
+            <Text className={styles.descriptionText}>
               <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
             </Text>
-
-        
           </div>
 
-    
-          <div
-            style={{
-              flex: 2,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
+          {/* ================= RIGHT ================= */}
+          <div className={styles.rightPanel}>
             {loading ? (
               <Center style={{ height: "400px" }}>
                 <Loader />
@@ -126,84 +140,50 @@ export default function ModalItem({
               <>
                 {/* ====== IMAGE ====== */}
                 {currentImage && (
-                  <div style={{ position: "relative", marginBottom: 20 }}>
-      <Image
-  src={currentImage.url || ""}
-  alt=""
-  width={800}
-  height={500}
-  style={{
-    width: "800px",
-    height: "500px",
-    objectFit: "contain",
-    borderRadius: 8,
-    background: "#f5f5f5",
-  }}
-/>
+                  <div className={styles.imageWrapper}>
+                    <Image
+                      src={currentImage.url || ""}
+                      alt=""
+                      className={styles.mainImage}
+                    />
                     {/* prev */}
                     <button
+                      className={`${styles.sliderBtn} ${styles.prevBtn}`}
                       onClick={goPrev}
                       disabled={index === 0}
-                      style={{
-                        position: "absolute",
-                        left: 10,
-                        top: "50%",
-                        cursor: "pointer",
-                      }}
                     >
                       ◀
                     </button>
 
                     {/* next */}
                     <button
+                      className={`${styles.sliderBtn} ${styles.nextBtn}`}
                       onClick={goNext}
                       disabled={index === imageData.length - 1}
-                      style={{
-                        position: "absolute",
-                        right: 10,
-                        top: "50%",
-                        cursor: "pointer",
-                      }}
                     >
                       ▶
                     </button>
                   </div>
                 )}
 
-               
-{/* ===== THUMBNAIL ===== */}
-<div
-  className={styles.thumbScroll}
-  style={{
-    display: "flex",
-    gap: 10,
-    overflowX: "auto",
-    maxWidth: "100%",
-    paddingBottom: 10,
-  }}
->
-  {imageData.map((img, i) => (
-    <div
-      key={img.id}
-      onClick={() => setIndex(i)}
-      style={{
-        border: i === index ? "2px solid #3d6985" : "1px solid #ccc",
-        cursor: "pointer",
-        borderRadius: 4,
-        padding: 2,
-        flex: "0 0 auto",
-      }}
-    >
-      <Image
-        src={img.url || ""}
-        width={80}
-        height={60}
-        alt=""
-        style={{ objectFit: "cover" }}
-      />
-    </div>
-  ))}
-</div>
+                {/* ===== THUMBNAIL ===== */}
+                <div className={`${styles.thumbList} ${styles.thumbScroll}`}>
+                  {imageData.map((img, i) => (
+                    <div
+                      key={img.id}
+                      onClick={() => setIndex(i)}
+                      className={`${styles.thumbItem} ${
+                        i === index ? styles.thumbItemActive : ""
+                      }`}
+                    >
+                      <Image
+                        src={img.url || ""}
+                        alt=""
+                        className={styles.thumbImage}
+                      />
+                    </div>
+                  ))}
+                </div>
               </>
             )}
           </div>
