@@ -63,7 +63,7 @@
 .img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  /* object-fit: contain; */
   /* Ép ảnh giãn cùng tỉ lệ để luôn khớp với SVG (không móp méo) */
   display: block;
   position: absolute;
