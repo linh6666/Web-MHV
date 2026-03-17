@@ -49,33 +49,26 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
+  position: relative;
   width: 100%;
-  height: 100%;
-  /* ✅ fill toàn bộ vùng left */
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 }
 
 /* Ảnh nền */
 .img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Lấp đầy toàn bộ khung */
+  height: auto;
   display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 /* SVG overlay — fill toàn bộ imageWrapper */
 .overlaySvg {
   position: absolute;
-  top: 2;
-  left: 10;
-  width: 98%;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
   z-index: 2;
   pointer-events: none;
