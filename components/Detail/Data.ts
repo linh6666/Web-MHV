@@ -15,20 +15,20 @@ export const pathsData: SvgItem[] = [
   <g id="SUNSHINE_EMPIRE" data-name="SUNSHINE EMPIRE" transform="translate(-16.672 -76.041)">
     <path id="SE.T5" 
     d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" 
-    transform="matrix(0.951, 0.309, -0.309, 0.951, 300.484, -153.137)" 
+    transform="matrix(0.951, 0.309, -0.309, 0.951, 250.484, -153.137)" 
     fill="#ffed95" opacity="0.6"/>
-    <rect id="SE.T4" width="32" height="32" transform="translate(340 655)" fill="#ffed95" opacity="0.6"/>
+    <rect id="SE.T4" width="32" height="32" transform="translate(280 655)" fill="#ffed95" opacity="0.6"/>
     <rect id="SE.T3" 
     width="32" height="32" 
-    transform="translate(340 688)" 
+    transform="translate(280 688)" 
     fill="#ffed95" opacity="0.6"/>
     <path id="SE.T2" 
     d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z"
-    transform="translate(10,-5)"
+    transform="matrix(0.951, 0.309, -0.309, 0.951, 200.484, -65.137)" 
      fill="#ffed95" opacity="0.6"/>
     <path id="SE.T1" 
     d="M325.277,730.963l-5.977,8.344,11.707,8.346v16.189H342.59V747.652l13.326-8.346-6.1-8.344-12.453,8.344Z" 
-    transform="matrix(0.951, 0.309, -0.309, 0.951, 300.484, -61.137)" 
+    transform="matrix(0.951, 0.309, -0.309, 0.951, 255.484, -55.137)" 
     fill="#ffed95" opacity="0.6"/>
   </g>
   <path id="SUNSHINE_EMPIRE-2" data-name="SUNSHINE EMPIRE" d="M-17681.09-22147.248c-1.066,1.424-17.072,91.77-16.006,97.105s15.65,19.918,43.039,24.188,59.756.713,67.582-37.7-18.141-97.816-30.234-100.307-52.287,7.824-55.488,9.959S-17680.023-22148.672-17681.09-22147.248Z" transform="translate(17992.328 22726.813)" fill="#64bc4e" stroke="#fffefb" stroke-width="1" opacity="0.6"/>
