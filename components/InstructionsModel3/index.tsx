@@ -17,11 +17,11 @@ export default function PdfViewer() {
   return (
     <div className={styles.pdfContainer}>
       <iframe
-        src="/huong-dan/hdsd_ciputra_nen.pdf"
-        width="100%"
-        className={styles.pdfFrame}
-        style={{ border: "none" }}
-      ></iframe>
+  src="/huong-dan/hdsd_ciputra_nen.pdf#toolbar=0&navpanes=0&scrollbar=0"
+  width="100%"
+  className={styles.pdfFrame}
+  style={{ border: "none" }}
+/>
       <Group justify="flex-end">
         <Button
           className={styles.backButton}
