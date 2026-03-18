@@ -6,22 +6,35 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { Button, Group } from "@mantine/core";
 
 export default function PdfViewer() {
-     const router = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const project_id = searchParams.get("id");
-      const handleBack = () => {
+
+  const handleBack = () => {
     if (!project_id) return;
     router.push(`/tuong-tac/Ciputra?id=${project_id}`);
   };
 
   return (
     <div className={styles.pdfContainer}>
-      <iframe
-  src="/huong-dan/hdsd_ciputra_nen.pdf#toolbar=0&navpanes=0&scrollbar=0"
-  width="100%"
-  className={styles.pdfFrame}
-  style={{ border: "none" }}
-/>
+      <object
+        data="/huong-dan/hdsd_ciputra_nen.pdf"
+        type="application/pdf"
+        className={styles.pdfFrame}
+      >
+        {/* fallback nếu không load được */}
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <p>Trình duyệt không hỗ trợ hiển thị PDF.</p>
+          <a
+            href="/huong-dan/hdsd_ciputra_nen.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Mở file PDF
+          </a>
+        </div>
+      </object>
+
       <Group justify="flex-end">
         <Button
           className={styles.backButton}
@@ -32,6 +45,5 @@ export default function PdfViewer() {
         </Button>
       </Group>
     </div>
-    
   );
 }
