@@ -62,10 +62,16 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           el.setAttribute("style", "display:none");
         }
       });
+      
+      // ✅ Ép SVG co giãn tuyệt đối theo wrapper (giống hệt ảnh)
+      const svgRoot = svgDoc.documentElement;
+      svgRoot.setAttribute("preserveAspectRatio", "none");
+      svgRoot.setAttribute("width", "100%");
+      svgRoot.setAttribute("height", "100%");
 
       return {
         ...item,
-        svg: svgDoc.documentElement.outerHTML,
+        svg: svgRoot.outerHTML,
       };
     });
   }, [activeModels, highlightedCodes]);
@@ -86,7 +92,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         >
           <TransformComponent>
             <div className={styles.imageWrapper}>
-              <Image src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
+              <img src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
               {filteredPaths.length > 0 ? (
                 filteredPaths.map((item) => (
                   <div
