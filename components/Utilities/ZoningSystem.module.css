@@ -27,7 +27,7 @@
 .left :global(.react-transform-wrapper),
 .left :global(.react-transform-component) {
   width: 100% !important;
-  height: 100% !important;
+  /* height: 100% !important; */
   display: flex !important;
   align-items: center;
   justify-content: center;
