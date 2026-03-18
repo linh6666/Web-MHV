@@ -16,11 +16,11 @@ export default function PdfViewer() {
 
   return (
     <div className={styles.pdfContainer}>
-      <iframe
-  src="/huong-dan/hdsd_ciputra_nen.pdf#toolbar=0&navpanes=0&scrollbar=0"
+   <iframe
+  src="https://drive.google.com/file/d/14SWx-24SM1xbbbGYVP8SD1jnA_AvLnx6/preview"
   width="100%"
   className={styles.pdfFrame}
-  style={{ border: "none" }}
+  style={{ border: "none", height: "100vh" }}
 />
       <Group justify="flex-end">
         <Button
