@@ -49,7 +49,7 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
-  aspect-ratio: 1517.49 / 928.682;
+  /* aspect-ratio: 1517.49 / 928.682; */
   position: relative;
   width: 100%;
   display: flex;
