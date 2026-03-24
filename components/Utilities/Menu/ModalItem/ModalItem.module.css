@@ -1,0 +1,190 @@
+.container {
+  display: flex;
+  gap: 2vw;
+  max-height: 80vh;
+  padding: 1vh 0;
+}
+
+.leftPanel {
+  flex: 0 0 25%;
+  max-width: 350px;
+  overflow-y: auto;
+  padding-right: 15px;
+}
+
+/* CHỮ TỰ CO GIÃN THEO CHIỀU RỘNG MÀN HÌNH (VW) */
+.unitTitle {
+  font-size: calc(14px + 0.5vw) !important;
+  line-height: 1.3;
+  color: #333;
+  margin-bottom: 2vh !important;
+}
+
+.descriptionText {
+  font-size: calc(12px + 0.2vw) !important;
+  line-height: 1.5;
+  color: #666;
+   text-align: justify;
+}
+
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  /* Giữ mọi thứ trong khung */
+  justify-content: center;
+  min-width: 0;
+  height: 100%;
+  /* Cố định theo chiều cao container cha */
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  /* Thu nhỏ ảnh nếu chiều cao màn hình quá thấp */
+  max-height: 55vh;
+  aspect-ratio: 16 / 9;
+  background: #f8f8f8;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2vh;
+  flex-shrink: 1;
+  /* Cho phép khung ảnh thu nhỏ lại nếu thiếu không gian dọc */
+}
+
+.mainImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.sliderBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  color: #333;
+  border: none;
+  width: 4vh;
+  height: 4vh;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.5vh;
+}
+
+.sliderBtn:hover:not(:disabled) {
+  background: #fff;
+  scale: 1.1;
+}
+
+.sliderBtn:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prevBtn {
+  left: 15px;
+}
+
+.nextBtn {
+  right: 15px;
+}
+
+.thumbList {
+  display: flex;
+  gap: 1vw;
+  overflow-x: auto;
+  width: 100%;
+  padding: 5px 5px 15px 5px;
+  flex-shrink: 0;
+}
+
+.thumbItem {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 2px;
+  flex: 0 0 auto;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  background: #fff;
+  overflow: hidden;
+}
+
+.thumbItemActive {
+  border-color: #C2923F;
+  transform: translateY(-2px);
+}
+
+/* THUMBNAIL TỰ CO GIÃN THEO VW VÀ VH */
+.thumbImage {
+  width: 6vw !important;
+  height: 4.5vw !important;
+  min-width: 60px;
+  min-height: 45px;
+  max-width: 100px;
+  max-height: 75px;
+  object-fit: cover !important;
+  border-radius: 6px;
+  display: block;
+}
+
+/* RESPONSIVE CHO MOBILE */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    max-height: none;
+  }
+
+  .leftPanel {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    padding-right: 0;
+    order: 2;
+  }
+
+  .rightPanel {
+    flex: none;
+    width: 100%;
+    order: 1;
+  }
+
+  .thumbImage {
+    width: 15vw !important;
+    height: 11vw !important;
+  }
+
+  .unitTitle {
+    font-size: 18px !important;
+  }
+}
+
+.thumbScroll {
+  scrollbar-width: thin;
+}
+
+.thumbScroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.thumbScroll::-webkit-scrollbar-thumb {
+  background: #C2923F44;
+  border-radius: 10px;
+}

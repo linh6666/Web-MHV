@@ -6,7 +6,7 @@ import { Button, Group, Image, Loader, Text, Stack } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifiterutilities";
-import ModalItem from "../../Detail/Menu/ModalItem"; 
+import ModalItem from "./ModalItem"; 
 
 interface MenuProps {
   project_id: string | null;
