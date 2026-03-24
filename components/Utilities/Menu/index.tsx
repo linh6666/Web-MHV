@@ -6,6 +6,7 @@ import { Button, Group, Image, Loader, Text, Stack } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifiterutilities";
+import ModalItem from "../../Detail/Menu/ModalItem"; 
 
 interface MenuProps {
   project_id: string | null;
@@ -17,6 +18,31 @@ interface MenuProps {
 
 interface MenuItem {
   label: string;
+}
+
+interface DataDetail {
+  id: number;
+  unit_code: string;
+  layer1?: string;
+  layer2?: string;
+  layer3?: string;
+  layer6?: string;
+  zone?: string;
+  building_type?: string;
+  bedroom?: number | string;
+  bathroom?: number | string;
+  view?: string;
+  status_unit?: string;
+  price?: number;
+  describe?: string;
+  describe_vi?: string;
+  main_door_direction?: string;
+  balcony_direction?: string;
+  direction?: string;
+  url?: string;
+  name_vi?: string;
+  name_en?: string;
+  description_en?: string;
 }
 
 interface NodeAttributeItem {
@@ -33,8 +59,11 @@ export default function Menu({
   onHighlightCodes,
 }: MenuProps) {
   const router = useRouter();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [menuItems, setMenuItems] = useState<(MenuItem & { data: DataDetail })[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const [opened, setOpened] = useState(false);
+  const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +80,7 @@ export default function Menu({
         const res = await createNodeAttribute(body);
 
         if (!res?.data || !Array.isArray(res.data)) {
+          console.warn("⚠️ API không trả về dữ liệu hoặc data không phải mảng:", res);
           setMenuItems([]);
           return;
         }
@@ -64,28 +94,31 @@ export default function Menu({
             .filter((code): code is string => Boolean(code))
         );
 
-        // xử lý zone từ layer6
-        const zoneSet = new Set<string>();
-        const zones: string[] = [];
+        // xử lý zone từ layer7
+        const zoneMap = new Map<string, DataDetail>();
+        const zones: { label: string; data: DataDetail }[] = [];
 
         data.forEach((item) => {
           if (!item.layer7) return;
 
-          item.layer7
+          const layers = item.layer7
             .split(";")
             .map((z) => z.trim())
-            .filter((z) => z && z.toLowerCase() !== "skip")
-            .forEach((z) => {
-              if (!zoneSet.has(z)) {
-                zoneSet.add(z);
-                zones.push(z);
-              }
-            });
+            .filter((z) => z && z.toLowerCase() !== "skip");
+            
+          layers.forEach((z) => {
+            if (!zoneMap.has(z)) {
+              const detail = item as unknown as DataDetail;
+              zoneMap.set(z, detail);
+              zones.push({ label: z, data: detail });
+            }
+          });
         });
 
-        setMenuItems(zones.map((zone) => ({ label: zone })));
+        console.log("✅ Đã xử lý danh sách tiện ích:", zones);
+        setMenuItems(zones);
       } catch (error) {
-        console.error("❌ Lỗi khi gọi API:", error);
+        console.error("❌ Lỗi khi gọi API danh sách tiện ích:", error);
         setMenuItems([]);
       } finally {
         setLoading(false);
@@ -95,23 +128,31 @@ export default function Menu({
     fetchData();
   }, [project_id, onModelsLoaded]);
 
-  // ✅ SỬA LOGIC CLICK ĐỂ TOGGLE VÀ TRÁNH CALL API LẦN 2
-  // ✅ SỬA LOGIC CLICK ĐỂ TOGGLE VÀ TRÁNH CALL API LẦN 2
-  const handleSelectModel = async (modelName: string) => {
+  const handleSelectModel = async (modelName: string, detail: DataDetail) => {
     if (!project_id) return;
 
     const normalizedModel = modelName.trim();
+    console.log("🖱️ Click tiện ích:", normalizedModel);
 
-    // Nếu nhấp vào cái đang chọn -> Tắt highlight và không call API
+    // Nếu nhấp vào cái đang chọn -> Tắt highlight
     if (selectedModel?.trim() === normalizedModel) {
-      onHighlightCodes?.([]); // Xóa danh sách highlight
-      onSelectModel?.(modelName); // Toggle về null trong parent
+      console.log("🔄 Toggle OFF tiện ích");
+      onHighlightCodes?.([]); 
+      onSelectModel?.(modelName); 
       return;
     }
 
-    onSelectModel?.(modelName); // Set model mới trong parent
+    console.log("✨ Chọn tiện ích mới:", normalizedModel);
+    onSelectModel?.(modelName); 
 
-    // Nếu nhấp vào cái mới -> Call API
+    // Sử dụng data có sẵn thay vì call API lại (tránh lỗi filter không khớp)
+    if (detail) {
+      console.log("📦 Dữ liệu modal:", detail);
+      setSelectedData(detail);
+      setOpened(true);
+    }
+
+    // Vẫn call API để lấy danh sách unit_code cần highlight (nếu cần filter chính xác hơn)
     try {
       const result = await createNodeAttribute({
         project_id,
@@ -126,10 +167,11 @@ export default function Menu({
           .map((item: NodeAttributeItem) => item.unit_code)
           .filter((code: string | undefined): code is string => Boolean(code));
 
+        console.log("🔦 Highlight các mã:", codes);
         onHighlightCodes?.(codes);
       }
     } catch (error) {
-      console.error("❌ Lỗi khi lọc theo tiện ích:", error);
+      console.error("❌ Lỗi khi lấy danh sách highlight:", error);
     }
   };
 
@@ -163,7 +205,7 @@ export default function Menu({
                    item.label.length >= 20 ? styles.menuBtnLong : ""
                  } ${selectedModel === item.label ? styles.activeBtn : ""}`} // Thêm class activeBtn
                  onClick={() => {
-                   handleSelectModel(item.label);
+                   handleSelectModel(item.label, item.data);
                  }}
                >
                  {item.label}
@@ -200,6 +242,13 @@ export default function Menu({
           </Button>
         </Group>
       </div>
+
+      <ModalItem
+        opened={opened}
+        onClose={() => setOpened(false)}
+        data={selectedData}
+        projectId={project_id}
+      />
     </div>
   );
 }
