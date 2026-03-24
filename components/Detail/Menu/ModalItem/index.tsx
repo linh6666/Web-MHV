@@ -1,9 +1,11 @@
 "use client";
 
-import { Image, Modal, Text, Loader, Center } from "@mantine/core";
+import { Image, Modal, Text, Loader, Center, ActionIcon } from "@mantine/core";
 import React, { useEffect, useState, useCallback } from "react";
 import { Getlisthome } from "../../../../api/apiGetListHome";
 import styles from "./ModalItem.module.css";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { IconMaximize, IconX } from "@tabler/icons-react";
 
 interface DataDetail {
   id: number;
@@ -39,6 +41,7 @@ export default function ModalItem({
   const [homeData, setHomeData] = useState<HomeDetailItem[]>([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [zoomOpened, setZoomOpened] = useState(false);
 
   // ================= FETCH API =================
   const fetchHomeData = useCallback(async () => {
@@ -89,106 +92,163 @@ export default function ModalItem({
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      // title="Chi tiết căn hộ"
-      size="70%"
-      radius="md"
-      styles={{
-        title: {
-          fontSize: "calc(16px + 0.5vw)",
-          fontWeight: 700,
-        },
-        content: {
-          height: "auto",
-          maxHeight: "95vh",
-          display: "flex",
-          flexDirection: "column",
-        },
-        body: {
-          padding: "clamp(10px, 2vw, 24px)",
-          flex: 1,
-          overflow: "hidden",
-        },
-      }}
-    >
-      {!data ? (
-        <Text size="lg" fw={500}>
-          Không có dữ liệu
-        </Text>
-      ) : (
-        <div className={styles.container}>
-          {/* ================= LEFT ================= */}
-          <div className={styles.leftPanel}>
-            <Text fw={700} mb={12} className={styles.unitTitle}>
-              Chi tiết: {data.layer6}
+    <>
+      <Modal
+        opened={opened}
+        onClose={onClose}
+        // title="Chi tiết căn hộ"
+        size="70%"
+        radius="md"
+        styles={{
+          title: {
+            fontSize: "calc(16px + 0.5vw)",
+            fontWeight: 700,
+          },
+          content: {
+            height: "auto",
+            maxHeight: "95vh",
+            display: "flex",
+            flexDirection: "column",
+          },
+          body: {
+            padding: "clamp(10px, 2vw, 24px)",
+            flex: 1,
+            overflow: "hidden",
+          },
+        }}
+      >
+        {!data ? (
+          <Center style={{ height: "200px" }}>
+            <Text size="lg" fw={500}>
+              Không có dữ liệu
             </Text>
+          </Center>
+        ) : (
+          <div className={styles.container}>
+            {/* ================= LEFT ================= */}
+            <div className={styles.leftPanel}>
+              <Text fw={700} mb={12} className={styles.unitTitle}>
+                Chi tiết: {data.layer6}
+              </Text>
 
-            <Text className={styles.descriptionText}>
-              <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
-            </Text>
-          </div>
+              <Text className={styles.descriptionText}>
+                <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
+              </Text>
+            </div>
 
-          {/* ================= RIGHT ================= */}
-          <div className={styles.rightPanel}>
-            {loading ? (
-              <Center style={{ height: "400px" }}>
-                <Loader />
-              </Center>
-            ) : (
-              <>
-                {/* ====== IMAGE ====== */}
-                {currentImage && (
-                  <div className={styles.imageWrapper}>
-                    <Image
-                      src={currentImage.url || ""}
-                      alt=""
-                      className={styles.mainImage}
-                    />
-                    {/* prev */}
-                    <button
-                      className={`${styles.sliderBtn} ${styles.prevBtn}`}
-                      onClick={goPrev}
-                      disabled={index === 0}
-                    >
-                      ◀
-                    </button>
-
-                    {/* next */}
-                    <button
-                      className={`${styles.sliderBtn} ${styles.nextBtn}`}
-                      onClick={goNext}
-                      disabled={index === imageData.length - 1}
-                    >
-                      ▶
-                    </button>
-                  </div>
-                )}
-
-                {/* ===== THUMBNAIL ===== */}
-                <div className={`${styles.thumbList} ${styles.thumbScroll}`}>
-                  {imageData.map((img, i) => (
-                    <div
-                      key={img.id}
-                      onClick={() => setIndex(i)}
-                      className={`${styles.thumbItem} ${
-                        i === index ? styles.thumbItemActive : ""
-                      }`}
-                    >
+            {/* ================= RIGHT ================= */}
+            <div className={styles.rightPanel}>
+              {loading ? (
+                <Center style={{ height: "400px" }}>
+                  <Loader />
+                </Center>
+              ) : (
+                <>
+                  {/* ====== IMAGE ====== */}
+                  {currentImage && (
+                    <div className={styles.imageWrapper}>
                       <Image
-                        src={img.url || ""}
+                        src={currentImage.url || ""}
                         alt=""
-                        className={styles.thumbImage}
+                        className={styles.mainImage}
                       />
+                      
+                      {/* Nút phóng to */}
+                      <ActionIcon 
+                         className={styles.zoomBtn}
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setZoomOpened(true);
+                         }}
+                         variant="filled"
+                       >
+                         <IconMaximize size={20} />
+                       </ActionIcon>
+
+                      {/* prev */}
+                      <button
+                        className={`${styles.sliderBtn} ${styles.prevBtn}`}
+                        onClick={goPrev}
+                        disabled={index === 0}
+                      >
+                        ◀
+                      </button>
+
+                      {/* next */}
+                      <button
+                        className={`${styles.sliderBtn} ${styles.nextBtn}`}
+                        onClick={goNext}
+                        disabled={index === imageData.length - 1}
+                      >
+                        ▶
+                      </button>
                     </div>
-                  ))}
-                </div>
-              </>
-            )}
+                  )}
+
+                  {/* ===== THUMBNAIL ===== */}
+                  <div className={`${styles.thumbList} ${styles.thumbScroll}`}>
+                    {imageData.map((img, i) => (
+                      <div
+                        key={img.id}
+                        onClick={() => setIndex(i)}
+                        className={`${styles.thumbItem} ${
+                          i === index ? styles.thumbItemActive : ""
+                        }`}
+                      >
+                        <Image
+                          src={img.url || ""}
+                          alt=""
+                          className={styles.thumbImage}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </Modal>
+        )}
+      </Modal>
+
+      {/* ================= FULLSCREEN ZOOM MODAL ================= */}
+      <Modal
+        opened={zoomOpened}
+        onClose={() => setZoomOpened(false)}
+        fullScreen
+        zIndex={2000}
+        withCloseButton={false}
+        styles={{
+          content: { background: "rgba(0,0,0,0.9)" },
+          body: { padding: 0, height: "100vh", position: "relative" }
+        }}
+      >
+        <ActionIcon 
+          onClick={() => setZoomOpened(false)}
+          variant="transparent"
+          style={{ position: "fixed", top: 20, right: 20, zIndex: 10 }}
+        >
+          <IconX size={40} color="white" />
+        </ActionIcon>
+
+        <TransformWrapper
+          initialScale={1}
+          minScale={0.5}
+          maxScale={5}
+          centerOnInit
+        >
+          <TransformComponent
+            wrapperStyle={{ width: "100%", height: "100%" }}
+          >
+            <div className={styles.zoomOverlay}>
+              <img 
+                src={currentImage?.url || ""} 
+                alt="Zoomed" 
+                className={styles.zoomImg}
+              />
+            </div>
+          </TransformComponent>
+        </TransformWrapper>
+      </Modal>
+    </>
   );
 }

@@ -24,7 +24,7 @@
   font-size: calc(12px + 0.2vw) !important;
   line-height: 1.5;
   color: #666;
-   text-align: justify;
+  text-align: justify;
 }
 
 .rightPanel {
@@ -188,3 +188,56 @@
   background: #C2923F44;
   border-radius: 10px;
 }
+
+.zoomBtn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  color: white !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  backdrop-filter: blur(4px);
+  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+  z-index: 5;
+  transition: all 0.2s ease !important;
+}
+
+.zoomBtn:hover {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  .zoomBtn {
+    width: 35px !important;
+    height: 35px !important;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+.zoomInPlaceArea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zoomOverlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoomImg {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
