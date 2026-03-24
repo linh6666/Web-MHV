@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import ZoningSystem from "../../../../../components/UtilityDetails";
+import ZoningSystem from "../../../../../components/Utilities2";
 
 export default function InteractiveClient() {
   const searchParams = useSearchParams();

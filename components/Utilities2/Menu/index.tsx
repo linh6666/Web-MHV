@@ -9,7 +9,8 @@ import { createNodeAttribute } from "../../../api/apifiterutilities";
 
 interface MenuProps {
   project_id: string | null;
-  selectedModel?: string | null; // Thêm prop này
+  initialBuildingType?: string | null;
+  selectedModel?: string | null; 
   onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
   onHighlightCodes?: (codes: string[]) => void;
@@ -27,7 +28,8 @@ interface NodeAttributeItem {
 
 export default function Menu({
   project_id,
-  selectedModel, // Nhận vào từ props
+  initialBuildingType,
+  selectedModel, 
   onModelsLoaded,
   onSelectModel,
   onHighlightCodes,
@@ -45,7 +47,10 @@ export default function Menu({
       try {
         const body = {
           project_id,
-          filters: [{ label: "layer8", values: ["ti", "ct;ti"] }],
+          filters: [
+            { label: "layer8", values: ["ti", "ct;ti"] },
+            { label: "layer6", values: [initialBuildingType || ""] }
+          ],
         };
 
         const res = await createNodeAttribute(body);
@@ -96,20 +101,45 @@ export default function Menu({
   }, [project_id, onModelsLoaded]);
 
   // ✅ SỬA LOGIC CLICK ĐỂ TOGGLE VÀ TRÁNH CALL API LẦN 2
-  const handleSelectModel = (modelName: string) => {
+  const handleSelectModel = async (modelName: string) => {
     if (!project_id) return;
 
     const normalizedModel = modelName.trim();
     
-    // Điều hướng sang trang Chi-tiet-tien-ich với tham số id và building_type_vi
-    router.push(
-      `/tuong-tac/Ciputra/Chi-tiet-tien-ich?id=${project_id}&building_type_vi=${encodeURIComponent(normalizedModel)}`
-    );
+    // Nếu nhấp vào cái đang chọn -> Tắt highlight và không call API
+    if (selectedModel?.trim() === normalizedModel) {
+      onHighlightCodes?.([]); // Xóa danh sách highlight
+      onSelectModel?.(modelName); // Toggle về null trong parent
+      return;
+    }
+
+    onSelectModel?.(modelName); // Set model mới trong parent
+
+    // Nếu nhấp vào cái mới -> Call API
+    try {
+      const result = await createNodeAttribute({
+        project_id,
+        filters: [
+          { label: "layer8", values: ["ti", "ct;ti"] },
+          { label: "layer7", values: [modelName] },
+        ],
+      });
+
+      if (result?.data && Array.isArray(result.data)) {
+        const codes = result.data
+          .map((item: NodeAttributeItem) => item.unit_code)
+          .filter((code: string | undefined): code is string => Boolean(code));
+
+        onHighlightCodes?.(codes);
+      }
+    } catch (error) {
+      console.error("❌ Lỗi khi lọc theo tiện ích:", error);
+    }
   };
 
   const handleBack = () => {
     if (!project_id) return;
-    router.push(`/tuong-tac/Ciputra?id=${project_id}`);
+    router.push(`/tuong-tac/Ciputra/?id=${project_id}`);
   };
 
   return (
@@ -121,7 +151,7 @@ export default function Menu({
 
       {/* Title */}
       <div className={styles.title}>
-        <h1>TIỆN ÍCH TIÊU BIỂU</h1>
+        <h1>{initialBuildingType || "TIỆN ÍCH TIÊU BIỂU"}</h1>
       </div>
 
       {/* Menu */}

@@ -1,0 +1,357 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  gap: clamp(5px, 1.5vh, 10px);
+  /* Gap co giãn */
+  box-sizing: border-box;
+}
+
+.logo {
+  flex: 0 0 auto;
+  min-height: 80px;
+  max-height: 18vh;
+  /* Giới hạn chiều cao theo viewport */
+  border: 1px solid #EEEEEE;
+  border-radius: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+.imgea {
+  height: 90%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.title {
+  flex: 0 0 auto;
+  height: 50px;
+  border: 1px solid #EEEEEE;
+  border-radius: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title h1 {
+  font-weight: 700;
+  font-size: 15px;
+  color: #C2923F;
+  margin: 0;
+}
+
+/* nút chức năng */
+.Function {
+  flex: 1;
+  min-height: 150px;
+  /* Giảm min-height để linh hoạt hơn trên màn nhỏ */
+  border: 1px solid #EEEEEE;
+  padding: clamp(5px, 1.5vh, 10px);
+  /* Padding co giãn */
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE */
+}
+
+/* Chrome, Safari, Edge */
+.Function::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll {
+  width: 100%;
+}
+
+.menuStack {
+  gap: clamp(8px, 2vh, 15px);
+  /* Gap giữa các nút co giãn */
+  margin-top: clamp(5px, 1.5vh, 10px);
+  width: 100%;
+  align-items: center;
+}
+
+.btn {
+  background-color: #fff;
+  color: #762f0b;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 15px;
+}
+
+/* hàng nút cuối cùng */
+.footer {
+  flex: 0 0 auto;
+  height: clamp(60px, 10vh, 80px);
+  /* Chiều cao footer co giãn */
+  border: 1px solid #EEEEEE;
+  display: flex;
+  border-radius: 13px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(5px, 1.5vh, 10px);
+}
+
+/* Hàng nút trên */
+.modeRow {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modeBtn {
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid #d1d1d1;
+  background-color: #ffffff;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.modeBtn:hover {
+  background-color: #FFF1D2;
+}
+
+.modeBtn.active {
+  background: #FFF1D2;
+  color: #fff;
+  border: none;
+}
+
+/* Hàng nút tròn dưới */
+.controlRow {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.circleBtn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.circleBtn:hover {
+  background-color: #f2f2f2;
+}
+
+/* Responsive: màn nhỏ hơn 1400px */
+@media (max-width: 1400px) {
+  .menuBtn {
+    width: 100%;
+    max-width: 170px;
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+}
+
+@media (max-height: 700px) {
+  .logo {
+    min-height: 60px;
+  }
+
+  .title {
+    height: 40px;
+  }
+
+  .footer {
+    height: 70px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+
+  .logo,
+  .Function,
+  .title,
+  .footer {
+    border: none;
+  }
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo {
+    height: 100px;
+  }
+
+  .Function {
+    width: 100%;
+    height: auto;
+    padding: 5px;
+  }
+
+  .footer {
+    width: 100%;
+    height: auto;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 120px;
+    height: 35px;
+  }
+
+  .circleBtn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .modeBtn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .imgea {
+    width: 200px;
+    height: auto;
+  }
+}
+
+.btn.active {
+  background: #762f0b;
+  color: #fff;
+  border: none;
+}
+
+.circleBtn.active {
+  background-color: #762f0b;
+  color: #fff;
+}
+
+@media only screen and (max-width: 600px) {
+  .btn.active {
+    background: #762f0b;
+    color: #fff;
+  }
+
+  .circleBtn.active {
+    background-color: #762f0b;
+    color: #fff;
+  }
+}
+
+/* -----------------------
+   nút menu chính
+   ----------------------- */
+.menuBtn {
+  width: 170px;
+  height: auto;
+  min-height: clamp(24px, 4vh, 29px);
+  /* Chiều cao nút co giãn */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1.5px solid #EEEEEE;
+  border-radius: 999px;
+  background-color: #234374;
+  color: #EEEEEE;
+  font-size: clamp(9px, 1.2vh, 11px);
+  /* Font chữ co giãn nhẹ */
+  padding: 6px 14px;
+  line-height: 1.35;
+  /* ✅ cho phép xuống dòng */
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.activeBtn {
+  background-color: #C2923F !important;
+  color: #12223B !important;
+  border-color: #EEEEEE !important;
+}
+
+/* Giảm bo góc cho nút có nhiều chữ */
+.menuBtnLong {
+  border-radius: 23px;
+}
+
+/* -----------------------
+   wrapper cho 2 nút cuối
+   ----------------------- */
+.bottomTwo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+/* -----------------------
+   2 nút cuối: co giãn theo text
+   ----------------------- */
+.menuBtnSmall {
+  height: 29px;
+  display: inline-block;
+  width: fit-content;
+  min-width: unset;
+  border: 1.5px solid #762f0b;
+  border-radius: 999px;
+  background-color: #FFFAEE;
+  color: #762f0b;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 6px 18px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* CSS Reset cho Button để không bị kẹt màu */
+.menuBtn:focus,
+.menuBtn:active,
+.menuBtn:focus-within,
+.menuBtn[data-active] {
+  background-color: #234374 !important;
+  color: #EEEEEE !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.activeBtn {
+  background-color: #C2923F !important;
+  color: #12223B !important;
+  border-color: #EEEEEE !important;
+}
+
+.activeBtn:hover {
+  background-color: #e2af5a !important;
+}
+
+.menuBtn :global(.mantine-Button-label) {
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  line-height: 1.35;
+}
+
+.menuBtn :global(.mantine-Button-root) {
+  border-radius: 100px;
+}

@@ -1,0 +1,160 @@
+.box {
+  max-width: 1260px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  aspect-ratio: 16/9;
+  /* Tỉ lệ khung hình linh hoạt */
+  max-height: calc(100vh - 220px);
+  /* Trừ Header (80px) + Footer (~140px) */
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Tránh scrollbar */
+}
+
+/* FIX CHÍNH Ở ĐÂY */
+.left {
+  flex: 3;
+  /* ✅ không cho ảnh tràn khi zoom */
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Force react-zoom-pan-pinch components to fill height */
+.left :global(.react-transform-wrapper),
+.left :global(.react-transform-component) {
+  width: 100% !important;
+  /* height: 100% !important; */
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.right {
+  width: 240px;
+  background-color: #234374;
+  color: #762f0b;
+  font-size: 18px;
+  text-align: center;
+  padding: clamp(5px, 1.5vh, 10px);
+  /* Padding co giãn linh hoạt */
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  /* Đè lên nếu cần */
+}
+
+/* FIX CHÍNH Ở ĐÂY */
+.imageWrapper {
+  /* aspect-ratio: 1517.49 / 928.682; */
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ảnh nền */
+.img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* SVG overlay — fill toàn bộ imageWrapper */
+.overlaySvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* SVG bên trong co giãn theo wrapper */
+.overlaySvg :global(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  .box {
+    max-width: 100%;
+    padding: 12px;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .right {
+    width: 220px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet dọc */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .box {
+    max-width: 100%;
+    padding: 12px;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .right {
+    width: 220px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet ngang */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .box {
+    max-width: 100%;
+    padding: 10px;
+    padding-top: 60px;
+    margin-top: 0;
+  }
+
+  .right {
+    width: 200px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .box {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left {
+    flex: none;
+    width: 100%;
+    height: clamp(260px, 45vw, 380px);
+  }
+
+  .right {
+    flex: none;
+    width: 100%;
+    padding: 20px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .left {
+    height: clamp(200px, 55vw, 280px);
+  }
+
+  .right {
+    font-size: 14px;
+    padding: 15px;
+    margin-top: 10px;
+  }
+}
