@@ -21,7 +21,7 @@ interface MenuItem {
 }
 
 interface NodeAttributeItem {
-  layer6?: string | null;
+  layer5?: string | null;
   unit_code?: string;
   [key: string]: unknown;
 }
@@ -74,9 +74,9 @@ export default function Menu({
         const zones: string[] = [];
 
         data.forEach((item) => {
-          if (!item.layer6) return;
+          if (!item.layer5) return;
 
-          item.layer6
+          item.layer5
             .split(";")
             .map((z) => z.trim())
             .filter((z) => z && z.toLowerCase() !== "skip")
@@ -121,7 +121,8 @@ export default function Menu({
         project_id,
         filters: [
           { label: "layer8", values: ["ti", "ct;ti"] },
-          { label: "layer7", values: [modelName] },
+        { label: "layer6", values: [initialBuildingType || ""] }
+        
         ],
       });
 
@@ -137,10 +138,11 @@ export default function Menu({
     }
   };
 
-  const handleBack = () => {
-    if (!project_id) return;
-    router.push(`/tuong-tac/Ciputra/?id=${project_id}`);
-  };
+const handleBack = () => {
+  if (!project_id) return;
+  router.push(`/tuong-tac/Ciputra/Tien-ich?id=${project_id}`);
+};
+
 
   return (
     <div className={styles.box}>
