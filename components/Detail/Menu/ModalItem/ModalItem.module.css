@@ -235,11 +235,11 @@
 }
 
 .zoomImg {
-  max-width: 95vw;
-  max-height: 95vh;
+  width: 85vw;
+  height: 80vh;
   object-fit: contain;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .zoomNavBtn {
