@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Getlisthome } from "../../../../api/apiGetListHome";
 import styles from "./ModalItem.module.css";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { IconMaximize, IconX } from "@tabler/icons-react";
+import { IconMaximize, IconX, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 interface DataDetail {
   id: number;
@@ -242,17 +242,48 @@ export default function ModalItem({
           maxScale={5}
           centerOnInit
         >
-          <TransformComponent
-            wrapperStyle={{ width: "100%", height: "100%" }}
-          >
-            <div className={styles.zoomOverlay}>
-              <img 
-                src={currentImage?.url || ""} 
-                alt="Zoomed" 
-                className={styles.zoomImg}
-              />
-            </div>
-          </TransformComponent>
+          {({ resetTransform }) => (
+            <>
+              <TransformComponent
+                wrapperStyle={{ width: "100%", height: "100%" }}
+              >
+                <div className={styles.zoomOverlay}>
+                  <img 
+                    src={currentImage?.url || ""} 
+                    alt="Zoomed" 
+                    className={styles.zoomImg}
+                  />
+                </div>
+              </TransformComponent>
+
+              {/* Phím điều hướng trong zoom */}
+              {imageData.length > 1 && (
+                <>
+                  <ActionIcon
+                    className={`${styles.zoomNavBtn} ${styles.zoomPrevBtn}`}
+                    onClick={() => {
+                      resetTransform();
+                      goPrev();
+                    }}
+                    disabled={index === 0}
+                  >
+                    <IconChevronLeft size={48} />
+                  </ActionIcon>
+
+                  <ActionIcon
+                    className={`${styles.zoomNavBtn} ${styles.zoomNextBtn}`}
+                    onClick={() => {
+                      resetTransform();
+                      goNext();
+                    }}
+                    disabled={index === imageData.length - 1}
+                  >
+                    <IconChevronRight size={48} />
+                  </ActionIcon>
+                </>
+              )}
+            </>
+          )}
         </TransformWrapper>
       </Modal>
     </>

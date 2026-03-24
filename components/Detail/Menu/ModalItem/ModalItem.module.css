@@ -240,4 +240,56 @@
   object-fit: contain;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
-}
+}
+
+.zoomNavBtn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  z-index: 2001;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoomNavBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  scale: 1.1;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.zoomNavBtn:disabled {
+  opacity: 0.1;
+  cursor: not-allowed;
+}
+
+.zoomPrevBtn {
+  left: 40px;
+}
+
+.zoomNextBtn {
+  right: 40px;
+}
+
+@media (max-width: 900px) {
+  .zoomNavBtn {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .zoomPrevBtn {
+    left: 10px;
+  }
+
+  .zoomNextBtn {
+    right: 10px;
+  }
+}
