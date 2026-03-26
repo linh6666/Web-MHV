@@ -297,7 +297,7 @@ export default function ModalItem({
               {currentImage?.name_vi || data?.layer7 || data?.layer6 || "CHI TIẾT TIỆN ÍCH"}
             </Text>
             <Text size="sm" style={{ color: "white", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
-              Mô tả: {currentImage?.description_vi || data?.describe_vi || data?.describe || "Chưa có nội dung"}
+              Mô tả : {currentImage?.description_vi || "Chưa có nội dung"}
             </Text>
           </div>
         </div>

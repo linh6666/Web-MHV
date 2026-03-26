@@ -277,9 +277,12 @@
 }
 
 .zoomImg {
-  width: 1100px;
-  height: 800px;
+  width: 85%;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
+  user-select: none;
+  background-color: #000;
+  border-radius: 8px;
 }
 .zoomNavBtn {
   position: absolute;
