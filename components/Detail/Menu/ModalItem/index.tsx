@@ -218,67 +218,82 @@ export default function ModalItem({
         zIndex={2000}
         withCloseButton={false}
         styles={{
-          content: { background: "rgba(0,0,0,0.9)" },
+          content: { background: "rgba(22, 42, 54, 0.92)", backdropFilter: "blur(5px)" },
           body: { padding: 0, height: "100vh", position: "relative" }
         }}
       >
         <ActionIcon 
           onClick={() => setZoomOpened(false)}
           variant="transparent"
-          style={{ position: "fixed", top: 20, right: 20, zIndex: 10 }}
+          style={{ position: "fixed", top: 20, right: 20, zIndex: 2010 }}
         >
           <IconX size={40} color="white" />
         </ActionIcon>
 
-        <TransformWrapper
-          initialScale={1}
-          minScale={0.5}
-          maxScale={5}
-          centerOnInit
-        >
-          {({ resetTransform }) => (
-            <>
-              <TransformComponent
-                wrapperStyle={{ width: "100%", height: "100%" }}
-              >
-                <div className={styles.zoomOverlay}>
-                  <img 
-                    src={currentImage?.url || ""} 
-                    alt="Zoomed" 
-                    className={styles.zoomImg}
-                  />
-                </div>
-              </TransformComponent>
-
-              {/* Phím điều hướng trong zoom */}
-              {imageData.length > 1 && (
+        <div className={styles.zoomContainer}>
+          {/* Cột trái (Image Zoom) */}
+          <div className={styles.zoomLeftPanel}>
+            <TransformWrapper
+              initialScale={1}
+              minScale={0.5}
+              maxScale={5}
+              centerOnInit
+            >
+              {({ resetTransform }) => (
                 <>
-                  <ActionIcon
-                    className={`${styles.zoomNavBtn} ${styles.zoomPrevBtn}`}
-                    onClick={() => {
-                      resetTransform();
-                      goPrev();
-                    }}
-                    disabled={index === 0}
+                  <TransformComponent
+                    wrapperStyle={{ width: "100%", height: "100%" }}
                   >
-                    <IconChevronLeft size={48} />
-                  </ActionIcon>
+                    <div className={styles.zoomOverlay}>
+                      <img 
+                        src={currentImage?.url || ""} 
+                        alt="Zoomed" 
+                        className={styles.zoomImg}
+                      />
+                    </div>
+                  </TransformComponent>
 
-                  <ActionIcon
-                    className={`${styles.zoomNavBtn} ${styles.zoomNextBtn}`}
-                    onClick={() => {
-                      resetTransform();
-                      goNext();
-                    }}
-                    disabled={index === imageData.length - 1}
-                  >
-                    <IconChevronRight size={48} />
-                  </ActionIcon>
+                  {/* Phím điều hướng trong zoom */}
+                  {imageData.length > 1 && (
+                    <>
+                      <ActionIcon
+                        className={`${styles.zoomNavBtn} ${styles.zoomPrevBtn}`}
+                        onClick={() => {
+                          resetTransform();
+                          goPrev();
+                        }}
+                        disabled={index === 0}
+                      >
+                        <IconChevronLeft size={48} />
+                      </ActionIcon>
+
+                      <ActionIcon
+                        className={`${styles.zoomNavBtn} ${styles.zoomNextBtn}`}
+                        onClick={() => {
+                          resetTransform();
+                          goNext();
+                        }}
+                        disabled={index === imageData.length - 1}
+                      >
+                        <IconChevronRight size={48} />
+                      </ActionIcon>
+                    </>
+                  )}
                 </>
               )}
-            </>
-          )}
-        </TransformWrapper>
+            </TransformWrapper>
+          </div>
+
+          {/* Cột phải (Description) */}
+          <div className={styles.zoomRightPanel}>
+            <Text size="lg" fw={600} mb="md" style={{ color: "#D4B068", textTransform: "uppercase" }}>
+              {currentImage?.name_vi || data?.layer6 || "CHI TIẾT MÔ HÌNH"}
+            </Text>
+            <Text size="sm" style={{ color: "white", whiteSpace: "pre-wrap", lineHeight: 1.6 }}>
+             Mô tả: {currentImage?.description_vi || data?.describe_vi || data?.describe || ""}
+            </Text>
+          </div>
+        </div>
       </Modal>
     </>
   );
