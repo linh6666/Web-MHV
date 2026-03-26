@@ -179,7 +179,7 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
               {/* Description Input Area (Integrated) */}
               <Box p="md" style={{ flex: 1 }}>
                 <Textarea
-                  placeholder="Mô tả (không bắt buộc)"
+                  placeholder="Mô tả (bắt buộc)"
                   value={item.description}
                   onChange={(e) => handleDescriptionChange(index, e.currentTarget.value)}
                   minRows={2}
