@@ -17,45 +17,46 @@ export const createImg = async (
   unitCode: string,
   payload: CreateImgPayload
 ) => {
-  // Tạo URL động
-  const url = API_ROUTE.CREATE_IMG_DETAIL_HOME
+  // Tạo URL động và thêm tham số vào query parameters
+  let url = API_ROUTE.CREATE_IMG_DETAIL_HOME
     .replace("{project_id}", projectId)
     .replace("{unit_code}", unitCode);
 
-  console.log("👉 CREATE IMG URL:", url);
-  console.log("👉 PAYLOAD RECEIVED:", payload);
+  const queryParams = new URLSearchParams();
+  if (payload.description_vi) {
+    // Thử gửi đồng thời vào nhiều field name phổ biến để backend nhận diện
+    queryParams.append("description_vi", payload.description_vi);
+    queryParams.append("name_vi", payload.description_vi);
+  }
+
+  if (queryParams.toString()) {
+    url += `?${queryParams.toString()}`;
+  }
+
+  console.log("👉 FINAL API URL:", url);
 
   // Khởi tạo FormData
   const formData = new FormData();
 
   // Append file: file_1, file_2, ...
   payload.files.forEach((file, index) => {
-    console.log(`👉 Append file_${index + 1}:`, file.name);
     formData.append(`file_${index + 1}`, file);
   });
 
-  // Append description_vi
+  // Append metadata vào FormData (để backup)
   if (payload.description_vi) {
-    console.log("👉 Append description_vi:", payload.description_vi);
     formData.append("description_vi", payload.description_vi);
-  } else {
-    console.warn("⚠️ description_vi is EMPTY or UNDEFINED");
+    formData.append("name_vi", payload.description_vi);
+    formData.append("description_en", payload.description_vi);
+    formData.append("name_en", payload.description_vi);
   }
 
-  // Log toàn bộ FormData (rất quan trọng)
-  console.log("👉 FORM DATA CONTENT:");
-  for (const pair of formData.entries()) {
-    console.log(`   ${pair[0]}:`, pair[1]);
-  }
-
-  // Gửi request
+  // Gửi request sử dụng PUT
   const response = await api.put(url, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-
-  console.log("👉 API RESPONSE:", response.data);
 
   return response.data;
 };
