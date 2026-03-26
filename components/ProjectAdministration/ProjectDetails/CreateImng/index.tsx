@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -6,8 +6,25 @@ import {
   Group,
   LoadingOverlay,
   TextInput,
+  Textarea,
+  Stack,
+  Image,
+  SimpleGrid,
+  ActionIcon,
+  Text,
+  Paper,
+  rem,
+  Center,
 } from "@mantine/core";
-import { IconCheck, IconPlus } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconPlus,
+  IconPhotoPlus,
+  IconX,
+  IconTag,
+  IconMapPin,
+  IconClock,
+} from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { NotificationExtension } from "../../../../extension/NotificationExtension";
 import { createImg } from "../../../../api/apiCreateImg";
@@ -23,45 +40,55 @@ interface Props {
 const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
   const [visible, { open, close }] = useDisclosure(false);
 
-  // danh sách file
-  const [files, setFiles] = useState<(File | null)[]>([null]);
-
-  // RID / description_en
-  const [descriptionEn, setDescriptionEn] = useState("");
+  // danh sách file và mô tả tương ứng
+  const [items, setItems] = useState<{ file: File | null; description: string }[]>([
+    { file: null, description: "" },
+  ]);
 
   const handleFileChange = (index: number, file: File | null) => {
-    const updated = [...files];
-    updated[index] = file;
-    setFiles(updated);
+    const updated = [...items];
+    updated[index].file = file;
+    setItems(updated);
+  };
+
+  const handleDescriptionChange = (index: number, val: string) => {
+    const updated = [...items];
+    updated[index].description = val;
+    setItems(updated);
   };
 
   const handleAddInput = () => {
-    setFiles([...files, null]);
+    setItems([...items, { file: null, description: "" }]);
+  };
+
+  const removeItem = (index: number) => {
+    if (items.length > 1) {
+      setItems(items.filter((_, i) => i !== index));
+    } else {
+      setItems([{ file: null, description: "" }]);
+    }
   };
 
   const handleSubmit = async () => {
-    const validFiles = files.filter((f): f is File => f !== null);
+    const validItems = items.filter((item) => item.file !== null);
 
-    if (validFiles.length === 0) {
+    if (validItems.length === 0) {
       NotificationExtension.Fails("Vui lòng chọn ít nhất một ảnh.");
-      return;
-    }
-
-    if (!descriptionEn.trim()) {
-      NotificationExtension.Fails("Vui lòng nhập RID (description_en).");
       return;
     }
 
     open();
     try {
-      await createImg(projectId, unitCode, {
-        files: validFiles,
-        description_vi: descriptionEn.trim(),
-      });
+      // Gọi API cho từng hình ảnh để có mô tả riêng
+      for (const item of validItems) {
+        await createImg(projectId, unitCode, {
+          files: [item.file as File],
+          description_vi: item.description.trim(),
+        });
+      }
 
       NotificationExtension.Success("Tạo ảnh chi tiết nhà thành công!");
-      setFiles([null]);
-      setDescriptionEn("");
+      setItems([{ file: null, description: "" }]);
       onSearch();
       onClose?.();
     } catch (error) {
@@ -80,53 +107,126 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
         handleSubmit();
       }}
       pos="relative"
+      style={{ maxWidth: rem(900) }}
     >
-      <LoadingOverlay visible={visible} />
+      <LoadingOverlay visible={visible} zIndex={1000} />
 
-      {/* ===== RID / description_en ===== */}
-      <TextInput
-        label="Mô tả"
-        placeholder="Nhập Mô Tả"
-        value={descriptionEn}
-        onChange={(e) => setDescriptionEn(e.currentTarget.value)}
-        withAsterisk
-        mt="md"
-      />
+      <Stack gap="md">
+        {/* ===== List of image cards with individual descriptions ===== */}
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+          {items.map((item, index) => (
+            <Paper
+              key={index}
+              shadow="xs"
+              radius="md"
+              p={0}
+              style={{
+                backgroundColor: "#1c1c1e",
+                border: "1px solid #2c2c2e",
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              {/* Image / Input Area */}
+              <Box
+                style={{
+                  height: "150px",
+                  position: "relative",
+                  backgroundColor: "#1c1c1e",
+                }}
+              >
+                {item.file ? (
+                  <>
+                    <Image
+                      src={URL.createObjectURL(item.file)}
+                      alt={`Selected ${index}`}
+                      height={150}
+                      style={{ objectFit: "cover" }}
+                    />
+                    <ActionIcon
+                      color="red"
+                      variant="filled"
+                      size="xs"
+                      pos="absolute"
+                      top={5}
+                      right={5}
+                      onClick={() => removeItem(index)}
+                      radius="xl"
+                    >
+                      <IconX size={rem(10)} />
+                    </ActionIcon>
+                  </>
+                ) : (
+                  <Center style={{ height: "100%" }}>
+                    <FileInput
+                      placeholder="Chọn ảnh"
+                      accept="image/*"
+                      value={item.file}
+                      onChange={(f) => handleFileChange(index, f)}
+                      variant="unstyled"
+                      label={
+                        <Stack align="center" gap={2} style={{ cursor: "pointer" }}>
+                          <IconPhotoPlus size={24} stroke={1.5} color="#909296" />
+                          <Text c="#909296" size="10px">Ảnh {index + 1}</Text>
+                          {/* <Text c="#fff" size="xs" fw={500}>Chọn ảnh</Text>
+                          <Text c="#fff" size="xs">Chọn ảnh</Text> */}
+                        </Stack>
+                      }
+                    />
+                  </Center>
+                )}
+              </Box>
 
-      {/* ===== File inputs ===== */}
-      {files.map((file, index) => (
-        <FileInput
-          key={index}
-          label={`Ảnh ${index + 1}`}
-          placeholder="Chọn ảnh"
-          accept="image/*"
-          value={file}
-          onChange={(f) => handleFileChange(index, f)}
-          withAsterisk
-          clearable
-          mt="md"
-        />
-      ))}
+              {/* Description Input Area (Integrated) */}
+              <Box p="md" style={{ flex: 1 }}>
+                <Textarea
+                  placeholder="Mô tả (không bắt buộc)"
+                  value={item.description}
+                  onChange={(e) => handleDescriptionChange(index, e.currentTarget.value)}
+                  minRows={2}
+                  autosize
+                  styles={{
+                    input: {
+                      backgroundColor: "#2c2c2e",
+                      border: "1px solid #3a3a3c",
+                      borderRadius: rem(4),
+                      color: "#fff",
+                      padding: "6px 10px",
+                      fontSize: rem(12),
+                      "&:focus": {
+                        borderColor: "#3598dc",
+                      },
+                    },
+                  }}
+                />
+                
+              </Box>
+            </Paper>
+          ))}
+        </SimpleGrid>
 
-      <Group justify="space-between" mt="lg">
-        <Button
-          variant="light"
-          color="gray"
-          onClick={handleAddInput}
-          leftSection={<IconPlus size={18} />}
-        >
-          Thêm ảnh
-        </Button>
+        {/* ===== ORIGINAL BUTTONS ===== */}
+        <Group justify="space-between" mt="sm">
+          <Button
+            variant="light"
+            color="gray"
+            onClick={handleAddInput}
+            leftSection={<IconPlus size={18} />}
+          >
+            Thêm ảnh
+          </Button>
 
-        <Button
-          type="submit"
-          color="#3598dc"
-          loading={visible}
-          leftSection={<IconCheck size={18} />}
-        >
-          Tạo ảnh
-        </Button>
-      </Group>
+          <Button
+            type="submit"
+            color="#3598dc"
+            loading={visible}
+            leftSection={<IconCheck size={18} />}
+          >
+            Tạo ảnh
+          </Button>
+        </Group>
+      </Stack>
     </Box>
   );
 };
