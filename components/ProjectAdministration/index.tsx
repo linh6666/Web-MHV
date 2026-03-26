@@ -103,7 +103,7 @@ export function ProjectManagement() {
         display: 'flex',
         width: '100%',
         maxWidth: '1260px',
-        margin: '100px auto 10px auto',
+        margin: '0px auto 10px auto',
         border:
           '1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
       }}
