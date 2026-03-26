@@ -243,6 +243,7 @@ export default function ModalItem({
                 <>
                   <TransformComponent
                     wrapperStyle={{ width: "100%", height: "100%" }}
+                    contentStyle={{ width: "100%", height: "100%" }}
                   >
                     <div className={styles.zoomOverlay}>
                       <img 
