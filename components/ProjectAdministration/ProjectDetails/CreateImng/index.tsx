@@ -5,7 +5,7 @@ import {
   FileInput,
   Group,
   LoadingOverlay,
-  TextInput,
+
   Textarea,
   Stack,
   Image,
@@ -21,9 +21,7 @@ import {
   IconPlus,
   IconPhotoPlus,
   IconX,
-  IconTag,
-  IconMapPin,
-  IconClock,
+
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { NotificationExtension } from "../../../../extension/NotificationExtension";
