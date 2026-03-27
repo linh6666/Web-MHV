@@ -5,27 +5,34 @@ import { API_ROUTE } from "../const/apiRouter";
    PAYLOAD
 ======================= */
 export interface CreateImgPayload {
-  files: File[]; // ✅ mảng file thay vì 1 file
+  files: File[];
+  description_vi?: string;
 }
 
 /* =======================
    API CALL
 ======================= */
 export const createImg = async (
-  projectId: string,
+  projectId: string, // Có thể giữ tham số này nếu API cũ cần hoặc bỏ qua
   detailid: string,
-  payload: { files: File[] }
+  payload: { files: File[]; description_vi?: string }
 ) => {
+  // 1. Đưa projectId quay lại URL theo chuẩn API Server
   const url = API_ROUTE.UPDATE_IMG
     .replace("{project_id}", projectId)
-    .replace("{detal_id}",detailid );
+    .replace("{detal_id}", detailid);
 
   const formData = new FormData();
 
-  // ✅ append đúng format: file_1, file_2, ...
-  payload.files.forEach((file, index) => {
-    formData.append(`file_${index + 1}`, file);
-  });
+  // 2. Append file với key 'file' thay vì file_1, file_2
+  if (payload.files.length > 0) {
+    formData.append("file", payload.files[0]);
+  }
+
+  // 3. Đưa metadata vào Body thay vì URL
+  if (payload.description_vi !== undefined) {
+    formData.append("description_vi", payload.description_vi);
+  }
 
   const response = await api.put(url, formData, {
     headers: {

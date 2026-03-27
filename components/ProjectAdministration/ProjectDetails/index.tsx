@@ -437,7 +437,7 @@ const openImgModal = (record: DataType, project_id: string) => {
       </div>
     ),
 
-    size: "xl", // 👈 tăng width modal
+    size: "50%", // 👈 Thu nhỏ lại một chút để cân đối nhất
 
     children: (
       <DetailsImng

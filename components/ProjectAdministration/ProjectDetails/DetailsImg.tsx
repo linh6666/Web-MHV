@@ -4,8 +4,6 @@ import { IconPhoto, IconEdit } from "@tabler/icons-react";
 import CreateImg from "./CreateImng";
 import EditImg from "../EditImg";
 
-
-
 interface DetailsImngProps {
   idItem?: string[];
   projectId: string;
@@ -50,11 +48,13 @@ const DetailsImng: React.FC<DetailsImngProps> = ({
 
       {/* TAB CHỈNH SỬA */}
       <Tabs.Panel value="messages" pt="md">
-       <EditImg   projectId={projectId}
+       <EditImg 
+          projectId={projectId}
           unitCode={unitCode}
           idItem={idItem}
           onSearch={onSearch}
-          onClose={onClose}/>
+          onClose={onClose}
+        />
       </Tabs.Panel>
     </Tabs>
   );
