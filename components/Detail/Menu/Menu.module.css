@@ -270,21 +270,29 @@
    nút menu chính
    ----------------------- */
 .menuBtn {
-  width: 170px;
-  height: clamp(24px, 4vh, 29px);
-  /* Chiều cao nút co giãn */
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border: 1.5px solid #EEEEEE;
-  border-radius: 999px;
-  background-color: #234374;
-  color: #EEEEEE;
-  font-size: clamp(9px, 1.2vh, 11px);
-  /* Font chữ co giãn nhẹ */
-  padding: 0 10px;
+  width: 170px !important;
+  min-height: clamp(24px, 4vh, 29px) !important;
+  height: auto !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  border: 1.5px solid #EEEEEE !important;
+  border-radius: 999px !important; /* Bo góc ban đầu */
+  background-color: #234374 !important;
+  color: #EEEEEE !important;
+  font-size: clamp(9px, 1.2vh, 11px) !important;
+  padding: 8px 15px !important; /* Tăng padding để dễ nhìn */
   transition: all 0.2s ease;
-  white-space: nowrap;
+  white-space: normal !important; /* Ép xuống dòng */
+  line-height: 1.2 !important;
+  word-break: break-word !important; /* Nếu một từ quá dài thì tự ngắt */
+}
+
+/* Tác động vào lớp label bên trong của Mantine Button */
+.menuBtn span {
+  white-space: normal !important;
+  display: block !important;
 }
 
 /* -----------------------
