@@ -3,21 +3,18 @@
   width: 100%;
   margin: auto;
   display: flex;
-  aspect-ratio: 16/9;
+  justify-content: center; /* Đưa cả cụm ra giữa */
   /* Tỉ lệ khung hình linh hoạt */
-  max-height: calc(100vh - 220px);
+  height: calc(100vh - 220px);
   /* Trừ Header (80px) + Footer (~140px) */
   /* Không vượt quá chiều cao màn hình */
   box-sizing: border-box;
   overflow: hidden;
-  /* Tránh scrollbar */
-  /* padding-bottom: 10px; */
 }
 
 /* FIX CHÍNH Ở ĐÂY */
 .left {
-  flex: 3;
-  /* ✅ không cho ảnh tràn khi zoom */
+  flex: 0 1 auto; /* Không tự động giãn ra, chỉ lấy vừa đủ chỗ của ảnh */
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -51,18 +48,18 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
-  width: 100%;
+  width: auto; /* Co lại theo tỉ lệ ảnh */
   height: 100%;
-  /* ✅ fill toàn bộ vùng left */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .mapImage {
-  width: 100%;
-  height: 100%;
-  /* object-fit: contain !important; */
+  height: 100% !important;
+  width: auto !important; /* Quan trọng: Rộng tự động theo cao */
+  max-width: none !important; /* Cho phép nó mở rộng nếu cần */
+  object-fit: contain;
   display: block;
 }
 

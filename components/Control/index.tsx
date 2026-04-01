@@ -26,7 +26,7 @@ export default function ControlPage({ project_id }: ControlPageProps) {
         <Image
           src="/HOME.png"
           alt="Ảnh trang chủ"
-       
+          fit="contain"
           className={styles.mapImage}
         />
         </div>
