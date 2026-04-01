@@ -3,19 +3,16 @@
   width: 100%;
   margin: auto;
   display: flex;
-  aspect-ratio: 16/9;
-  /* Tỉ lệ khung hình linh hoạt */
-  max-height: calc(100vh - 220px);
+  justify-content: center; /* Căn giữa toàn bộ cụm ảnh+menu */
+  height: calc(100vh - 220px);
   /* Trừ Header (80px) + Footer (~140px) */
   box-sizing: border-box;
   overflow: hidden;
-  /* Tránh scrollbar */
 }
 
 /* FIX CHÍNH Ở ĐÂY */
 .left {
-  flex: 3;
-  /* ✅ không cho ảnh tràn khi zoom */
+  flex: 0 1 auto; /* Co lại theo chiều rộng của ảnh */
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -49,10 +46,8 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
-  width: 100%;
+  width: auto; /* Co lại theo tỉ lệ ảnh */
   height: 100%;
-  aspect-ratio: 1517.492 / 928.682;
-  /* Khớp với viewBox của SVG */
   position: relative;
   display: flex;
   justify-content: center;
@@ -61,14 +56,11 @@
 
 /* Ảnh nền */
 .img {
-  width: 100%;
-  height: 100%;
-  /* object-fit: contain; */
-  /* Ép ảnh giãn cùng tỉ lệ để luôn khớp với SVG (không móp méo) */
+  height: 100% !important;
+  width: auto !important;
   display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative; /* Đổi sang relative để nó tạo ra độ rộng thực tế */
+  object-fit: contain;
 }
 
 /* SVG overlay — fill toàn bộ imageWrapper */
