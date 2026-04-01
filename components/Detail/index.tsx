@@ -129,9 +129,15 @@ export default function ZoningSystem({
         }
       });
 
+      // ✅ Ép SVG co giãn tuyệt đối theo wrapper (giống hệt ảnh)
+      const svgRoot = svgDoc.documentElement;
+      svgRoot.setAttribute("preserveAspectRatio", "none");
+      svgRoot.setAttribute("width", "100%");
+      svgRoot.setAttribute("height", "100%");
+
       return {
         ...item,
-        svg: svgDoc.documentElement.outerHTML,
+        svg: svgRoot.outerHTML,
       };
     });
 
@@ -267,6 +273,7 @@ export default function ZoningSystem({
                 <Image
                   src="/HOME_BG.png"
                   alt="Ảnh"
+                  fit="contain"
                   className={styles.img}
                 />
 
