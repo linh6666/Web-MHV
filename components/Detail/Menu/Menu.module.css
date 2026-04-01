@@ -327,15 +327,15 @@
 /* hover / active */
 .menuBtn:hover,
 .menuBtnSmall:hover {
-  background-color: #C2923F;
-  color: #12223B;
+  background-color: #C2923F !important;
+  color: #12223B !important;
 }
 
 .menuBtn:active,
 .menuBtnSmall:active,
 .menuBtn:focus,
 .menuBtnSmall:focus {
-  background: #C2923F;
-  color: #12223B;
-  border-color: #EEEEEE;
+  background: #C2923F !important;
+  color: #12223B !important;
+  border-color: #EEEEEE !important;
 }
