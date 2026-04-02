@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Table, Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import AppSearch from "../../../common/AppSearch";
 import axios from "axios";
-import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
+import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiSelect } from "@elastic/eui";
 import { createWarehouse } from "../../../api/apiFilterWarehouse";
 import { getListProject } from "../../../api/apigetlistProject";
 
@@ -70,8 +70,9 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
 
   const pageSize = 10;
 
-  // ✅ SEARCH STATE
+  // ✅ SEARCH & FILTER STATE
   const [searchText, setSearchText] = useState("");
+  const [selectedLayer7, setSelectedLayer7] = useState("");
 
   const [templateOptions, setTemplateOptions] = useState<
     { value: string; label: string }[]
@@ -191,10 +192,34 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   }, [fetchWarehouse]);
 
   /* =======================
-     SEARCH FILTER
+     LAYER 7 OPTIONS
+  ======================= */
+  const layer7Options = useMemo(() => {
+    const uniqueValues = new Set<string>();
+    data.forEach((item) => {
+      const val = (item.layer7?.trim() || item.layer3?.trim());
+      if (val && val !== "-") uniqueValues.add(val);
+    });
+    
+    return [
+      { value: "", text: "Phân khu/Tòa" },
+      ...Array.from(uniqueValues).sort().map(val => ({ value: val, text: val }))
+    ];
+  }, [data]);
+
+  /* =======================
+     SEARCH & FILTER LOGIC
   ======================= */
   const filteredData = data.filter((item) => {
+    // 1. Phân khu filter
+    if (selectedLayer7) {
+      const itemLayer = (item.layer7?.trim() || item.layer3?.trim());
+      if (itemLayer !== selectedLayer7) return false;
+    }
+
+    // 2. Keyword search
     const keyword = searchText.toLowerCase();
+    if (!keyword) return true;
 
     return (
       item.unit_code?.toLowerCase().includes(keyword) ||
@@ -209,10 +234,10 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
     );
   });
 
-  // reset page khi search
+  // reset page khi filter thay đổi
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchText]);
+  }, [searchText, selectedLayer7]);
 
   /* =======================
      PAGINATION
@@ -313,11 +338,23 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
 
   return (
     <>
-      {/* ✅ SEARCH */}
-      <AppSearch
-        value={searchText}
-        onSearch={(value) => setSearchText(value)}
-      />
+      {/* ✅ SEARCH & FILTER */}
+      <EuiFlexGroup gutterSize="s" style={{ marginBottom: 16 }}>
+        <EuiFlexItem grow={false} style={{ width: 150  }}>
+          <EuiSelect
+            options={layer7Options}
+            value={selectedLayer7}
+            onChange={(e) => setSelectedLayer7(e.target.value)}
+            fullWidth
+          />
+        </EuiFlexItem>
+        <EuiFlexItem>
+          <AppSearch
+            value={searchText}
+            onSearch={(value) => setSearchText(value)}
+          />
+        </EuiFlexItem>
+      </EuiFlexGroup>
 
       <Table
         columns={columns}
