@@ -61,12 +61,19 @@ balcony_direction: string;
 /* =======================
    COMPONENT
 ======================= */
-export default function LargeFixedTable() {
+export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   const token = localStorage.getItem("access_token") || "";
 
   const [data, setData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
-  const [templateId, setTemplateId] = useState("");
+  const [templateId, setTemplateId] = useState(projectId || "");
+
+  // Cập nhật templateId nếu projectId đẩy vào thay đổi
+  useEffect(() => {
+    if (projectId) {
+      setTemplateId(projectId);
+    }
+  }, [projectId]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -97,11 +104,16 @@ export default function LargeFixedTable() {
         }));
 
       setTemplateOptions(options);
+
+      // Nếu không có projectId truyền vào thì tự động chọn dự án đầu tiên
+      if (!projectId && !templateId && options.length > 0) {
+        setTemplateId(options[0].value);
+      }
     } catch (err) {
       console.error("Load template error:", err);
       setTemplateOptions([]);
     }
-  }, [token]);
+  }, [token, projectId, templateId]);
 
   useEffect(() => {
     fetchTemplateList();
@@ -238,133 +250,7 @@ const columns: ColumnsType<DataType> = [
     },
   },
 
-  // {
-  //   title: "Loại công trình/vị trí",
-  //   dataIndex: "building_type",
-  //   width: 60,
-  //   render: (_: unknown, record: DataType) => {
-  //     if (
-  //       typeof record.building_type === "string" &&
-  //       record.building_type.trim() !== ""
-  //     ) {
-  //       return record.building_type;
-  //     }
-  //     if (
-  //       typeof record.layer2 === "string" &&
-  //       record.layer2.trim() !== ""
-  //     ) {
-  //       return record.layer2;
-  //     }
-  //     return "-";
-  //   },
-  // },
-
-  // {
-  //   title: "Phòng ngủ",
-  //   dataIndex: "bedroom",
-  //   width: 50,
-  // },
-
-  // {
-  //   title: "Phòng tắm",
-  //   dataIndex: "bathroom",
-  //   width: 50,
-  //   render: (bathroom: unknown) => {
-  //     if (
-  //       bathroom === null ||
-  //       bathroom === undefined ||
-  //       bathroom === "skip"
-  //     ) {
-  //       return "Không có";
-  //     }
-  //     return String(bathroom);
-  //   },
-  // },
-
-  // {
-  //   title: "Hướng",
-  //   dataIndex: "direction",
-  //   width: 50,
-  //   render: (direction: unknown) => {
-  //     if (
-  //       direction === null ||
-  //       direction === undefined ||
-  //       direction === "skip"
-  //     ) {
-  //       return "Không có";
-  //     }
-  //     return String(direction);
-  //   },
-  // },
-
-  // {
-  //   title: "Hướng cửa chính",
-  //   dataIndex: "main_door_direction",
-  //   width: 50,
-  //   render: (mainDoorDirection: unknown) => {
-  //     if (
-  //       mainDoorDirection === null ||
-  //       mainDoorDirection === undefined ||
-  //       mainDoorDirection === "skip"
-  //     ) {
-  //       return "Không có";
-  //     }
-  //     return String(mainDoorDirection);
-  //   },
-  // },
-
-  // {
-  //   title: "Hướng ban công",
-  //   dataIndex: "balcony_direction",
-  //   width: 50,
-  //   render: (balconyDirection: unknown) => {
-  //     if (
-  //       balconyDirection === null ||
-  //       balconyDirection === undefined ||
-  //       balconyDirection === "skip"
-  //     ) {
-  //       return "Không có";
-  //     }
-  //     return String(balconyDirection);
-  //   },
-  // },
-
-  // {
-  //   title: "Trạng thái",
-  //   dataIndex: "status_unit",
-  //   width: 50,
-  //   render: (statusUnit: unknown) => {
-  //     if (
-  //       statusUnit === null ||
-  //       statusUnit === undefined ||
-  //       statusUnit === "skip"
-  //     ) {
-  //       return <span style={{ color: "gray" }}>Không có</span>;
-  //     }
-
-  //     if (typeof statusUnit !== "string") {
-  //       return <span>-</span>;
-  //     }
-
-  //     let color = "#000";
-  //     switch (statusUnit) {
-  //       case "Quan tâm":
-  //         color = "#b8893c";
-  //         break;
-  //       case "Đang bán":
-  //         color = "#3d6985";
-  //         break;
-  //       case "Đã đặt cọc":
-  //         color = "#cc5c34";
-  //         break;
-  //       case "Đã bán":
-  //         color = "#b32f1f";
-  //         break;
-  //     }
-
-  //     return <span style={{ color }}>{statusUnit}</span>;
-  //   },
-  // },
+  
 
   {
     title: "Hành động",
@@ -455,7 +341,8 @@ const openImgModal = (record: DataType, project_id: string) => {
 
   return (
     <>
-      <Group mb="md">
+      {/* Ẩn Select đi theo yêu cầu */}
+      {/* <Group mb="md">
         <Select
           label="Chọn dự án"
           placeholder="Chọn dự án mẫu"
@@ -471,7 +358,7 @@ const openImgModal = (record: DataType, project_id: string) => {
           clearable
           withAsterisk
         />
-      </Group>
+      </Group> */}
 
       <Table
       //  scroll={{ x: 1000 }}
