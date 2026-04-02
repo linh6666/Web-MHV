@@ -224,7 +224,7 @@ const columns: ColumnsType<DataType> = [
     title: "Mã căn",
     dataIndex: "unit_code",
     width: 50,
-    fixed: "left",
+    // fixed: "left",
   },
 {
     title: "Phân khu/Tòa",
@@ -238,138 +238,138 @@ const columns: ColumnsType<DataType> = [
     },
   },
 
-  {
-    title: "Loại công trình/vị trí",
-    dataIndex: "building_type",
-    width: 60,
-    render: (_: unknown, record: DataType) => {
-      if (
-        typeof record.building_type === "string" &&
-        record.building_type.trim() !== ""
-      ) {
-        return record.building_type;
-      }
-      if (
-        typeof record.layer2 === "string" &&
-        record.layer2.trim() !== ""
-      ) {
-        return record.layer2;
-      }
-      return "-";
-    },
-  },
+  // {
+  //   title: "Loại công trình/vị trí",
+  //   dataIndex: "building_type",
+  //   width: 60,
+  //   render: (_: unknown, record: DataType) => {
+  //     if (
+  //       typeof record.building_type === "string" &&
+  //       record.building_type.trim() !== ""
+  //     ) {
+  //       return record.building_type;
+  //     }
+  //     if (
+  //       typeof record.layer2 === "string" &&
+  //       record.layer2.trim() !== ""
+  //     ) {
+  //       return record.layer2;
+  //     }
+  //     return "-";
+  //   },
+  // },
 
-  {
-    title: "Phòng ngủ",
-    dataIndex: "bedroom",
-    width: 50,
-  },
+  // {
+  //   title: "Phòng ngủ",
+  //   dataIndex: "bedroom",
+  //   width: 50,
+  // },
 
-  {
-    title: "Phòng tắm",
-    dataIndex: "bathroom",
-    width: 50,
-    render: (bathroom: unknown) => {
-      if (
-        bathroom === null ||
-        bathroom === undefined ||
-        bathroom === "skip"
-      ) {
-        return "Không có";
-      }
-      return String(bathroom);
-    },
-  },
+  // {
+  //   title: "Phòng tắm",
+  //   dataIndex: "bathroom",
+  //   width: 50,
+  //   render: (bathroom: unknown) => {
+  //     if (
+  //       bathroom === null ||
+  //       bathroom === undefined ||
+  //       bathroom === "skip"
+  //     ) {
+  //       return "Không có";
+  //     }
+  //     return String(bathroom);
+  //   },
+  // },
 
-  {
-    title: "Hướng",
-    dataIndex: "direction",
-    width: 50,
-    render: (direction: unknown) => {
-      if (
-        direction === null ||
-        direction === undefined ||
-        direction === "skip"
-      ) {
-        return "Không có";
-      }
-      return String(direction);
-    },
-  },
+  // {
+  //   title: "Hướng",
+  //   dataIndex: "direction",
+  //   width: 50,
+  //   render: (direction: unknown) => {
+  //     if (
+  //       direction === null ||
+  //       direction === undefined ||
+  //       direction === "skip"
+  //     ) {
+  //       return "Không có";
+  //     }
+  //     return String(direction);
+  //   },
+  // },
 
-  {
-    title: "Hướng cửa chính",
-    dataIndex: "main_door_direction",
-    width: 50,
-    render: (mainDoorDirection: unknown) => {
-      if (
-        mainDoorDirection === null ||
-        mainDoorDirection === undefined ||
-        mainDoorDirection === "skip"
-      ) {
-        return "Không có";
-      }
-      return String(mainDoorDirection);
-    },
-  },
+  // {
+  //   title: "Hướng cửa chính",
+  //   dataIndex: "main_door_direction",
+  //   width: 50,
+  //   render: (mainDoorDirection: unknown) => {
+  //     if (
+  //       mainDoorDirection === null ||
+  //       mainDoorDirection === undefined ||
+  //       mainDoorDirection === "skip"
+  //     ) {
+  //       return "Không có";
+  //     }
+  //     return String(mainDoorDirection);
+  //   },
+  // },
 
-  {
-    title: "Hướng ban công",
-    dataIndex: "balcony_direction",
-    width: 50,
-    render: (balconyDirection: unknown) => {
-      if (
-        balconyDirection === null ||
-        balconyDirection === undefined ||
-        balconyDirection === "skip"
-      ) {
-        return "Không có";
-      }
-      return String(balconyDirection);
-    },
-  },
+  // {
+  //   title: "Hướng ban công",
+  //   dataIndex: "balcony_direction",
+  //   width: 50,
+  //   render: (balconyDirection: unknown) => {
+  //     if (
+  //       balconyDirection === null ||
+  //       balconyDirection === undefined ||
+  //       balconyDirection === "skip"
+  //     ) {
+  //       return "Không có";
+  //     }
+  //     return String(balconyDirection);
+  //   },
+  // },
 
-  {
-    title: "Trạng thái",
-    dataIndex: "status_unit",
-    width: 50,
-    render: (statusUnit: unknown) => {
-      if (
-        statusUnit === null ||
-        statusUnit === undefined ||
-        statusUnit === "skip"
-      ) {
-        return <span style={{ color: "gray" }}>Không có</span>;
-      }
+  // {
+  //   title: "Trạng thái",
+  //   dataIndex: "status_unit",
+  //   width: 50,
+  //   render: (statusUnit: unknown) => {
+  //     if (
+  //       statusUnit === null ||
+  //       statusUnit === undefined ||
+  //       statusUnit === "skip"
+  //     ) {
+  //       return <span style={{ color: "gray" }}>Không có</span>;
+  //     }
 
-      if (typeof statusUnit !== "string") {
-        return <span>-</span>;
-      }
+  //     if (typeof statusUnit !== "string") {
+  //       return <span>-</span>;
+  //     }
 
-      let color = "#000";
-      switch (statusUnit) {
-        case "Quan tâm":
-          color = "#b8893c";
-          break;
-        case "Đang bán":
-          color = "#3d6985";
-          break;
-        case "Đã đặt cọc":
-          color = "#cc5c34";
-          break;
-        case "Đã bán":
-          color = "#b32f1f";
-          break;
-      }
+  //     let color = "#000";
+  //     switch (statusUnit) {
+  //       case "Quan tâm":
+  //         color = "#b8893c";
+  //         break;
+  //       case "Đang bán":
+  //         color = "#3d6985";
+  //         break;
+  //       case "Đã đặt cọc":
+  //         color = "#cc5c34";
+  //         break;
+  //       case "Đã bán":
+  //         color = "#b32f1f";
+  //         break;
+  //     }
 
-      return <span style={{ color }}>{statusUnit}</span>;
-    },
-  },
+  //     return <span style={{ color }}>{statusUnit}</span>;
+  //   },
+  // },
 
   {
     title: "Hành động",
     width: 40,
-    fixed: "right",
+    // fixed: "right",
     render: (_: unknown, record: DataType) => (
       <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
         <EuiFlexItem grow={false}>
@@ -474,7 +474,7 @@ const openImgModal = (record: DataType, project_id: string) => {
       </Group>
 
       <Table
-       scroll={{ x: 1600 }}
+      //  scroll={{ x: 1000 }}
         columns={columns}
         dataSource={paginatedData}
         loading={loading}
