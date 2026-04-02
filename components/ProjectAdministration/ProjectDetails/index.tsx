@@ -21,7 +21,7 @@ import { modals } from "@mantine/modals";
 ======================= */
 interface DataType {
   id: string;
-  zone: string;
+  layer7: string;
   building_type: string;
   unit_code: string;
   layer3: string;
@@ -43,9 +43,10 @@ interface ProjectTemplate {
 
 interface TemplateAttributeLink {
   id: string | number;
-  zone: string;
+  layer7: string;
   building_type: string;
   unit_code?: string;
+
   layer3: string;
   layer2: string;
   bedroom: string;
@@ -155,7 +156,7 @@ export default function LargeFixedTable() {
 
       const rows: DataType[] = list.map((item) => ({
         id: String(item.id),
-        zone: item.zone,
+        layer7: item.layer7,
        building_type: item.building_type,
         unit_code: item.unit_code || "-",
         layer3: item .layer3 || "-",
@@ -227,10 +228,10 @@ const columns: ColumnsType<DataType> = [
   },
 {
     title: "Phân khu/Tòa",
-    dataIndex: "zone",
+    dataIndex: "layer7",
     width: 40,
-    render: (zone: unknown, record: DataType) => {
-      if (typeof zone === "string" && zone.trim() !== "") return zone;
+    render: (layer7: unknown, record: DataType) => {
+      if (typeof layer7 === "string" && layer7.trim() !== "") return layer7;
       if (typeof record.layer3 === "string" && record.layer3.trim() !== "")
         return record.layer3;
       return "-";

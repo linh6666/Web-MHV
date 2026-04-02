@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -43,10 +43,20 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
     { file: null, description: "" },
   ]);
 
-  const handleFileChange = (index: number, file: File | null) => {
-    const updated = [...items];
-    updated[index].file = file;
-    setItems(updated);
+  const handleFileChange = (index: number, payload: File | File[] | null) => {
+    if (!payload) return;
+    const files = Array.isArray(payload) ? payload : [payload];
+    if (files.length === 0) return;
+
+    // Chuyển đổi các file được chọn thành danh sách các item mới
+    const newItems = files.map((file) => ({ file, description: "" }));
+
+    setItems((prev) => {
+      const result = [...prev];
+      // Thay thế ô hiện tại bằng danh sách các ảnh mới chọn
+      result.splice(index, 1, ...newItems);
+      return result;
+    });
   };
 
   const handleDescriptionChange = (index: number, val: string) => {
@@ -158,17 +168,16 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
                 ) : (
                   <Center style={{ height: "100%" }}>
                     <FileInput
+                      multiple
                       placeholder="Chọn ảnh"
                       accept="image/*"
-                      value={item.file}
+                      value={item.file ? [item.file] : []}
                       onChange={(f) => handleFileChange(index, f)}
                       variant="unstyled"
                       label={
                         <Stack align="center" gap={2} style={{ cursor: "pointer" }}>
                           <IconPhotoPlus size={24} stroke={1.5} color="#909296" />
-                          <Text c="#909296" size="10px">Ảnh {index + 1}</Text>
-                          {/* <Text c="#fff" size="xs" fw={500}>Chọn ảnh</Text>
-                          <Text c="#fff" size="xs">Chọn ảnh</Text> */}
+                          <Text c="#909296" size="10px">Tải nhiều ảnh</Text>
                         </Stack>
                       }
                     />
