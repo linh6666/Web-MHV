@@ -45,11 +45,9 @@ const EditView = ({
     initialValues: {
      
     
-      bathroom:"",
-      bedroom:"",
-      direction:"",
-      balcony_direction:"",
-      // main_door_direction:"",
+      layer7:"",
+      unit_code:"",
+   
      
     },
   });
@@ -69,9 +67,9 @@ const EditView = ({
       updates: {
        
     
-        bathroom: values.bathroom,
-        bedroom: values.bedroom,
-        balcony_direction: values.balcony_direction,
+        layer7: values.layer7,
+        unit_code: values.unit_code,
+    
         // main_door_direction: values.main_door_direction,
       },
     };
@@ -120,10 +118,9 @@ const fetchDetail = useCallback(async () => {
    formRef.current.setValues({
 
  
-  bathroom: item.bathroom ?? "",
-  bedroom: item.bedroom ?? "",
-  balcony_direction: item.balcony_direction ?? "",
-  // main_door_direction: item.main_door_direction ?? "",
+  layer7: item.layer7 ?? "",
+  unit_code: item.unit_code ?? "",
+ 
 });
   } catch (error) {
     console.error("Lỗi khi tải chi tiết:", error);
@@ -157,18 +154,14 @@ const fetchDetail = useCallback(async () => {
 
  
        <TextInput
-        label="Phòng tắm "
-         {...form.getInputProps("bathroom")}
+        label="Mã căn hộ "
+         {...form.getInputProps("unit_code")}
       />
       <TextInput
-        label="Phòng ngủ "
-         {...form.getInputProps("bedroom")}
+        label="Phân khu "
+         {...form.getInputProps("layer7")}
       />
-  <TextInput
-        label="Hướng "
-         {...form.getInputProps("direction")}
-      />
-      <TextInput label="Hướng ban công" {...form.getInputProps("balcony_direction")} />
+  
 
       <Group justify="flex-end" mt="lg">
         <Button

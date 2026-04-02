@@ -13,10 +13,9 @@ export interface GetDetailHomeParams {
 export interface CreateUserPayload {
   
   // describe_vi: string;
-  bathroom:string;
-  bedroom:string;
-  direction:string;
- balcony_direction:string;
+  unit_code:string;
+  layer7:string;
+ 
 //  main_door_direction:string;
 
 }
