@@ -3,8 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Table, Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import {  Group, Select } from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons-react";
+import AppSearch from "../../../common/AppSearch";
 import axios from "axios";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
 import { createWarehouse } from "../../../api/apiFilterWarehouse";
@@ -32,8 +31,7 @@ interface DataType {
   main_door_direction: string;
   balcony_direction: string;
   status_unit: string;
-  leaf_id:string;
-  
+  leaf_id: string;
 }
 
 interface ProjectTemplate {
@@ -46,16 +44,15 @@ interface TemplateAttributeLink {
   layer7: string;
   building_type: string;
   unit_code?: string;
-
   layer3: string;
   layer2: string;
   bedroom: string;
   bathroom: number;
   direction: string;
   main_door_direction: string;
-balcony_direction: string;
+  balcony_direction: string;
   status_unit: string;
-  leaf_id:string;
+  leaf_id: string;
 }
 
 /* =======================
@@ -68,23 +65,26 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   const [loading, setLoading] = useState(false);
   const [templateId, setTemplateId] = useState(projectId || "");
 
-  // Cập nhật templateId nếu projectId đẩy vào thay đổi
-  useEffect(() => {
-    if (projectId) {
-      setTemplateId(projectId);
-    }
-  }, [projectId]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
 
+  // ✅ SEARCH STATE
+  const [searchText, setSearchText] = useState("");
+
   const [templateOptions, setTemplateOptions] = useState<
     { value: string; label: string }[]
   >([]);
 
+  useEffect(() => {
+    if (projectId) {
+      setTemplateId(projectId);
+    }
+  }, [projectId]);
+
   /* =======================
-     1️⃣ LOAD TEMPLATE
+     LOAD TEMPLATE
   ======================= */
   const fetchTemplateList = useCallback(async () => {
     try {
@@ -93,8 +93,6 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
         skip: 0,
         limit: 100,
       });
-
-      console.log("TEMPLATE API FULL:", res.data);
 
       const options = (res.data || [])
         .filter((item: ProjectTemplate) => item?.name)
@@ -105,7 +103,6 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
 
       setTemplateOptions(options);
 
-      // Nếu không có projectId truyền vào thì tự động chọn dự án đầu tiên
       if (!projectId && !templateId && options.length > 0) {
         setTemplateId(options[0].value);
       }
@@ -120,7 +117,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   }, [fetchTemplateList]);
 
   /* =======================
-     2️⃣ LOAD TABLE DATA
+     LOAD TABLE DATA
   ======================= */
   const fetchWarehouse = useCallback(async () => {
     if (!templateId) {
@@ -133,64 +130,44 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
 
     const body = {
       project_id: templateId,
-     filters: [
-  {
-    label: "layer8",
-    values: ["ct", "ti"],
-  },
-],
+      filters: [
+        {
+          label: "layer8",
+          values: ["ct", "ti"],
+        },
+      ],
     };
 
     try {
       const res = await createWarehouse(templateId, body);
 
-      console.log("WAREHOUSE RAW RESPONSE:", res);
-      console.log("WAREHOUSE res.data:", res.data);
-
-      /* =======================
-         🔥 PARSE RESPONSE – FIX CHÍNH
-      ======================= */
       let list: TemplateAttributeLink[] = [];
 
-      if (Array.isArray(res.data)) {
-        list = res.data;
-      } else if (Array.isArray(res.data?.data)) {
-        list = res.data.data;
-      } else if (Array.isArray(res.data?.result)) {
-        list = res.data.result;
-      } else if (Array.isArray(res.data?.items)) {
-        list = res.data.items;
-      } else if (Array.isArray(res.data?.data?.items)) {
+      if (Array.isArray(res.data)) list = res.data;
+      else if (Array.isArray(res.data?.data)) list = res.data.data;
+      else if (Array.isArray(res.data?.result)) list = res.data.result;
+      else if (Array.isArray(res.data?.items)) list = res.data.items;
+      else if (Array.isArray(res.data?.data?.items))
         list = res.data.data.items;
-      }
-
-      console.log("WAREHOUSE FINAL LIST:", list);
 
       const rows: DataType[] = list.map((item) => ({
         id: String(item.id),
         layer7: item.layer7,
-       building_type: item.building_type,
+        building_type: item.building_type,
         unit_code: item.unit_code || "-",
-        layer3: item .layer3 || "-",
-        layer2: item .layer2 || "-",
-      bedroom: item .bedroom || "-", // để string 
-       bathroom: item .bathroom || 0, 
-       direction: item.direction ,
-        main_door_direction: item.main_door_direction ,
+        layer3: item.layer3 || "-",
+        layer2: item.layer2 || "-",
+        bedroom: item.bedroom || "-",
+        bathroom: item.bathroom || 0,
+        direction: item.direction,
+        main_door_direction: item.main_door_direction,
         balcony_direction: item.balcony_direction,
         status_unit: item.status_unit,
-        leaf_id:item.leaf_id,
+        leaf_id: item.leaf_id,
       }));
 
-      console.log("ROWS ĐƯA VÀO TABLE:", rows);
-
       setData(rows);
-      setTotal(
-        res.data?.count ||
-          res.data?.total ||
-          res.data?.data?.count ||
-          rows.length
-      );
+      setTotal(rows.length);
     } catch (err) {
       let message = "Có lỗi khi tải dữ liệu kho";
 
@@ -214,16 +191,33 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   }, [fetchWarehouse]);
 
   /* =======================
-     DEBUG STATE
+     SEARCH FILTER
   ======================= */
+  const filteredData = data.filter((item) => {
+    const keyword = searchText.toLowerCase();
+
+    return (
+      item.unit_code?.toLowerCase().includes(keyword) ||
+      item.layer7?.toLowerCase().includes(keyword) ||
+      item.layer3?.toLowerCase().includes(keyword) ||
+      item.layer2?.toLowerCase().includes(keyword) ||
+      item.building_type?.toLowerCase().includes(keyword) ||
+      item.direction?.toLowerCase().includes(keyword) ||
+      item.main_door_direction?.toLowerCase().includes(keyword) ||
+      item.balcony_direction?.toLowerCase().includes(keyword) ||
+      item.status_unit?.toLowerCase().includes(keyword)
+    );
+  });
+
+  // reset page khi search
   useEffect(() => {
-    console.log("DATA STATE (FINAL):", data);
-  }, [data]);
+    setCurrentPage(1);
+  }, [searchText]);
 
   /* =======================
      PAGINATION
   ======================= */
-  const paginatedData = data.slice(
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
@@ -231,80 +225,66 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   /* =======================
      TABLE COLUMNS
   ======================= */
-const columns: ColumnsType<DataType> = [
-  {
-    title: "Mã căn",
-    dataIndex: "unit_code",
-    width: 50,
-    // fixed: "left",
-  },
-{
-    title: "Phân khu/Tòa",
-    dataIndex: "layer7",
-    width: 40,
-    render: (layer7: unknown, record: DataType) => {
-      if (typeof layer7 === "string" && layer7.trim() !== "") return layer7;
-      if (typeof record.layer3 === "string" && record.layer3.trim() !== "")
-        return record.layer3;
-      return "-";
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Mã căn",
+      dataIndex: "unit_code",
+      width: 50,
     },
-  },
+    {
+      title: "Phân khu/Tòa",
+      dataIndex: "layer7",
+      width: 40,
+      render: (layer7: unknown, record: DataType) => {
+        if (typeof layer7 === "string" && layer7.trim() !== "") return layer7;
+        if (typeof record.layer3 === "string" && record.layer3.trim() !== "")
+          return record.layer3;
+        return "-";
+      },
+    },
+    {
+      title: "Hành động",
+      width: 40,
+      render: (_: unknown, record: DataType) => (
+        <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
+          <EuiFlexItem grow={false}>
+            <EuiButtonIcon
+              iconType="image"
+              onClick={() => openImgModal(record, templateId)}
+            />
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiButtonIcon
+              iconType="documentEdit"
+              onClick={() => openEditUserModal(record)}
+            />
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiButtonIcon
+              iconType="trash"
+              onClick={() => openDeleteUserModal(record)}
+            />
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      ),
+    },
+  ];
 
-  
-
-  {
-    title: "Hành động",
-    width: 40,
-    // fixed: "right",
-    render: (_: unknown, record: DataType) => (
-      <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
-        <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="image"
-            aria-label="Hình ảnh"
-            color="primary"
-            onClick={() => openImgModal(record, templateId)}
-          />
-        </EuiFlexItem>
-
-        <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="documentEdit"
-            aria-label="Chỉnh sửa"
-            color="success"
-            onClick={() => openEditUserModal(record)}
-          />
-        </EuiFlexItem>
-
-        <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="trash"
-            aria-label="Xóa"
-            color="danger"
-            onClick={() => openDeleteUserModal(record)}
-          />
-        </EuiFlexItem>
-      </EuiFlexGroup>
-    ),
-  },
- 
-];
-
-const openEditUserModal = (record: DataType) => {
-  modals.openConfirmModal({
-    title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa</div>,
-    children: (
-      <EditView
-        id={record.id}
-        leaf_id={record.leaf_id}
-        project_id={templateId}   // 👈 project đang chọn
-        onSearch={fetchWarehouse}
-      />
-    ),
-    confirmProps: { display: "none" },
-    cancelProps: { display: "none" },
-  });
-};
+  const openEditUserModal = (record: DataType) => {
+    modals.openConfirmModal({
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa</div>,
+      children: (
+        <EditView
+          id={record.id}
+          leaf_id={record.leaf_id}
+          project_id={templateId}
+          onSearch={fetchWarehouse}
+        />
+      ),
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
 
   const openDeleteUserModal = (record: DataType) => {
     modals.openConfirmModal({
@@ -314,54 +294,32 @@ const openEditUserModal = (record: DataType) => {
       cancelProps: { display: "none" },
     });
   };
-const openImgModal = (record: DataType, project_id: string) => {
-  const unit_code = record.unit_code || "-";
 
-  modals.openConfirmModal({
-    title: (
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-        Hình ảnh
-      </div>
-    ),
-
-    size: "50%", // 👈 Thu nhỏ lại một chút để cân đối nhất
-
-    children: (
-      <DetailsImng
-        projectId={project_id}
-        unitCode={unit_code}
-        onSearch={fetchWarehouse}
-      />
-    ),
-
-    confirmProps: { display: "none" },
-    cancelProps: { display: "none" },
-  });
-};
+  const openImgModal = (record: DataType, project_id: string) => {
+    modals.openConfirmModal({
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Hình ảnh</div>,
+      size: "50%",
+      children: (
+        <DetailsImng
+          projectId={project_id}
+          unitCode={record.unit_code}
+          onSearch={fetchWarehouse}
+        />
+      ),
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
 
   return (
     <>
-      {/* Ẩn Select đi theo yêu cầu */}
-      {/* <Group mb="md">
-        <Select
-          label="Chọn dự án"
-          placeholder="Chọn dự án mẫu"
-          data={templateOptions}
-          value={templateId}
-          onChange={(value) => {
-            setTemplateId(value || "");
-            setCurrentPage(1);
-            setData([]);
-            setTotal(0);
-          }}
-          rightSection={<IconChevronDown size={16} />}
-          clearable
-          withAsterisk
-        />
-      </Group> */}
+      {/* ✅ SEARCH */}
+      <AppSearch
+        value={searchText}
+        onSearch={(value) => setSearchText(value)}
+      />
 
       <Table
-      //  scroll={{ x: 1000 }}
         columns={columns}
         dataSource={paginatedData}
         loading={loading}
@@ -372,7 +330,7 @@ const openImgModal = (record: DataType, project_id: string) => {
 
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
         <Pagination
-          total={total}
+          total={filteredData.length}
           current={currentPage}
           pageSize={pageSize}
           onChange={(page) => setCurrentPage(page)}

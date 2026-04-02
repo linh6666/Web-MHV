@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 
 import type { ColumnsType } from "antd/es/table";
 import { Table, Pagination } from "antd";
-import AppSearch from "../../../common/AppSearch";
+// import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
@@ -241,7 +241,7 @@ export default function LargeFixedTable({}) {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <AppSearch />
+        {/* <AppSearch /> */}
         <AppAction openModal={openModal} />
       </Group>
 

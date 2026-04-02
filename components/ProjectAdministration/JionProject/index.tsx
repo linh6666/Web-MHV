@@ -8,7 +8,7 @@ import { GetJoinProject } from "../../../api/apigetlistJoinProject";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
 import { getListProject } from "../../../api/apigetlistProject";
 import { getListRoles } from "../../../api/getlistrole";
-import AppSearch from "../../../common/AppSearch";
+// import AppSearch from "../../../common/AppSearch";
 import { Badge, Group } from "@mantine/core";
 import EditView from "./EditView";
 import DeleteView from "./DeleteView";
@@ -251,7 +251,7 @@ export default function LargeFixedTable() {
          <Group
         style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
-        <AppSearch />
+        {/* <AppSearch /> */}
       </Group>
 
 

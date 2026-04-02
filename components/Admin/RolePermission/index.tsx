@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import AppSearch from "../../../common/AppSearch";
+// import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
@@ -198,7 +198,7 @@ const fetchOptions = useCallback(async () => {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <AppSearch />
+        {/* <AppSearch /> */}
         <AppAction openModal={openModal} />
       </Group>
 
