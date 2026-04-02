@@ -38,7 +38,7 @@ const mockdata = [
     initiallyOpened: true,
     links: [
       { label: 'Danh sách dự án', link: 'project' },
-         { label: 'Cập nhật dự án', link: 'projectdetails' },
+         { label: 'Cập nhật sản phẩm', link: 'projectdetails' },
       
       { label: 'Định danh vai trò người trong dự án', link: 'Roles' },
        { label: 'Phân quyền người dùng trong dự án', link: 'UserProjectRole' },
