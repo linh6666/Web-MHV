@@ -119,10 +119,10 @@ a.secondary {
 }
 
 @media (max-width: 600px) {
-  .page {
+  /* .page {
     padding: 32px;
     padding-bottom: 80px;
-  }
+  } */
 
   .main {
     align-items: center;

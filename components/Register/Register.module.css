@@ -1,12 +1,14 @@
 .registerPage {
   max-width: 500px;
+  width: 100%;
   margin: 0 auto;
-  /* margin-top: 85px; */
+  padding: 40px 20px;
+  box-sizing: border-box;
 }
 
 .registerPage .container {
-  /* margin: 0 auto; */
-  /* padding: 0 5px; */
+  margin: 0 auto;
+  padding: 0;
   display: block;
   height: 100%;
   position: relative;
@@ -39,12 +41,10 @@
   margin-top: 5px;
 }
 
-.registerPage .container .loginForm .formGroup .checkBox {
-}
-
 .registerPage .container .btn,
 .registerPage .container .btnDisabled {
   width: 100%;
+  padding: 12px;
   font-size: 14px;
   cursor: pointer;
   display: block;
@@ -110,7 +110,7 @@
 }
 
 .inputBox {
-  margin: 30px 0px;
+  margin: 25px 0px;
 }
 
 .root {
@@ -119,7 +119,7 @@
 }
 
 .input {
-  height: 35px;
+  height: 38px;
   border-top: none !important;
   border-left: none !important;
   border-right: none !important;
@@ -160,8 +160,8 @@
 }
 
 .label[data-floating] {
-  transform: translateY(-30px);
-  font-size: 15px;
+  transform: translateY(-28px);
+  font-size: 14px;
   color: var(--mantine-color-text);
 }
 
@@ -170,33 +170,26 @@
   color: white;
 }
 
-.header button {
-  background-color: var(--clr-bright-primary);
-  border-radius: 50%;
-  color: white;
+/* Responsive */
+
+@media (max-width: 768px) {
+  .registerPage {
+    max-width: 95%;
+    padding: 30px 15px;
+  }
 }
 
-.header button:hover {
-  background-color: var(--clr-bright-primary);
-  border-radius: 50%;
-  color: white;
-}
 @media (max-width: 480px) {
   .registerPage {
-    max-width: 100%;
-    padding: 0 10px;
+    padding: 20px 10px;
   }
 
-  .registerPage .container {
-    padding: 0 5px;
-  }
-
-  .registerPage .container .topNavBar .navBarTitle {
+  .registerPage .container .topNavBar .navBarContainer .navBarTitle {
     font-size: 18px;
   }
 
   .inputBox {
-    margin: 22px 0;
+    margin: 20px 0px;
   }
 
   .label {
@@ -204,12 +197,12 @@
   }
 
   .label[data-floating] {
-    transform: translateY(-26px);
-    font-size: 14px;
+    transform: translateY(-24px);
+    font-size: 13px;
   }
 
   .registerPage .container .btn {
-    font-size: 13px;
     padding: 10px;
+    font-size: 13px;
   }
 }
