@@ -123,13 +123,15 @@ export default function Header() {
           visibleFrom="sm"
           style={{ display: "flex", gap: "20px" }}
         >
-          <IconCircle>
-            <IconPhoneCall
-              size={17}
-              color="#fff"
-              stroke={1.5}
+           <Link href="/lien-he">
+             <IconCircle>
+               <IconPhoneCall
+                 size={17}
+                 color="#fff"
+                 stroke={1.5}
             />
           </IconCircle>
+          </Link>
 
           <UserIcon />
         </Box>
