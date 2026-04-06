@@ -172,17 +172,26 @@ export default function PhotoCollage() {
       await framePromise;
       ctx.drawImage(frameImg, 0, 0, EXPORT_SIZE, EXPORT_SIZE);
 
+      // Lấy giá trị --canvas-scale thực tế từ CSS (phục vụ mobile hiển thị scale nhỏ hơn)
+      const canvasScaleStr = canvasWrapperRef.current ? getComputedStyle(canvasWrapperRef.current).getPropertyValue('--canvas-scale') : "1";
+      const canvasScale = parseFloat(canvasScaleStr) || 1;
+      
+      // Tỷ lệ chuyển đổi vị trí chữ từ CANVAS_SIZE (cố định 450) sang EXPORT_SIZE (1200)
+      const textPositionRatio = EXPORT_SIZE / CANVAS_SIZE;
+
       // 3. Vẽ tất cả mẫu chữ
       texts.forEach(text => {
         if (!text.content) return;
         ctx.save();
-        const exportTextSize = text.size * exportScaleRatio;
+        
+        // Kích thước chữ dựa trên tỷ lệ thực tế hiển thị
+        const exportTextSize = text.size * canvasScale * exportScaleRatio;
         ctx.font = `bold ${exportTextSize}px "Nunito Sans", sans-serif`;
         ctx.fillStyle = text.color;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        ctx.translate(text.x * exportScaleRatio, text.y * exportScaleRatio);
+        ctx.translate(text.x * textPositionRatio, text.y * textPositionRatio);
         ctx.rotate((text.rotation * Math.PI) / 180);
         ctx.scale(text.flipH ? -1 : 1, text.flipV ? -1 : 1);
 
@@ -230,21 +239,22 @@ export default function PhotoCollage() {
           onMouseMove={(e) => {
             if (isDraggingText && activeTextId && canvasWrapperRef.current) {
               const rect = canvasWrapperRef.current.getBoundingClientRect();
+              const scale = CANVAS_SIZE / rect.width;
               updateActiveText({
-                x: Math.max(0, Math.min(CANVAS_SIZE, e.clientX - rect.left)),
-                y: Math.max(0, Math.min(CANVAS_SIZE, e.clientY - rect.top))
+                x: Math.max(0, Math.min(CANVAS_SIZE, (e.clientX - rect.left) * scale)),
+                y: Math.max(0, Math.min(CANVAS_SIZE, (e.clientY - rect.top) * scale))
               });
             }
           }}
           onTouchMove={(e) => {
             if (isDraggingText && activeTextId && canvasWrapperRef.current) {
-              // Khóa tuyệt đối việc cuộn màn hình khi đang kéo chữ
               if (e.cancelable) e.preventDefault();
               const touch = e.touches[0];
               const rect = canvasWrapperRef.current.getBoundingClientRect();
+              const scale = CANVAS_SIZE / rect.width;
               updateActiveText({
-                x: Math.max(0, Math.min(CANVAS_SIZE, touch.clientX - rect.left)),
-                y: Math.max(0, Math.min(CANVAS_SIZE, touch.clientY - rect.top))
+                x: Math.max(0, Math.min(CANVAS_SIZE, (touch.clientX - rect.left) * scale)),
+                y: Math.max(0, Math.min(CANVAS_SIZE, (touch.clientY - rect.top) * scale))
               });
             }
           }}
@@ -375,36 +385,37 @@ export default function PhotoCollage() {
               </div>
 
               {activeTextId && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "15px", paddingTop: "15px", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px", paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
                   <div style={{ display: "flex", gap: "5px" }}>
                     <input 
                       type="text" value={activeText?.content || ""} 
                       onChange={(e) => updateActiveText({ content: e.target.value })}
-                      style={{ flex: 1, padding: "8px", borderRadius: "8px", background: "#1f1f2e", border: "1px solid #333", color: "white" }}
+                      placeholder="Nhập.."
+                      style={{ flex: 1, padding: "6px 10px", fontSize: "12px", borderRadius: "6px", background: "#1f1f2e", border: "1px solid #333", color: "white" }}
                     />
-                    <button onClick={() => removeActiveText(activeTextId)} style={{ background: "#ef4444", border: "none", color: "white", padding: "8px", borderRadius: "8px" }}><IconTrash size={18} /></button>
+                    <button onClick={() => removeActiveText(activeTextId)} style={{ background: "#ef4444", border: "none", color: "white", padding: "6px", borderRadius: "6px", cursor: "pointer" }}><IconTrash size={15} /></button>
                   </div>
-                  <div style={{ display: "flex", gap: "5px" }}>
+                  <div style={{ display: "flex", gap: "6px" }}>
                     {["#ffffff", "#FFD700", "#FF4500", "#00BFFF", "#7CFC00"].map(c => (
-                      <div key={c} onClick={() => updateActiveText({ color: c })} style={{ width: "20px", height: "20px", background: c, borderRadius: "50%", cursor: "pointer", border: activeText?.color === c ? "2px solid white" : "none" }} />
+                      <div key={c} onClick={() => updateActiveText({ color: c })} style={{ width: "16px", height: "16px", background: c, borderRadius: "50%", cursor: "pointer", border: activeText?.color === c ? "2px solid white" : "none" }} />
                     ))}
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-5px" }}>
-                    <span style={{ fontSize: "12px", color: "#94a3b8" }}>Kích thước chữ:</span>
-                    <span style={{ fontSize: "12px", color: "#818cf8", fontWeight: "bold" }}>{activeText?.size}px</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-8px" }}>
+                    <span style={{ fontSize: "11px", color: "#94a3b8" }}>Kích thước chữ:</span>
+                    <span style={{ fontSize: "11px", color: "#818cf8", fontWeight: "bold" }}>{activeText?.size}px</span>
                   </div>
-                  <input type="range" min="12" max="100" value={activeText?.size || 32} onChange={(e) => updateActiveText({ size: parseInt(e.target.value) })} className="range-slider" />
-                  <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <button className="zoom-btn" onClick={() => updateActiveText({ rotation: (activeText?.rotation || 0) + 50 })} title="Xoay chữ 50°">
-                      <IconRotateClockwise size={18} />
+                  <input type="range" min="12" max="100" value={activeText?.size || 32} onChange={(e) => updateActiveText({ size: parseInt(e.target.value) })} className="range-slider" style={{ height: "4px" }} />
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <button className="zoom-btn" style={{ width: "28px", height: "28px" }} onClick={() => updateActiveText({ rotation: (activeText?.rotation || 0) + 50 })} title="Xoay chữ 50°">
+                      <IconRotateClockwise size={15} />
                     </button>
-                    <button className={`zoom-btn ${activeText?.flipH ? "active" : ""}`} onClick={() => updateActiveText({ flipH: !activeText?.flipH })} title="Lật ngang chữ" style={activeText?.flipH ? { backgroundColor: "rgba(99, 102, 241, 0.4)" } : {}}>
-                      <IconFlipHorizontal size={18} />
+                    <button className={`zoom-btn ${activeText?.flipH ? "active" : ""}`} style={{ width: "28px", height: "28px", backgroundColor: activeText?.flipH ? "rgba(99, 102, 241, 0.4)" : "" }} onClick={() => updateActiveText({ flipH: !activeText?.flipH })} title="Lật ngang chữ">
+                      <IconFlipHorizontal size={15} />
                     </button>
-                    <button className={`zoom-btn ${activeText?.flipV ? "active" : ""}`} onClick={() => updateActiveText({ flipV: !activeText?.flipV })} title="Lật dọc chữ" style={activeText?.flipV ? { backgroundColor: "rgba(99, 102, 241, 0.4)" } : {}}>
-                      <IconFlipVertical size={18} />
+                    <button className={`zoom-btn ${activeText?.flipV ? "active" : ""}`} style={{ width: "28px", height: "28px", backgroundColor: activeText?.flipV ? "rgba(99, 102, 241, 0.4)" : "" }} onClick={() => updateActiveText({ flipV: !activeText?.flipV })} title="Lật dọc chữ">
+                      <IconFlipVertical size={15} />
                     </button>
-                    <button onClick={addNewText} style={{ marginLeft: "auto", background: "none", border: "1px dashed #818cf8", color: "#818cf8", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", fontSize: "11px" }}>+ Thêm tiếp</button>
+                    <button onClick={addNewText} style={{ marginLeft: "auto", background: "none", border: "1px dashed #818cf8", color: "#818cf8", padding: "4px 8px", borderRadius: "5px", cursor: "pointer", fontSize: "10px" }}>+ Thêm tiếp</button>
                   </div>
                 </div>
               )}
@@ -439,7 +450,7 @@ export default function PhotoCollage() {
                     <IconCirclePlus size={22} />
                   </button>
                 </div>
-                <p style={{ color: "#4b5563", fontSize: "12px", marginTop: "10px", textAlign: "center" }}>
+                <p style={{ color: "#4b5563", fontSize: "12px", marginTop: "4px", textAlign: "center" }}>
                   Độ phóng đại: {Math.round(zoom * 100)}%
                 </p>
               </div>
