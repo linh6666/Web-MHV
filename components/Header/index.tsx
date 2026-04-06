@@ -103,6 +103,7 @@ export default function Header() {
           alt="Logo"
           w={280}
           h={70}
+          
           // fit="contain"
           // style={{ paddingLeft: 12, paddingRight: 12 }}
         />

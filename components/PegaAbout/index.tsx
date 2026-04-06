@@ -142,7 +142,7 @@ export default function DetailInteractive() {
             size="lg"
             ta="center"
             mb="sm"
-            c="#053c74"
+            c="#294B61"
           >
             Giới thiệu mô hình dự án
           </Text>
