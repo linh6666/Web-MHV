@@ -82,6 +82,10 @@
 /* ================= */
 
 @media (max-width: 1024px) {
+  .pageTitle {
+    margin-bottom: 0px;
+  }
+
   .card {
     padding: 30px 20px;
   }

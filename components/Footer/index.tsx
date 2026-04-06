@@ -15,7 +15,7 @@ CÔNG TY TNHH MÔ HÌNH VIỆT
   </Title>
 
   <Text>
-  Trụ sở chính tại Việt Nam: Số 751 Nguyễn Khoái, Phường Thanh Trì, Quận Hoàng Mai, Hà Nội, Việt Nam | Mã bưu chính: 10000
+  Trụ sở chính tại Việt Nam: Số 751 Nguyễn Khoái, Phường Thanh Trì, Quận Hoàng Mai, Hà Nội, Việt Nam
   </Text>
 
   <Group justify="center" gap="md" mt={6}>
