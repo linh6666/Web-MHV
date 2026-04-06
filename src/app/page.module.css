@@ -1,18 +1,11 @@
 .page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-items: center;
-  /* min-height: 100vh; */
-  /* padding: 80px; */
-  margin-top: 300px;
-  gap: 64px;
+  /* min-height: calc(100vh - 100px);  */
+  width: 100%;
+  margin-top: 0;
+  box-sizing: border-box;
   font-family: var(--font-geist-sans);
 }
 

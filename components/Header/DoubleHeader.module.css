@@ -14,19 +14,19 @@
   align-items: center;
   width: 100%;
   max-width: 1260px;
-  /* Giữ giới hạn chiều rộng giống layout cũ */
   margin: auto;
   justify-content: space-between;
   padding: 0 clamp(10px, 2vw, 20px);
-  /* Padding nhẹ để không dính lề khi màn hình nhỏ */
   box-sizing: border-box;
+  position: relative; /* Thêm để hỗ trợ căn giữa tuyệt đối nếu cần */
 }
 
 .links {
-  padding-top: var(--mantine-spacing-lg);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
 }
 
 .mainLinks {
