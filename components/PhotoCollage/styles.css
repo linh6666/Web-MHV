@@ -223,6 +223,31 @@
   margin-bottom: 0.75rem;
 }
 
+.add-text-pill-btn {
+  background: #ffffff;
+  color: #5b6eac;
+  border: none;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: fit-content;
+  margin: 5px 0;
+}
+
+.add-text-pill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  background: #fdfdfd;
+}
+
 .panel-title {
   font-size: 0.875rem;
   font-weight: 800;
@@ -303,7 +328,7 @@
 }
 
 .btn-secondary {
-  background: linear-gradient(90deg, #db2777, #9333ea);
+  background: #294b61;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -312,7 +337,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(90deg, #db2777, #9333ea);
+  background: #294b61;
   box-shadow: 0 10px 20px rgba(219, 39, 119, 0.25);
 }
 

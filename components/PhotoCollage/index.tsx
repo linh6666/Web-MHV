@@ -18,6 +18,8 @@ import {
   IconFlipHorizontal,
   IconFlipVertical,
   IconTrash,
+  IconArrowBackUp,
+  IconChevronLeft
 } from "@tabler/icons-react";
 import "./styles.css";
 
@@ -350,59 +352,30 @@ export default function PhotoCollage() {
 
           <div className="controls-area">
             <div className="control-panel">
-              {/* <h4 className="panel-title">1. Điều chỉnh kích thước</h4> */}
-              <div className="zoom-controls">
-                <button onClick={() => transformWrapperRef.current?.zoomOut(0.1)} className="zoom-btn">
-                  <IconCircleMinus size={22} />
-                </button>
-                <input 
-                  type="range" min="0.1" max="10" step="0.01" value={zoom}
-                  onChange={(e) => {
-                    const newScale = parseFloat(e.target.value);
-                    const wrapper = transformWrapperRef.current;
-                    const canvas = canvasWrapperRef.current;
-                    if (wrapper && canvas) {
-                      const rect = canvas.getBoundingClientRect();
-                      const centerX = rect.width / 2;
-                      const centerY = rect.height / 2;
-                      const state = wrapper.instance.transformState;
-                      const newPosX = centerX - (centerX - state.positionX) * (newScale / state.scale);
-                      const newPosY = centerY - (centerY - state.positionY) * (newScale / state.scale);
-                      wrapper.setTransform(newPosX, newPosY, newScale, 0);
-                    }
-                  }}
-                  className="range-slider"
-                />
-                <button onClick={() => transformWrapperRef.current?.zoomIn(0.1)} className="zoom-btn">
-                  <IconCirclePlus size={22} />
-                </button>
-              </div>
-              <p style={{ color: "#4b5563", fontSize: "12px", marginTop: "10px", textAlign: "center" }}>
-                Độ phóng đại: {Math.round(zoom * 100)}%
-              </p>
-            </div>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center", justifyContent: "space-between" }}>
+                {!activeTextId ? (
+                  <button onClick={addNewText} className="add-text-pill-btn" style={{ margin: 0 }}>A+ Thêm chữ</button>
+                ) : (
+                  <button onClick={() => setActiveTextId(null)} className="add-text-pill-btn" style={{ margin: 0 }}>
+                    <IconChevronLeft size={16} /> Trở lại
+                  </button>
+                )}
 
-            <div className="control-panel">
-              {/* <h4 className="panel-title">2. Hướng ảnh</h4> */}
-              <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-                <button className="zoom-btn" onClick={() => setRotation(r => r + 50)} title="Xoay ảnh 50°">
-                  <IconRotateClockwise size={22} />
-                </button>
-                <button className={`zoom-btn ${flipH ? "active" : ""}`} onClick={() => setFlipH(!flipH)} title="Lật ngang ảnh" style={flipH ? { backgroundColor: "rgba(99, 102, 241, 0.4)" } : {}}>
-                  <IconFlipHorizontal size={22} />
-                </button>
-                <button className={`zoom-btn ${flipV ? "active" : ""}`} onClick={() => setFlipV(!flipV)} title="Lật dọc ảnh" style={flipV ? { backgroundColor: "rgba(99, 102, 241, 0.4)" } : {}}>
-                  <IconFlipVertical size={22} />
-                </button>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button className="zoom-btn" onClick={() => setRotation(r => r + 50)} title="Xoay ảnh 50°">
+                    <IconRotateClockwise size={20} />
+                  </button>
+                  <button className={`zoom-btn ${flipH ? "active" : ""}`} onClick={() => setFlipH(!flipH)} title="Lật ngang" style={flipH ? { backgroundColor: "rgba(99, 102, 241, 0.4)" } : {}}>
+                    <IconFlipHorizontal size={20} />
+                  </button>
+                  <button className={`zoom-btn ${flipV ? "active" : ""}`} onClick={() => setFlipV(!flipV)} title="Lật dọc" style={flipV ? { backgroundColor: "rgba(99, 102, 241, 0.4)" } : {}}>
+                    <IconFlipVertical size={20} />
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="control-panel">
-              <h4 className="panel-title"> Quản lý chữ ({texts.length})</h4>
-              {!activeTextId ? (
-                <button onClick={addNewText} className="btn-primary" style={{ width: "100%", padding: "10px" }}>+ Thêm chữ mới</button>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              {activeTextId && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "15px", paddingTop: "15px", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
                   <div style={{ display: "flex", gap: "5px" }}>
                     <input 
                       type="text" value={activeText?.content || ""} 
@@ -436,6 +409,41 @@ export default function PhotoCollage() {
                 </div>
               )}
             </div>
+
+            {!activeTextId && (
+              <div className="control-panel">
+                {/* <h4 className="panel-title">1. Điều chỉnh kích thước</h4> */}
+                <div className="zoom-controls">
+                  <button onClick={() => transformWrapperRef.current?.zoomOut(0.1)} className="zoom-btn">
+                    <IconCircleMinus size={22} />
+                  </button>
+                  <input 
+                    type="range" min="0.1" max="10" step="0.01" value={zoom}
+                    onChange={(e) => {
+                      const newScale = parseFloat(e.target.value);
+                      const wrapper = transformWrapperRef.current;
+                      const canvas = canvasWrapperRef.current;
+                      if (wrapper && canvas) {
+                        const rect = canvas.getBoundingClientRect();
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        const state = wrapper.instance.transformState;
+                        const newPosX = centerX - (centerX - state.positionX) * (newScale / state.scale);
+                        const newPosY = centerY - (centerY - state.positionY) * (newScale / state.scale);
+                        wrapper.setTransform(newPosX, newPosY, newScale, 0);
+                      }
+                    }}
+                    className="range-slider"
+                  />
+                  <button onClick={() => transformWrapperRef.current?.zoomIn(0.1)} className="zoom-btn">
+                    <IconCirclePlus size={22} />
+                  </button>
+                </div>
+                <p style={{ color: "#4b5563", fontSize: "12px", marginTop: "10px", textAlign: "center" }}>
+                  Độ phóng đại: {Math.round(zoom * 100)}%
+                </p>
+              </div>
+            )}
 
             <div className="action-buttons">
               <button onClick={() => fileInputRef.current?.click()} className="btn-secondary"><IconReplace size={20} /> Đổi ảnh</button>
