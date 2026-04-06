@@ -1,12 +1,15 @@
 .registerPage {
-  max-width: 500px;
+  max-width: 450px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
+  /* padding: 40px 20px; */
+  box-sizing: border-box;
 }
 
 .registerPage .container {
   margin: 0 auto;
-  padding: 0 5px;
+  padding: 0;
   display: block;
   height: 100%;
   position: relative;
@@ -37,9 +40,6 @@
   font-size: 12px;
   font-style: italic;
   margin-top: 5px;
-}
-
-.registerPage .container .loginForm .formGroup .checkBox {
 }
 
 .registerPage .container .btn,
@@ -196,4 +196,50 @@
 
 .navBarLink:hover {
   text-decoration: underline;
+}
+
+/* Responsive Media Queries */
+
+@media (max-width: 768px) {
+  .registerPage {
+    max-width: 95%;
+    padding: 30px 15px;
+  }
+  
+  .registerPage .container .topNavBar .navBarContainer .navBarTitle {
+    font-size: 20px;
+  }
+
+  .navBarSubtitle {
+    font-size: 13px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .registerPage {
+    max-width: 100%;
+    padding: 20px 10px;
+  }
+
+  .registerPage .container .topNavBar .navBarContainer .navBarTitle {
+    font-size: 18px;
+  }
+
+  .inputBox {
+    margin: 25px 0px; 
+  }
+
+  .label {
+    font-size: 14px;
+  }
+
+  .label[data-floating] {
+    transform: translateY(-25px);
+    font-size: 13px;
+  }
+
+  .input {
+    height: 38px;
+  }
 }
