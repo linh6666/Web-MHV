@@ -101,10 +101,10 @@ export default function Header() {
         <Image
           src="/logo.png"
           alt="Logo"
-          w={150}
+          w={280}
           h={70}
-          fit="contain"
-          style={{ paddingLeft: 12, paddingRight: 12 }}
+          // fit="contain"
+          // style={{ paddingLeft: 12, paddingRight: 12 }}
         />
 
         {/* ============ Menu desktop ============ */}
