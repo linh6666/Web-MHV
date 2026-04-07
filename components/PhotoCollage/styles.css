@@ -628,11 +628,11 @@
 
 .frame-thumb-item:hover {
   transform: translateY(-3px);
-  border-color: rgba(99, 102, 241, 0.5);
+  border-color: #BB8D38;
 }
 
 .frame-thumb-item.active {
-  border-color: #818cf8;
+  border-color: #BB8D38;
   transform: translateY(-3px) scale(1.05);
   box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
@@ -655,7 +655,7 @@
   right: 4px;
   width: 8px;
   height: 8px;
-  background-color: #818cf8;
+  background-color: #BB8D38;
   border-radius: 50%;
   box-shadow: 0 0 5px #818cf8;
 }
