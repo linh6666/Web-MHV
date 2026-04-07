@@ -27,7 +27,7 @@
   margin: auto;
   font-weight: 700;
   font-size: 22px;
-  color: #053c74;
+  color: #294b61;
   text-align: center;
 }
 
@@ -48,7 +48,7 @@
   font-size: 14px;
   cursor: pointer;
   display: block;
-  background: #053c74;
+  background: #294b61;
   border: none;
   border-radius: 5px;
   text-align: center;
@@ -130,7 +130,7 @@
 }
 
 .input:focus-within {
-  border-color: #053c74;
+  border-color: #294b61;
   padding-left: 0 !important;
   outline: transparent;
   border-top: none;
