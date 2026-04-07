@@ -1,7 +1,7 @@
 .navbar {
   background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
-  height: 800px;
-  width: 270px;
+  width: 300px;
+  min-width: 300px;
   padding: var(--mantine-spacing-md);
   padding-bottom: 0;
   display: flex;
@@ -25,7 +25,7 @@
 }
 
 .linksInner {
-  padding-top: var(--mantine-spacing-xl);
+  /* padding-top: var(--mantine-spacing-xl); */
   padding-bottom: var(--mantine-spacing-xl);
 }
 
@@ -64,4 +64,55 @@
 
 .hidescrollbar::-webkit-scrollbar {
   display: none; /* Ẩn scrollbar trên WebKit browsers */
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 1260px;
+  margin: 0px auto 10px auto;
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  flex-direction: row;
+  height: calc(100vh - 220px);
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobileHeader {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 60px);
+    overflow: visible;
+  }
+  .navbar {
+    display: none;
+  }
+  .content {
+    height: auto;
+    overflow-y: visible;
+  }
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    padding: var(--mantine-spacing-md);
+    border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  }
+  .mobileHeader h3 {
+    margin: 0;
+    margin-left: var(--mantine-spacing-md);
+  }
 }

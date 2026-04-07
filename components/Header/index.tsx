@@ -70,7 +70,7 @@ export default function Header() {
   const publicLabels = [
     "GIỚI THIỆU",
     "MÔ HÌNH TƯƠNG TÁC",
-    "QUẢN TRỊ DỰ ÁN",
+    
   ];
 
   const visibleLinks = mainLinks.filter((link) => {
