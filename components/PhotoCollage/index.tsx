@@ -396,8 +396,12 @@ export default function PhotoCollage() {
                     <button onClick={() => removeActiveText(activeTextId)} style={{ background: "#ef4444", border: "none", color: "white", padding: "6px", borderRadius: "6px", cursor: "pointer" }}><IconTrash size={15} /></button>
                   </div>
                   <div style={{ display: "flex", gap: "6px" }}>
-                    {["#ffffff", "#FFD700", "#FF4500", "#00BFFF", "#7CFC00"].map(c => (
-                      <div key={c} onClick={() => updateActiveText({ color: c })} style={{ width: "16px", height: "16px", background: c, borderRadius: "50%", cursor: "pointer", border: activeText?.color === c ? "2px solid white" : "none" }} />
+                    {[ "#9FADBA", "#294B61", "#6C727E", "#BB8D38"].map(c => (
+                      <div 
+                        key={c} 
+                        onClick={() => updateActiveText({ color: activeText?.color === c ? "#ffffff" : c })} 
+                        style={{ width: "16px", height: "16px", background: c, borderRadius: "50%", cursor: "pointer", border: activeText?.color === c ? "2px solid white" : "none" }} 
+                      />
                     ))}
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-8px" }}>
