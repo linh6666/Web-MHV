@@ -6,7 +6,8 @@ import {
   IconNotes,
   IconUser,
 } from '@tabler/icons-react';
-import { ScrollArea } from '@mantine/core';
+import { ScrollArea, Drawer, Burger } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { LinksGroup } from './NavbarLinksGroup/NavbarLinksGroup';
 import classes from './NavbarSimple.module.css';
 import Project from './Project'; 
@@ -64,6 +65,7 @@ export function ProjectManagementContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const [opened, { toggle, close }] = useDisclosure(false);
 
   // Lấy giá trị active từ url query parameter (ví dụ: ?tab=project)
   const active = searchParams.get('tab') || 'home';
@@ -84,6 +86,7 @@ export function ProjectManagementContent() {
     } else {
       router.push(`${pathname}?tab=${value}`);
     }
+    close(); // Tự động đóng menu trên thiết bị di động sau khi chọn
   };
 
   const combinedData = [...mockdata, ];
@@ -120,18 +123,40 @@ export function ProjectManagementContent() {
     }
   };
 
+  const navLinks = combinedData.slice(0, mockdata.length).map((item) => (
+    <LinksGroup
+      {...item}
+      key={item.label}
+      active={active}
+      onActiveChange={handleActiveChange} // truyền hàm để đổi nội dung khi click và cập nhật url
+    />
+  ));
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        width: '100%',
-        maxWidth: '1260px',
-        margin: '0px auto 10px auto',
-        border:
-          '1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
-      }}
-    >
-      {/* Sidebar */}
+    <div className={classes.container}>
+      {/* Mobile Header */}
+      <div className={classes.mobileHeader}>
+        <Burger opened={opened} onClick={toggle} size="sm" />
+        <h3>QUẢN TRỊ DỰ ÁN</h3>
+      </div>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        opened={opened}
+        onClose={close}
+        title="Menu"
+        padding="md"
+        size="sm"
+        zIndex={100}
+      >
+        <ScrollArea className={classes.links}>
+          <div className={classes.linksInner}>
+            {navLinks}
+          </div>
+        </ScrollArea>
+      </Drawer>
+
+      {/* Sidebar (Desktop) */}
       <nav className={classes.navbar}>
         <div className={classes.header}>
           <h3>QUẢN TRỊ DỰ ÁN</h3>
@@ -139,32 +164,13 @@ export function ProjectManagementContent() {
 
         <ScrollArea className={classes.links}>
           <div className={classes.linksInner}>
-            {combinedData.slice(0, mockdata.length).map((item) => (
-              <LinksGroup
-                {...item}
-                key={item.label}
-                active={active}
-                onActiveChange={handleActiveChange} // truyền hàm để đổi nội dung khi click và cập nhật url
-              />
-            ))}
+            {navLinks}
           </div>
-
-       
         </ScrollArea>
       </nav>
 
       {/* Phần nội dung hiển thị bên phải */}
-      <div
-        style={{ 
-          flex: 1, 
-          padding: 20, 
-          overflowY: 'auto', 
-          height: '800px',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none'
-        }}
-        className={classes.hidescrollbar}
-      >
+      <div className={`${classes.content} ${classes.hidescrollbar}`}>
         {renderContent()}
       </div>
     </div>
