@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
 import {
   IconGauge,
   IconNotes,
@@ -17,7 +18,6 @@ import UserProjectRole from './UserProjectRole';
 import Order from './Order'; 
 import  ProjectDetails from './ProjectDetails';
 import HomeAdmin from '../HomeAdmin/index';  
-// import ProjectManagere from './ProjectManagere'; 
 
 const mockdata = [
   { label: 'Báo cáo tổng quan', icon: IconGauge, link: 'home' },
@@ -60,8 +60,31 @@ const mockdata = [
 
 
 
-export function ProjectManagement() {
-  const [active, setActive] = useState<string>(''); // <-- thêm state để xử lý active
+export function ProjectManagementContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Lấy giá trị active từ url query parameter (ví dụ: ?tab=project)
+  const active = searchParams.get('tab') || 'home';
+
+  // Tự động thêm ?tab=home vào URL nếu chưa có
+  useEffect(() => {
+    if (!searchParams.get('tab')) {
+      router.replace(`${pathname}?tab=home`);
+    }
+  }, [pathname, searchParams, router]);
+
+  const handleActiveChange = (value: string) => {
+    // Nếu value là đường dẫn riêng thực sự, điều hướng trực tiếp
+    if (value.startsWith('http')) {
+      window.location.href = value;
+    } else if (value.startsWith('/')) {
+      router.push(value);
+    } else {
+      router.push(`${pathname}?tab=${value}`);
+    }
+  };
 
   const combinedData = [...mockdata, ];
 
@@ -89,9 +112,9 @@ export function ProjectManagement() {
         return <ProjectDetails />;
       case 'JionProject':
        return <JionProject/>;
-      // case 'user-list':
-      //   return <UserProjectRole/>;
          
+      case 'home':
+        return <HomeAdmin />;
       default:
          return <HomeAdmin/>;
     }
@@ -121,7 +144,7 @@ export function ProjectManagement() {
                 {...item}
                 key={item.label}
                 active={active}
-                onActiveChange={setActive} // truyền hàm để đổi nội dung khi click
+                onActiveChange={handleActiveChange} // truyền hàm để đổi nội dung khi click và cập nhật url
               />
             ))}
           </div>
@@ -145,5 +168,13 @@ export function ProjectManagement() {
         {renderContent()}
       </div>
     </div>
+  );
+}
+
+export function ProjectManagement() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProjectManagementContent />
+    </Suspense>
   );
 }
