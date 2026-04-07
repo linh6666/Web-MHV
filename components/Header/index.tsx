@@ -171,13 +171,17 @@ export default function Header() {
               paddingRight: 12,
             }}
           >
-            <IconCircle>
+             <Link href="/lien-he">
+              <IconCircle>
               <IconPhoneCall
                 size={17}
                 color="#fff"
                 stroke={1.5}
               />
             </IconCircle>
+             
+             </Link>
+           
 
             <UserIcon />
           </Box>

@@ -155,7 +155,7 @@ export default function DetailInteractive() {
           fullWidth
           onClick={() => (window.location.href = "/")}
           style={{
-            backgroundColor: "#053c74",
+            backgroundColor: "#294b61",
             color: "#fff",
             fontWeight: 600,
           }}
