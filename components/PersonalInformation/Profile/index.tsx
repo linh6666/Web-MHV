@@ -201,7 +201,7 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
           </Group>
 
           {!isEditing && (
-            <Button color="#053c74" onClick={() => setIsEditing(true)} style={{ color: "#fff" }}>
+            <Button color="#294b61" onClick={() => setIsEditing(true)} style={{ color: "#fff" }}>
               Chỉnh sửa
             </Button>
           )}

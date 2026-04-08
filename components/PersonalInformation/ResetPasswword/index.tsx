@@ -70,7 +70,7 @@ export default function ResetPassword() {
 
   return (
     <Container size="sm" py="xl">
-      <Title order={2} c="#053c74" ta="center" mb="lg">
+      <Title order={2} c="#294b61" ta="center" mb="lg">
         Đổi mật khẩu tài khoản
       </Title>
       <PasswordInput
@@ -94,7 +94,7 @@ export default function ResetPassword() {
       <Button 
         onClick={handleChangePassword} // Mở modal khi nhấn nút
         style={{ 
-          backgroundColor: '#053c74',  // Màu nền
+          backgroundColor: '#294b61',  // Màu nền
           color: '#ffffff',              // Màu chữ
         }}
         // disabled={isButtonDisabled} // Điều kiện disable nút
