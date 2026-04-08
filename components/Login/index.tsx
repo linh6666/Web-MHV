@@ -112,16 +112,16 @@ const Login = () => {
       >
         <Box className={style.container}>
           {/* Header */}
- <Box className={style.topNavBar}>
-  <Box className={style.navBarContainer}>
-    <Box className={style.navBarTitle}>Đăng nhập vào Hệ thống</Box>
-    
-    {/* Text hướng dẫn bên dưới tiêu đề */}
-    <Text className={style.navBarSubtitle}>
-    Hãy đăng nhập để truy cập các tính năng xem dự án. Nếu chưa có tài khoản, bạn hãy đăng ký ở link dưới.
-    </Text>
-  </Box>
-</Box>
+          <Box className={style.topNavBar}>
+            <Box className={style.navBarContainer}>
+              <Box className={style.navBarTitle}>Đăng nhập vào Hệ thống</Box>
+
+              {/* Text hướng dẫn bên dưới tiêu đề */}
+              <Text className={style.navBarSubtitle}>
+                Hãy đăng nhập để truy cập các tính năng xem dự án. Nếu chưa có tài khoản, bạn hãy đăng ký ở link dưới.
+              </Text>
+            </Box>
+          </Box>
 
 
 

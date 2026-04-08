@@ -51,7 +51,7 @@ export default function ForgotPasswordModal({
       centered
       styles={{
         title: {
-          color: "#053c74",
+          color: "#294b61",
           fontWeight: 700,
           fontSize: "24px", // to như h1 nhưng vẫn hợp lệ HTML
         },
@@ -100,7 +100,7 @@ export default function ForgotPasswordModal({
       <Button
         fullWidth
         onClick={handleResetPassword}
-        color="#053c74"
+        color="#294b61"
         styles={{
           label: {
             color: "#fff",

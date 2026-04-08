@@ -1,9 +1,3 @@
-/* .wrapper {
-  background: linear-gradient(180deg, #eef2f3 0%, #dfe6ea 100%);
-  min-height: 100vh;
-  padding: 60px 20px;
-} */
-
 .pageTitle {
   text-align: center;
   font-size: 36px;
@@ -13,17 +7,15 @@
   letter-spacing: 6px;
 }
 
-/* Card xanh */
+/* Card */
 .card {
   max-width: 900px;
   margin: auto;
-  /* background: #FFFAEE; */
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Title trong card */
 .cardTitle {
   color: white;
   font-size: 32px;
@@ -46,8 +38,6 @@
 }
 
 .input :global(input) {
-  /* background: #e6eaed;
-  border: none; */
   height: 42px;
 }
 
@@ -56,12 +46,7 @@
   color:#294B61;
 }
 
-.textarea :global(textarea) {
-  /* background: #e6eaed;
-  border: none; */
-}
-
-/* Button vàng */
+/* Button */
 .submitBtn {
   margin-top: 20px;
   width: 100%;
@@ -77,20 +62,66 @@
   background: #406C89;
 }
 
-/* ================= */
-/* Responsive Tablet */
-/* ================= */
+/* --- PHẦN RESPONSIVE TỰ CO GIÃN CHIỀU CAO (Height Scaling) --- */
+
+@media (max-height: 850px) {
+  .pageTitle {
+    font-size: 28px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+  .card {
+    padding: 25px 40px;
+  }
+  .grid {
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-height: 700px) {
+  .pageTitle {
+    font-size: 24px;
+    margin-bottom: 15px;
+    letter-spacing: 3px;
+  }
+  .card {
+    padding: 20px 30px;
+  }
+  .grid {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .submitBtn {
+    margin-top: 10px;
+    height: 40px;
+  }
+}
+
+/* --- Responsive Width --- */
 
 @media (max-width: 1024px) {
   .pageTitle {
-    margin-bottom: 0px;
+    font-size: 30px;
+    margin-bottom: 20px;
   }
 
   .card {
     padding: 30px 20px;
+    margin: 0 10px;
   }
 
   .grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 22px;
+    letter-spacing: 2px;
+  }
+  .card {
+    padding: 20px 15px;
   }
 }

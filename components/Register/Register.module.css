@@ -170,7 +170,36 @@
   color: white;
 }
 
-/* Responsive */
+/* --- PHẦN RESPONSIVE TỰ CO GIÃN CHIỀU CAO (Height Scaling) --- */
+
+/* Khi màn hình có chiều cao thấp (ví dụ: laptop đặt độ phân giải scale 125%-150%) */
+@media (max-height: 900px) {
+  .registerPage {
+    padding: 20px 20px;
+  }
+  .inputBox {
+    margin: 12px 0px !important; /* Thu hẹp mạnh khoảng cách các ô */
+  }
+  .registerPage .container .btn {
+    margin-top: 10px;
+  }
+}
+
+/* Khi màn hình cực ngắn */
+@media (max-height: 700px) {
+  .inputBox {
+    margin: 8px 0px !important;
+  }
+  .input {
+    height: 34px; /* Giảm nhẹ chiều cao ô input */
+  }
+  .label {
+    top: 2px;
+  }
+  .label[data-floating] {
+    transform: translateY(-22px);
+  }
+}
 
 @media (max-width: 768px) {
   .registerPage {
@@ -189,7 +218,7 @@
   }
 
   .inputBox {
-    margin: 20px 0px;
+    margin: 15px 0px !important;
   }
 
   .label {
@@ -204,5 +233,6 @@
   .registerPage .container .btn {
     padding: 10px;
     font-size: 13px;
+    margin-top: 15px;
   }
 }
