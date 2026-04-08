@@ -18,7 +18,6 @@ import {
   IconFlipHorizontal,
   IconFlipVertical,
   IconTrash,
-  IconArrowBackUp,
   IconChevronLeft
 } from "@tabler/icons-react";
 import "./styles.css";
@@ -56,6 +55,7 @@ export default function PhotoCollage() {
   // Quản lý danh sách chữ
   const [texts, setTexts] = useState<TextItem[]>([]);
   const [activeTextId, setActiveTextId] = useState<string | null>(null);
+  const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const [isDraggingText, setIsDraggingText] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,7 +68,7 @@ export default function PhotoCollage() {
     const newId = Math.random().toString(36).substr(2, 9);
     const newText: TextItem = {
       id: newId,
-      content: "Nhập..",
+      content: "Nhập nội dung...",
       color: "#ffffff",
       size: 32,
       rotation: 0,
@@ -79,6 +79,7 @@ export default function PhotoCollage() {
     };
     setTexts([...texts, newText]);
     setActiveTextId(newId);
+    setEditingTextId(newId);
   };
 
   const updateActiveText = (updates: Partial<TextItem>) => {
@@ -232,7 +233,7 @@ export default function PhotoCollage() {
         </div>
       ) : (
         <div 
-          className="editor-container"
+          className={`editor-container ${editingTextId ? "is-editing-text" : ""}`}
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveTextId(null);
           }}
@@ -305,7 +306,7 @@ export default function PhotoCollage() {
               {texts.map(text => (
                 <div 
                   key={text.id}
-                  className={`draggable-text-overlay ${activeTextId === text.id ? "active" : ""}`}
+                  className={`draggable-text-overlay ${activeTextId === text.id ? "active" : ""} ${editingTextId === text.id ? "editing" : ""}`}
                   style={{
                     position: "absolute", 
                     left: `${(text.x / CANVAS_SIZE) * 100}%`, 
@@ -313,22 +314,63 @@ export default function PhotoCollage() {
                     color: text.color, 
                     fontSize: `calc(${text.size}px * (var(--canvas-scale, 1)))`, 
                     fontWeight: 800,
-                    zIndex: 20, userSelect: "none", 
+                    zIndex: 20, userSelect: editingTextId === text.id ? "text" : "none", 
                     transform: `translate(-50%, -50%) rotate(${text.rotation}deg) scale(${text.flipH ? -1 : 1}, ${text.flipV ? -1 : 1})`,
                     textShadow: "2px 2px 8px rgba(0,0,0,0.6)", whiteSpace: "nowrap",
                     fontFamily: "var(--font-nunito), sans-serif",
                     border: activeTextId === text.id ? "2px solid #00a8ff" : "none",
-                    borderRadius: "4px", padding: "4px 8px", cursor: "move",
+                    borderRadius: "4px", padding: "4px 8px", cursor: editingTextId === text.id ? "text" : "move",
                     touchAction: "none"
                   }}
-                  onMouseDown={(e) => { e.stopPropagation(); setActiveTextId(text.id); setIsDraggingText(true); }}
-                  onTouchStart={(e) => { 
+                  onMouseDown={(e) => { 
+                    if (editingTextId === text.id) return;
                     e.stopPropagation(); 
                     setActiveTextId(text.id); 
                     setIsDraggingText(true); 
                   }}
+                  onTouchStart={(e) => { 
+                    if (editingTextId === text.id) return;
+                    e.stopPropagation(); 
+                    setActiveTextId(text.id); 
+                    setIsDraggingText(true); 
+                  }}
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    setEditingTextId(text.id);
+                  }}
                 >
-                  {text.content}
+                  <span
+                    contentEditable={editingTextId === text.id}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                      updateActiveText({ content: e.currentTarget.innerText });
+                      setEditingTextId(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    style={{ outline: "none", display: "inline-block", minWidth: "1ch" }}
+                    ref={(el) => {
+                      if (el && editingTextId === text.id) {
+                        // Focus and select all text if it's the default "Nhập nội dung..."
+                        if (text.content === "Nhập nội dung...") {
+                          const range = document.createRange();
+                          range.selectNodeContents(el);
+                          const sel = window.getSelection();
+                          if (sel) {
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                          }
+                        }
+                        el.focus();
+                      }
+                    }}
+                  >
+                    {text.content}
+                  </span>
                   {activeTextId === text.id && (
                     <>
                       <div className="handle-line" />
@@ -386,15 +428,6 @@ export default function PhotoCollage() {
 
               {activeTextId && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px", paddingTop: "12px", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-                  <div style={{ display: "flex", gap: "5px" }}>
-                    <input 
-                      type="text" value={activeText?.content || ""} 
-                      onChange={(e) => updateActiveText({ content: e.target.value })}
-                      placeholder="Nhập.."
-                      style={{ flex: 1, padding: "6px 10px", fontSize: "12px", borderRadius: "6px", background: "#1f1f2e", border: "1px solid #333", color: "white" }}
-                    />
-                    <button onClick={() => removeActiveText(activeTextId)} style={{ background: "#ef4444", border: "none", color: "white", padding: "6px", borderRadius: "6px", cursor: "pointer" }}><IconTrash size={15} /></button>
-                  </div>
                   <div style={{ display: "flex", gap: "6px" }}>
                     {[ "#9FADBA", "#294B61", "#6C727E", "#BB8D38"].map(c => (
                       <div 
@@ -418,6 +451,9 @@ export default function PhotoCollage() {
                     </button>
                     <button className={`zoom-btn ${activeText?.flipV ? "active" : ""}`} style={{ width: "28px", height: "28px", backgroundColor: activeText?.flipV ? "rgba(99, 102, 241, 0.4)" : "" }} onClick={() => updateActiveText({ flipV: !activeText?.flipV })} title="Lật dọc chữ">
                       <IconFlipVertical size={15} />
+                    </button>
+                    <button onClick={() => removeActiveText(activeTextId)} style={{ width: "28px", height: "28px", background: "#ef4444", border: "none", color: "white", borderRadius: "6px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Xóa text">
+                      <IconTrash size={15} />
                     </button>
                     <button onClick={addNewText} style={{ marginLeft: "auto", background: "none", border: "1px dashed #818cf8", color: "#818cf8", padding: "4px 8px", borderRadius: "5px", cursor: "pointer", fontSize: "10px" }}>+ Thêm tiếp</button>
                   </div>
