@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 1260px;
+  max-width: 1330px;
   margin: auto;
   justify-content: space-between;
   padding: 0 clamp(10px, 2vw, 20px);
