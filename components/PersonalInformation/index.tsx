@@ -4,19 +4,21 @@ import { useState, useEffect } from "react";
 import styles from "./PersonalInformation.module.css";
 import {
   IconUser,
-  // IconCalendar,
+  IconCalendar,
   IconLogout,
-  // IconHeartFilled,
-  // IconBuildingWarehouse,
-  // IconList,
-  
+  IconBuildingWarehouse,
+  IconList,
   IconExchange,
 } from "@tabler/icons-react";
-import { Loader, Container,  Text } from "@mantine/core";
+import { Loader, Container, Text } from "@mantine/core";
 import { getCurrentUser } from "../../api/apiProfile";
 import ProfileInfo from "./Profile";
-import  Project from "./Project";
+import Project from "./Project";
 import ResetPasswword from "./ResetPasswword";
+import Warehouse from "./Warehouse";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 
 interface User {
@@ -36,13 +38,35 @@ introducer_id:string;
 }
 
 export default function ProfilePage() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <ProfilePageContent />
+    </Suspense>
+  );
+}
+
+function ProfilePageContent() {
+  type TabType =
+    | "home"
+    | "profile"
+    | "bookings"
+    | "membership"
+    | "promotions"
+    | "listcustomer"
+    | "ResetPassword";
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-//   const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTabParam = searchParams.get("tab") as TabType | null;
 
-  const [activeTab, setActiveTab] = useState<
-    "home" | "profile" | "orders" | "bookings" | "membership" | "promotions"| "listcustomer"| "ResetPassword"
-  >("profile");
+  const [activeTab, setActiveTab] = useState<TabType>("profile");
+
+  useEffect(() => {
+    if (activeTabParam) {
+      setActiveTab(activeTabParam);
+    }
+  }, [activeTabParam]);
 
   useEffect(() => {
     setLoading(true);
@@ -91,16 +115,12 @@ export default function ProfilePage() {
     switch (activeTab) {
       case "profile":
         return <ProfileInfo user={user} />;
-      case "orders":
-        return  <h1>xin chào</h1>;
-        // <FavoritesList  />
       case "bookings":
-        return <Project  />;
+        return <Project />;
       case "membership":
-        return <h1>xin chào</h1>;
-        // <Warehouse/>
-         case "listcustomer":
-        return <>xin chào các bạn nhé </>;
+        return <Warehouse />;
+      case "listcustomer":
+        return <>Danh sách khách hàng</>;
           case "ResetPassword":
         return <ResetPasswword />;
       default:
@@ -115,69 +135,55 @@ export default function ProfilePage() {
         <nav>
           <ul>
             <li>
-              <button
-                onClick={() => setActiveTab("profile")}
+              <Link
+                href="/Tai-khoan?tab=profile"
                 className={`${styles.menuItem} ${
                   activeTab === "profile" ? styles.active : ""
                 }`}
               >
                 <IconUser size={18} /> Tài khoản của bạn
-              </button>
+              </Link>
             </li>
-            {/* <li>
-              <button
-                onClick={() => setActiveTab("orders")}
-                className={`${styles.menuItem} ${
-                  activeTab === "orders" ? styles.active : ""
-                }`}
-              >
-                <IconHeartFilled size={18} /> Danh sách yêu thích
-              </button>
-            </li> */}
-            {/* <li>
-              <button
-                onClick={() => setActiveTab("bookings")}
+            <li>
+              <Link
+                href="/Tai-khoan?tab=bookings"
                 className={`${styles.menuItem} ${
                   activeTab === "bookings" ? styles.active : ""
                 }`}
               >
-                <IconCalendar size={18} /> Dự án của tôi 
-              </button>
-            </li> */}
-            {/* <li>
-              <button
-                onClick={() => setActiveTab("membership")}
+                <IconCalendar size={18} /> Dự án của tôi
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/Tai-khoan?tab=membership"
                 className={`${styles.menuItem} ${
                   activeTab === "membership" ? styles.active : ""
                 }`}
               >
                 <IconBuildingWarehouse size={18} /> Tổng quan bán hàng
-              </button>
-            </li> */}
-                {/* <li>
-              <button
-                onClick={() => setActiveTab("listcustomer")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/Tai-khoan?tab=listcustomer"
                 className={`${styles.menuItem} ${
                   activeTab === "listcustomer" ? styles.active : ""
                 }`}
               >
-                <IconList
- size={18} /> Danh sách khách hàng
-              </button>
-            </li> */}
-                 <li>
-              <button
-                onClick={() => setActiveTab("ResetPassword")}
+                <IconList size={18} /> Danh sách khách hàng
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/Tai-khoan?tab=ResetPassword"
                 className={`${styles.menuItem} ${
                   activeTab === "ResetPassword" ? styles.active : ""
                 }`}
               >
-                <IconExchange
-
- size={18} /> Đổi mật khẩu tài khoản
-              </button>
+                <IconExchange size={18} /> Đổi mật khẩu tài khoản
+              </Link>
             </li>
-
 
             <li>
               <button

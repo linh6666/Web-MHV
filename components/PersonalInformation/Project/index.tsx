@@ -3,10 +3,10 @@
 import {  Title ,Card, Image, Stack, Text, } from "@mantine/core";
 import styles from "./Interact.module.css";
 
-export default function ProfileInfo() {
+export default function Project() {
   return (
     <div className={styles.Box}>
-      <Title order={2} c="#294b61" ta="center" mb="lg">
+      <Title order={2} c="#053c74" ta="center" mb="lg">
         Dự án
       </Title>
    

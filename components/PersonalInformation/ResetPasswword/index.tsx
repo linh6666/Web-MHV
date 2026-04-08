@@ -8,7 +8,7 @@ import {
 import { NotificationExtension } from "../../../extension/NotificationExtension";
 import { modals } from "@mantine/modals";
 
-export default function ProfileInfo() {
+export default function ResetPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

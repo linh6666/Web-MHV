@@ -183,7 +183,7 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
 
   return (
     <Container size="sm" py="xl">
-      <Title order={2} c="#053c74" ta="center" mb="lg">
+      <Title order={2} c="#294b61" ta="center" mb="lg">
         Hồ sơ cá nhân
       </Title>
 

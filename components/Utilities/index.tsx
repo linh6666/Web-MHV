@@ -1,6 +1,6 @@
 "use client";
 
-import { Image } from "@mantine/core";
+
 import React, {useMemo,useState} from "react";
 import styles from "./ZoningSystem.module.css";
 import Menu from "./Menu/index"; 
