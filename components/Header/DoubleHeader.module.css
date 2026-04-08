@@ -18,15 +18,25 @@
   justify-content: space-between;
   padding: 0 clamp(10px, 2vw, 20px);
   box-sizing: border-box;
-  position: relative; /* Thêm để hỗ trợ căn giữa tuyệt đối nếu cần */
+  position: relative;
+  gap: 20px;
 }
 
 .links {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+@media (max-width: 1100px) {
+  .mainLink {
+    font-size: 12px;
+    padding: 7px 8px;
+  }
+  .inner {
+    gap: 10px;
+  }
 }
 
 .mainLinks {
@@ -40,19 +50,19 @@
   padding: 7px var(--mantine-spacing-sm);
   font-weight: 500;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
   transition:
     border-color 100ms ease,
     color 100ms ease;
 
-  @mixin hover {
+  .mainLink:hover {
     color: #c2923f;
     text-decoration: none;
   }
 
-  &[data-active] {
+  .mainLink[data-active] {
     color: #c2923f;
   }
-
 }
 
 .secondaryLink {
@@ -60,11 +70,11 @@
   font-size: var(--mantine-font-size-xs);
   text-transform: uppercase;
   transition: color 100ms ease;
+}
 
-  @mixin hover {
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
-    text-decoration: none;
-  }
+.secondaryLink:hover {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+  text-decoration: none;
 }
 
 /* -------------------- MOBILE MENU -------------------- */
@@ -109,20 +119,14 @@
   margin-top: 20px;
 }
 
-.mobileMenuIcons div {
-  border: 1px solid #fff;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.mobileMenuIcons > * {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.mobileMenuIcons div:hover {
+.mobileMenuIcons > *:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
+  border-radius: 50%;
 }
 
 /* Tablet & small desktop: add side padding so logo/buttons don't hug edges */

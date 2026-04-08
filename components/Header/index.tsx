@@ -8,7 +8,7 @@ import {
   Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPhoneCall } from "@tabler/icons-react";
+import { IconBell, IconHeart, IconPhoneCall } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
@@ -110,7 +110,7 @@ export default function Header() {
         />
 
         {/* ============ Menu desktop ============ */}
-        <Box className={classes.links} visibleFrom="sm">
+        <Box className={classes.links} visibleFrom="md">
           <Group
             gap="md"
             justify="flex-end"
@@ -122,7 +122,7 @@ export default function Header() {
 
         {/* ============ Icons desktop ============ */}
         <Box
-          visibleFrom="sm"
+          visibleFrom="md"
           style={{ display: "flex", gap: "20px" }}
         >
            <Link href="/lien-he">
@@ -135,12 +135,20 @@ export default function Header() {
           </IconCircle>
           </Link>
 
+          <IconCircle>
+            <IconBell size={17} color="#fff" stroke={1.5} />
+          </IconCircle>
+
+          <IconCircle>
+            <IconHeart size={17} color="#fff" stroke={1.5} />
+          </IconCircle>
+
           <UserIcon />
         </Box>
 
         {/* ============ Burger mobile ============ */}
         <Box
-          hiddenFrom="sm"
+          hiddenFrom="md"
           style={{ paddingLeft: 12, paddingRight: 12 }}
         >
           <Burger
@@ -157,35 +165,29 @@ export default function Header() {
       {opened && (
         <Box
           className={classes.mobileMenu}
-          hiddenFrom="sm"
+          hiddenFrom="md"
         >
           <Box className={classes.mobileLinks}>
             {mainItems}
           </Box>
 
-          <Box
-            style={{
-              display: "flex",
-              gap: "20px",
-              marginTop: "20px",
-              paddingLeft: 12,
-              paddingRight: 12,
-            }}
-          >
-             <Link href="/lien-he">
+          <Group className={classes.mobileMenuIcons}>
+            <Link href="/lien-he">
               <IconCircle>
-              <IconPhoneCall
-                size={17}
-                color="#fff"
-                stroke={1.5}
-              />
+                <IconPhoneCall size={17} color="#fff" stroke={1.5} />
+              </IconCircle>
+            </Link>
+
+            <IconCircle>
+              <IconBell size={17} color="#fff" stroke={1.5} />
             </IconCircle>
-             
-             </Link>
-           
+
+            <IconCircle>
+              <IconHeart size={17} color="#fff" stroke={1.5} />
+            </IconCircle>
 
             <UserIcon />
-          </Box>
+          </Group>
         </Box>
       )}
     </div>
