@@ -218,8 +218,8 @@ export default function PhotoCollage() {
   return (
     <div className="photo-collage-container">
       <div className="collage-header">
-        <h1 className="collage-title">Chào mừng kỷ niệm 20 năm thành lập Công ty TNHH Mô hình Việt</h1>
-        <p className="collage-subtitle">Tải ảnh lên và tạo kỷ niệm riêng của bạn</p>
+        <h1 className="collage-title">Chào mừng Kỷ niệm 20 năm Thành lập Công ty TNHH Mô hình Việt</h1>
+        <p className="collage-subtitle">Thay khung ảnh đại diện và cùng Mô hình Việt lan tỏa tinh thần Vững Bước!</p>
       </div>
 
       {!image ? (
