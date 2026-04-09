@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Burger,
   Group,
   Image,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBell, IconHeart, IconPhoneCall } from "@tabler/icons-react";
@@ -150,22 +151,44 @@ export default function Header() {
           style={{ display: "flex", gap: "20px" }}
         >
            <Link href="/lien-he">
+            <Tooltip 
+              label="Liên hệ" 
+              position="bottom"
+              bg="#f1eeeeff"
+              c="#294b61"
+              withArrow
+            >
              <IconCircle>
                <IconPhoneCall
                  size={17}
                  color="#fff"
                  stroke={1.5}
-            />
-          </IconCircle>
+               />
+             </IconCircle>
+            </Tooltip>
           </Link>
-
+  <Tooltip 
+              label="Thông báo" 
+              position="bottom"
+              bg="#f1eeeeff"
+              c="#294b61"
+              withArrow
+            >
           <IconCircle>
             <IconBell size={17} color="#fff" stroke={1.5} />
           </IconCircle>
-
+          </Tooltip>
+<Tooltip 
+              label="Yêu thích" 
+              position="bottom"
+              bg="#f1eeeeff"
+              c="#294b61"
+              withArrow
+            >
           <IconCircle>
             <IconHeart size={17} color="#fff" stroke={1.5} />
           </IconCircle>
+          </Tooltip>
 
           <UserIcon />
         </Box>
@@ -219,24 +242,27 @@ export default function Header() {
 }
 
 /* ============ Icon wrapper dùng chung ============ */
-function IconCircle({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <Box
-      style={{
-        border: "1px solid #fff",
-        borderRadius: "50%",
-        width: 26,
-        height: 26,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
+const IconCircle = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(
+  ({ children, ...others }, ref) => {
+    return (
+      <Box
+        ref={ref}
+        {...others}
+        style={{
+          border: "1px solid #fff",
+          borderRadius: "50%",
+          width: 26,
+          height: 26,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+        }}
+      >
+        {children}
+      </Box>
+    );
+  }
+);
+
+IconCircle.displayName = "IconCircle";
