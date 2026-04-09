@@ -16,7 +16,7 @@
 
 .collage-title {
   font-size: 1.2rem;
-    padding-top: 2rem;
+  padding-top: 2rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
   background: #436F86;
@@ -50,7 +50,7 @@
 .upload-box-glow {
   position: absolute;
   inset: -4px;
-  background: linear-gradient(90deg, #6366f1, #9333ea);
+  background: #294b61;
   border-radius: 32px;
   filter: blur(15px);
   opacity: 0.2;
@@ -64,13 +64,13 @@
 .upload-box-border {
   position: absolute;
   inset: 0;
-  border: 2px dashed rgba(99, 102, 241, 0.3);
+  border: 2px dashed #294b61;
   border-radius: 32px;
   transition: all 0.3s ease;
 }
 
 .upload-box-wrapper:hover .upload-box-border {
-  border-color: #6366f1;
+  border-color: #436f86;
   transform: scale(1.01);
 }
 
@@ -93,9 +93,9 @@
 
 .upload-icon-container {
   padding: 1rem;
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: #294b61;
   border-radius: 1rem;
-  color: #818cf8;
+  color: #436f86;
   transition: transform 0.3s ease;
 }
 
@@ -286,7 +286,7 @@
 .range-slider {
   flex: 1;
   height: 6px;
-  background: rgba(99, 102, 241, 0.2);
+  background: #436f86;
   border-radius: 9999px;
   appearance: none;
   cursor: pointer;
@@ -296,9 +296,9 @@
   appearance: none;
   width: 20px;
   height: 20px;
-  background-color: #ec4899;
+  background-color: #BB8D38;
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+  box-shadow: 0 0 10px #BB8D38;
   transition: transform 0.2s ease;
 }
 
@@ -338,13 +338,13 @@
 
 .btn-primary {
   background: #294b61;
-  box-shadow: 0 10px 20px rgba(219, 39, 119, 0.25);
+  /* box-shadow: 0 10px 20px #436f86; */
 }
 
-.btn-primary:hover {
+/* .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(219, 39, 119, 0.4);
-}
+  box-shadow: 0 12px 24px #436f86;
+} */
 
 /* responsive @media queries */
 
@@ -385,6 +385,7 @@
     margin: 0 auto;
     border-radius: 12px;
   }
+
   .collage-header {
     margin-bottom: 0.5rem;
   }
@@ -398,6 +399,7 @@
     font-size: 0.7rem;
     margin-bottom: 0.25rem;
   }
+
   .btn-secondary,
   .btn-primary {
     padding: 0.5rem 0.75rem;
@@ -405,6 +407,7 @@
     font-size: 0.65rem;
     gap: 0.35rem;
   }
+
   .upload-box-wrapper {
     aspect-ratio: 4/3;
   }
@@ -623,7 +626,7 @@
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .frame-thumb-item:hover {
@@ -664,6 +667,7 @@
   .frame-picker-bar {
     margin-top: 1rem;
   }
+
   .frame-thumb-item {
     width: 50px;
     height: 50px;
