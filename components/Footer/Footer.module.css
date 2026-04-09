@@ -1,91 +1,69 @@
 .footer {
-  background-color: #294B61;
-  padding: 10px;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.footerOverlay {
-  max-width: 1300px;
+  background-color: #2D4B5D; /* Màu xanh đậm giống ảnh */
+  padding: 15px 0;
+  color: rgba(255, 255, 255, 0.9);
   width: 100%;
-  margin: 0 auto;
+}
+
+.container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
 }
 
-.logo {
-  flex: 1 1 200px;
-  margin-bottom: 20px;
-  text-align: center;
+.stack {
+  width: 100%;
 }
 
-.company {
-  flex: 2 1 300px;
-  font-size: 1.5em;
-  /* margin-bottom: 20px; */
-  text-align: center;
+.headerRow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2px;
 }
 
-.links {
-  flex: 1 1 200px;
-  font-size: 0.9em;
+.companyName {
   color: #fff;
+  font-weight: 400; /* Nunito Sans 200-500 was original, but I added up to 800 */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 1.1rem;
+}
+
+.copyright {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+}
+
+.infoText {
   text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 300;
+  line-height: 1.4;
+  font-size: 0.85rem;
 }
 
-/* Mobile: ≤600px */
-@media (max-width: 600px) {
-  .logo {
-    flex: 1 1 100px;
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .headerRow {
+    flex-direction: column;
+    gap: 4px;
     margin-bottom: 10px;
   }
 
-  .company {
-    flex: 1 1 150px;
-    font-size: 1em;
-    margin-bottom: 10px;
+  .copyright {
+    position: static;
+    transform: none;
+    margin-top: 4px;
   }
 
-  .links {
-    display: none; /* Ẩn links trên mobile */
-  }
-}
-
-/* Tablet: 601px–1024px */
-@media (min-width: 601px) and (max-width: 1024px) {
-  .logo {
-    flex: 1 1 150px;
-    margin-bottom: 15px;
-  }
-
-  .company {
-    flex: 2 1 250px;
-    font-size: 1.2em;
-    margin-bottom: 15px;
-  }
-
-  .links {
-    flex: 1 1 200px;
-    font-size: 0.85em;
-    text-align: center;
-  }
-}
-
-/* Desktop: >1024px */
-@media (min-width: 1025px) {
-  .logo {
-    flex: 1 1 200px;
-  }
-
-  .company {
-    flex: 2 1 300px;
-    font-size: 1.5em;
-  }
-
-  .links {
-    flex: 1 1 200px;
-    font-size: 0.9em;
+  .infoText {
+    font-size: 0.75rem;
+    padding: 0 10px;
   }
 }

@@ -12,7 +12,8 @@
 
 html,
 body {
-  height: 100%;          /* ✅ chiếm toàn bộ chiều cao màn hình */
+  height: 100%;
+  /* ✅ chiếm toàn bộ chiều cao màn hình */
   max-width: 100vw;
   overflow-x: hidden;
   margin: 0;
@@ -20,9 +21,11 @@ body {
 }
 
 body {
-  display: flex;         /* ✅ dùng flexbox */
+  display: flex;
+  /* ✅ dùng flexbox */
   flex-direction: column;
-  min-height: 100vh;     /* ✅ chiều cao tối thiểu bằng viewport */
+  min-height: 100vh;
+  /* ✅ chiều cao tối thiểu bằng viewport */
 
   color: var(--foreground);
   background: var(--background);
@@ -36,7 +39,8 @@ body {
 }
 
 main {
-  flex: 1;               /* ✅ chiếm hết khoảng trống, đẩy footer xuống dưới */
+  flex: 1;
+  /* ✅ chiếm hết khoảng trống, đẩy footer xuống dưới */
 
   padding: 0 10px;
   padding-top: 80px;

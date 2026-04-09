@@ -1,42 +1,33 @@
 "use client";
 
-import { Box, Group, Text, Anchor, Title } from "@mantine/core";
-
+import { Box, Text, Title, Stack, Container } from "@mantine/core";
 import classes from "./Footer.module.css";
 
 export default function Footer() {
   return (
-   
     <footer className={classes.footer}>
-      <div className={classes.footerOverlay} >
-         <Box className={classes.company}>
-  <Title order={5}>
-CÔNG TY TNHH MÔ HÌNH VIỆT
-  </Title>
+      <Container size="xl" className={classes.container}>
+        <Stack gap={4} align="center" className={classes.stack}>
+          <Box className={classes.headerRow}>
+            <Title order={4} className={classes.companyName}>
+              CÔNG TY TNHH MÔ HÌNH VIỆT
+            </Title>
+            
+          </Box>
 
-  <Text>
-  Trụ sở chính tại Việt Nam: Số 751 Nguyễn Khoái, Phường Thanh Trì, Quận Hoàng Mai, Hà Nội, Việt Nam
-  </Text>
+          <Text size="sm" className={classes.infoText}>
+            Hotline: +842436336688 | ĐTDĐ: +84889371188 | Email: info@mohinhviet.com
+          </Text>
 
-  <Group justify="center" gap="md" mt={6}>
-    <Text size="sm">Tel: +842436336688</Text>
-   
-    <Text size="sm">
-      Email:{" "}
-      <Anchor
-        href="mailto:info@monhinhviet.vn"
-        c="inherit"
-        underline="hover"
-      >
-        
-info@monhinhviet.vn
-      </Anchor>
-    </Text>
-  </Group>
-</Box>
+          <Text size="sm" className={classes.infoText}>
+            Trụ sở chính tại Việt Nam: Số 751 Nguyễn Khoái, Phường Thanh Trì, Quận Hoàng Mai, Hà Nội, Việt Nam | Mã bưu chính: 10000
+          </Text>
 
-       
-      </div>
+          <Text size="sm" className={classes.infoText}>
+            Trụ sở tại Úc: 2B Mercer Rd, Armadale VIC 3143, Australia
+          </Text>
+        </Stack>
+      </Container>
     </footer>
   );
 }

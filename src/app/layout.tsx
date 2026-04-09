@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 const nunito = Nunito_Sans({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
   style: ["normal", "italic"],
   variable: "--font-nunito",
 });
@@ -34,7 +34,12 @@ export default function RootLayout({
     >
       <body>
         {/* ✅ MantineProvider bọc TẤT CẢ */}
-        <MantineProvider>
+        <MantineProvider
+          theme={{
+            fontFamily: "var(--font-nunito), sans-serif",
+            headings: { fontFamily: "var(--font-nunito), sans-serif" },
+          }}
+        >
           {/* ✅ Thêm ModalsProvider bọc Header, main, Footer */}
           <ModalsProvider>
             <Header />
