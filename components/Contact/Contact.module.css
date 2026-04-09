@@ -1,3 +1,11 @@
+.wrapper {
+  margin-top: 20px;
+  /* Thêm khoảng cách phía trên tiêu đề */
+  /* padding: 0 20px; */
+  /* Đảm bảo lề hai bên khi thu nhỏ màn hình */
+  /* box-sizing: border-box; */
+}
+
 .pageTitle {
   text-align: center;
   font-size: 36px;
@@ -33,7 +41,7 @@
 
 /* Input Mantine */
 .input :global(.mantine-TextInput-label) {
-  color:#294B61;
+  color: #294B61;
   margin-bottom: 6px;
 }
 
@@ -43,7 +51,7 @@
 
 /* Textarea */
 .textarea :global(.mantine-Textarea-label) {
-  color:#294B61;
+  color: #294B61;
 }
 
 /* Button */
@@ -51,7 +59,7 @@
   margin-top: 20px;
   width: 100%;
   height: 46px;
-  background:#294B61;
+  background: #294B61;
   color: white;
   font-weight: 600;
   font-size: 16px;
@@ -70,9 +78,11 @@
     margin-bottom: 20px;
     margin-top: 10px;
   }
+
   .card {
     padding: 25px 40px;
   }
+
   .grid {
     gap: 15px;
     margin-bottom: 15px;
@@ -85,13 +95,16 @@
     margin-bottom: 15px;
     letter-spacing: 3px;
   }
+
   .card {
     padding: 20px 30px;
   }
+
   .grid {
     gap: 10px;
     margin-bottom: 10px;
   }
+
   .submitBtn {
     margin-top: 10px;
     height: 40px;
@@ -121,6 +134,7 @@
     font-size: 22px;
     letter-spacing: 2px;
   }
+
   .card {
     padding: 20px 15px;
   }
