@@ -55,15 +55,15 @@
   transition:
     border-color 100ms ease,
     color 100ms ease;
+}
 
-  .mainLink:hover {
-    color: #c2923f;
-    text-decoration: none;
-  }
+.mainLink:hover {
+  color: #c2923f;
+  text-decoration: none;
+}
 
-  .mainLink[data-active] {
-    color: #c2923f;
-  }
+.mainLink[data-active] {
+  color: #c2923f;
 }
 
 .secondaryLink {

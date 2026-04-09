@@ -92,7 +92,8 @@ export default function Header() {
         "GIỚI THIỆU",
         "MÔ HÌNH TƯƠNG TÁC",
         "QUẢN LÝ BÁN HÀNG",
-        "THÔNG TIN SẢN PHẨM", 
+        "THÔNG TIN SẢN PHẨM",
+     
       ].includes(link.label);
     }
   });
@@ -117,7 +118,7 @@ export default function Header() {
   if (!isLoggedIn) {
     maxWidth = "1260px";
   } else if (isSuperUser) {
-    maxWidth = "1400px";
+    maxWidth = "1500px";
   }
 
   return (
@@ -127,8 +128,8 @@ export default function Header() {
         <Image
           src="/logo.png"
           alt="Logo"
-          w={280}
-          h={70}
+          w={250}
+          h={60}
           
           // fit="contain"
           // style={{ paddingLeft: 12, paddingRight: 12 }}
@@ -160,7 +161,7 @@ export default function Header() {
             >
              <IconCircle>
                <IconPhoneCall
-                 size={17}
+                 size={14}
                  color="#fff"
                  stroke={1.5}
                />
@@ -175,7 +176,7 @@ export default function Header() {
               withArrow
             >
           <IconCircle>
-            <IconBell size={17} color="#fff" stroke={1.5} />
+            <IconBell size={14} color="#fff" stroke={1.5} />
           </IconCircle>
           </Tooltip>
 <Tooltip 
@@ -186,7 +187,7 @@ export default function Header() {
               withArrow
             >
           <IconCircle>
-            <IconHeart size={17} color="#fff" stroke={1.5} />
+            <IconHeart size={14} color="#fff" stroke={1.5} />
           </IconCircle>
           </Tooltip>
 
