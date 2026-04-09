@@ -377,7 +377,7 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
             </Button>
 
             <Button
-              color="#053c74"
+              color="#294b61"
               onClick={handleSave}
               loading={loading}
               style={{ color: "#fff", fontSize: "12px" }}
