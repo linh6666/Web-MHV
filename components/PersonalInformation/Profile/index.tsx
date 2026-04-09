@@ -63,7 +63,7 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
       children: "Bạn có chắc muốn lưu các thay đổi này không?",
       confirmProps: {
         style: {
-          backgroundColor: "#053c74",
+          backgroundColor: "#294b61",
           color: "#fff",
         },
       },
@@ -113,7 +113,7 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
       labels: { confirm: "Có", cancel: "Không" },
       confirmProps: {
         style: {
-          backgroundColor: "#053c74",
+          backgroundColor: "#294b61",
           color: "#fff",
         },
       },
