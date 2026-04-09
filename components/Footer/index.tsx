@@ -1,18 +1,50 @@
 "use client";
 
-import { Box, Text, Title, Stack, Container } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Box, Text, Title, Stack } from "@mantine/core";
+import { jwtDecode } from "jwt-decode";
 import classes from "./Footer.module.css";
 
+interface DecodedToken {
+  is_superuser?: boolean;
+  exp?: number;
+  [key: string]: unknown;
+}
+
 export default function Footer() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSuperUser, setIsSuperUser] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token") || localStorage.getItem("access_token");
+    if (!token) return;
+
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) return;
+      setIsLoggedIn(true);
+      setIsSuperUser(decoded?.is_superuser === true);
+    } catch {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  /* ============ Dynamic Max Width Logic (Giống Header) ============ */
+  let maxWidth = "1330px";
+  if (!isLoggedIn) {
+    maxWidth = "1260px";
+  } else if (isSuperUser) {
+    maxWidth = "1400px";
+  }
+
   return (
     <footer className={classes.footer}>
-      <Container size="xl" className={classes.container}>
+      <div className={classes.container} style={{ maxWidth }}>
         <Stack gap={4} align="center" className={classes.stack}>
           <Box className={classes.headerRow}>
             <Title order={4} className={classes.companyName}>
               CÔNG TY TNHH MÔ HÌNH VIỆT
             </Title>
-            
           </Box>
 
           <Text size="sm" className={classes.infoText}>
@@ -27,7 +59,7 @@ export default function Footer() {
             Trụ sở tại Úc: 2B Mercer Rd, Armadale VIC 3143, Australia
           </Text>
         </Stack>
-      </Container>
+      </div>
     </footer>
   );
 }

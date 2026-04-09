@@ -14,12 +14,13 @@
   align-items: center;
   width: 100%;
   max-width: 1330px;
-  margin: auto;
+  margin: 0 auto; /* Đảm bảo giống Footer */
   justify-content: space-between;
   padding: 0 clamp(10px, 2vw, 20px);
   box-sizing: border-box;
   position: relative;
   gap: 20px;
+  /* border: 1px solid red; */ /* Mở comment này để kiểm tra khung Header */
 }
 
 .links {

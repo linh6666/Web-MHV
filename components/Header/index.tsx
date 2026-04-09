@@ -21,6 +21,9 @@ const mainLinks = [
   { link: "/tuong-tac", label: "MÔ HÌNH TƯƠNG TÁC" },
   { link: "/quan-tri-du-an", label: "QUẢN TRỊ DỰ ÁN" },
   { link: "/quan-ly-he-thong", label: "QUẢN TRỊ HỆ THỐNG" },
+   { link: "/thong-tin-san-pham", label: "THÔNG TIN SẢN PHẨM" },
+  { link: "/quan-ly-ban-hang", label: "QUẢN LÝ BÁN HÀNG" },
+  
 ];
 
 /* ============ Token interface ============ */
@@ -36,6 +39,7 @@ export default function Header() {
   const pathname = usePathname();
 
   /* ============ Auth state ============ */
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSuperUser, setIsSuperUser] = useState(false);
 
   /* ============ Check token ============ */
@@ -45,6 +49,7 @@ export default function Header() {
       localStorage.getItem("access_token");
 
     if (!token) {
+      setIsLoggedIn(false);
       setIsSuperUser(false);
       return;
     }
@@ -56,28 +61,39 @@ export default function Header() {
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         localStorage.removeItem("token");
         localStorage.removeItem("access_token");
+        setIsLoggedIn(false);
         setIsSuperUser(false);
         return;
       }
 
+      setIsLoggedIn(true);
       setIsSuperUser(decoded?.is_superuser === true);
     } catch {
+      setIsLoggedIn(false);
       setIsSuperUser(false);
     }
   }, []);
 
   /* ============ Filter menu ============ */
-  const publicLabels = [
-    "GIỚI THIỆU",
-    "MÔ HÌNH TƯƠNG TÁC",
-    
-  ];
-
   const visibleLinks = mainLinks.filter((link) => {
-    if (!isSuperUser) {
-      return publicLabels.includes(link.label);
+    if (!isLoggedIn) {
+      // ❌ Chưa đăng nhập → chỉ hiển thị các mục public
+      return [
+        "GIỚI THIỆU",
+        "MÔ HÌNH TƯƠNG TÁC",
+      ].includes(link.label);
+    } else if (isSuperUser) {
+      // ✅ Admin → hiển thị tất cả
+      return true;
+    } else {
+      // 👤 User thường
+      return [
+        "GIỚI THIỆU",
+        "MÔ HÌNH TƯƠNG TÁC",
+        "QUẢN LÝ BÁN HÀNG",
+        "THÔNG TIN SẢN PHẨM", 
+      ].includes(link.label);
     }
-    return true;
   });
 
   /* ============ Render menu ============ */
@@ -95,9 +111,17 @@ export default function Header() {
     </Link>
   ));
 
+  /* ============ Max Width Logic ============ */
+  let maxWidth = "1330px";
+  if (!isLoggedIn) {
+    maxWidth = "1260px";
+  } else if (isSuperUser) {
+    maxWidth = "1400px";
+  }
+
   return (
     <div className={classes.header}>
-      <div className={classes.inner}>
+      <div className={classes.inner} style={{ maxWidth }}>
         {/* ============ Logo ============ */}
         <Image
           src="/logo.png"

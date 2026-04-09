@@ -1,5 +1,6 @@
 .footer {
-  background-color: #2D4B5D; /* Màu xanh đậm giống ảnh */
+  background-color: #2D4B5D;
+  /* Màu xanh đậm giống ảnh */
   padding: 15px 0;
   color: rgba(255, 255, 255, 0.9);
   width: 100%;
@@ -7,7 +8,12 @@
 
 .container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(10px, 2vw, 20px);
+  box-sizing: border-box;
 }
 
 .stack {
@@ -25,7 +31,8 @@
 
 .companyName {
   color: #fff;
-  font-weight: 400; /* Nunito Sans 200-500 was original, but I added up to 800 */
+  font-weight: 400;
+  /* Nunito Sans 200-500 was original, but I added up to 800 */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 1.1rem;
