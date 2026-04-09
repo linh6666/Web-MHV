@@ -137,33 +137,89 @@ export default function DetailInteractive() {
         {/* ===== Footer ===== */}
         <div className={styles.footerwrapper}>
           <Text
-            className={styles.footersubtex}
+            className={styles.footersubtext}
             fw={600}
-            size="lg"
+            size="md"
             ta="center"
-            mb="sm"
+            mb="xl"
             c="#294B61"
           >
-            Giới thiệu mô hình dự án
+            Giới thiệu
           </Text>
 
-          <p className={styles.footerline}>
-            Mô hình quy hoạch các dự án của Sunshine Group tại khu đô thị
-            Ciputra (Nam Thăng Long, Hà Nội) là kết quả của sự hợp tác chiến
-            lược và tin cậy giữa Sunshine Group và Công ty TNHH Mô hình Việt –
-            đơn vị tiên phong trong lĩnh vực thiết kế và thi công mô hình
-            kiến trúc cao cấp tại Việt Nam. Mỗi mô hình được nghiên cứu và
-            triển khai với yêu cầu khắt khe về độ chính xác, tỷ lệ chuẩn xác,
-            tính thẩm mỹ tinh tế và khả năng mô phỏng sát thực không gian đô
-            thị hiện tại và tương lai. Không dừng lại ở giá trị trưng bày, mô
-            hình còn được tích hợp hệ thống điều khiển ánh sáng thông minh
-            thông qua nền tảng website, cho phép người dùng chủ động theo dõi,
-            vận hành và cập nhật từng hạng mục một cách trực quan, sinh động,
-            mọi lúc mọi nơi. Đây không chỉ là công cụ minh họa dự án, mà còn
-            là giải pháp trình diễn hiện đại, góp phần nâng tầm trải nghiệm và
-            thể hiện tầm nhìn phát triển bền vững, công nghệ hóa của Sunshine
-            Group.
-          </p>
+          <div className={styles.footerline} style={{ display: "block", textAlign: "justify" }}>
+            <Text size="sm" mb="sm">
+              Được khởi đầu từ năm 2001, Công ty TNHH Mô hình Việt tự hào là một
+              trong những công ty sản xuất mô hình chuyên nghiệp, uy tín nhất
+              tại Việt Nam, và là đơn vị tiên phong mang mô hình kiến trúc Việt
+              Nam ra thị trường thế giới.
+            </Text>
+            <Text size="sm" mb="sm">
+              Mô hình dự án Khu đô thị mới Nam Thăng Long (Ciputra Hanoi
+              International City) là một trong những dự án tiêu biểu của Mô hình
+              Việt, nổi bật với quy mô ấn tượng và được ứng dụng nhiều giải pháp
+              công nghệ hiện đại, tiên tiến.
+            </Text>
+            <Text size="sm" mb="sm">
+              Ở tỷ lệ 1:1000, mô hình tái hiện tổng thể không gian đô thị với bố
+              cục quy hoạch rõ ràng và trực quan. Các khu chức năng, hệ thống
+              cây xanh được Mô hình Việt thể hiện một cách tinh xảo, từ màu sắc
+              đến từng chi tiết mô hình được xử lý tỉ mỉ, làm nổi bật lên cấu
+              trúc cảnh quan và định hướng quy hoạch của toàn khu đô thị.
+            </Text>
+            <Text size="sm" mb="sm">
+              Không chỉ được thực hiện với độ chính xác cao, mô hình Ciputra
+              Hanoi mà còn được ứng dụng nhiều giải pháp công nghệ sáng tạo do
+              Mô hình Việt nghiên cứu & phát triển, bao gồm:
+            </Text>
+
+            <Text size="sm" mb="xs" fw={700}>
+              (1) Công nghệ Điều khiển Ánh sáng bằng website
+            </Text>
+            <Text size="sm" mb="sm" ml="md">
+              Không chỉ đơn thuần thắp sáng mô hình, chúng tôi mang đến giải
+              pháp điều khiển ánh sáng thông minh qua website, với kịch bản được
+              thiết kế riêng cho Ciputra Hanoi. Để tối ưu sự linh hoạt và thuận
+              tiện khi vận hành, hệ thống cũng cho phép người dùng dễ dàng điều
+              khiển từ xa trên nhiều thiết bị.
+            </Text>
+
+            <Text size="sm" mb="xs" fw={700}>
+              (2) Công nghệ trình chiếu trên mô hình Projection Mapping
+            </Text>
+            <Text size="sm" mb="sm" ml="md">
+              Công nghệ Projection Mapping tạo nên những hiệu ứng ánh sáng sống
+              động cùng khả năng tương tác đa chiều, mang đến trải nghiệm trực
+              quan, độc đáo và ấn tượng trong thời gian thực cho người xem.
+            </Text>
+
+            <Text size="sm" mb="xs" fw={700}>
+              (3) Hệ thống Quản lý Bán hàng (Sales Management System)
+            </Text>
+            <Text size="sm" mb="sm" ml="md">
+              Hệ thống cung cấp các tính năng Quản lý Dự án & Quản lý Khách
+              hàng, tất cả được tích hợp trên một nền tảng duy nhất, giúp việc
+              theo dõi và vận hành của Chủ đầu tư trở nên thuận tiện và hiệu quả
+              hơn.
+            </Text>
+
+            <Text size="sm" mt="lg" ta="left">
+              Khám phá thêm những công nghệ mới nhất được ứng dụng cho mô hình
+              dự án{" "}
+              <a
+                href=" https://www.mohinhviet.com/mohinhtuongtac"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: "#294B61",
+                  fontWeight: 600,
+                  textDecoration: "underline",
+                }}
+              >
+                Mô hình Việt!
+              </a>
+            </Text>
+          </div>
         </div>
       </div>
     </div>
