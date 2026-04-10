@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@elastic/eui": "^112.0.0",
+    "@mantine/charts": "^8.3.10",
     "@mantine/core": "^8.3.10",
     "@mantine/form": "^8.3.10",
     "@mantine/hooks": "^8.3.10",
@@ -24,7 +25,8 @@
     "postcss-preset-mantine": "^1.18.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-zoom-pan-pinch": "^3.7.0"
+    "react-zoom-pan-pinch": "^3.7.0",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

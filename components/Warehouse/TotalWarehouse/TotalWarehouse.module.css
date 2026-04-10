@@ -1,0 +1,23 @@
+.container {
+ margin-top: 20px; /* hoặc 30px tùy Linh */
+padding-top: 10px; /* vẫn giữ 1 chút để đẹp */
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Ẩn scrollbar trên Chrome, Edge, Safari */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+}
+
+.container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Tùy chọn: style card nếu muốn để sạch file JSX */
+.card {
+  background-color: #3d6985;
+  color: white;
+  width: 220px;
+  border-radius: 12px;
+}

@@ -1,0 +1,47 @@
+.filterListContainer {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Custom Scrollbar Styles - Thinner */
+.filterListContainer::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filterListContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filterListContainer::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 10px;
+}
+
+.filterListContainer::-webkit-scrollbar-thumb:hover {
+    background: #762f0b;
+}
+
+/* Firefox */
+.filterListContainer {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d1d1 transparent;
+}
+
+/* Also apply to MultiSelect internal scrollbars if possible via global-ish selection or just targeted */
+.filterListContainer :global(.mantine-MultiSelect-input) {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d1d1 transparent;
+}
+
+.filterListContainer :global(.mantine-MultiSelect-input)::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filterListContainer :global(.mantine-MultiSelect-input)::-webkit-scrollbar-thumb {
+    background: #d1d1d1;
+    border-radius: 10px;
+}

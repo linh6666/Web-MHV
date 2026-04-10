@@ -1,0 +1,107 @@
+.containerr {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ================= TAB HEADER ================= */
+
+.headerList {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: -2px;
+  position: relative;
+  z-index: 10;
+}
+
+/* TAB */
+.titleTab {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  color: #7a3010;
+  padding: 7px 24px;
+  position: relative;
+  margin-left: -5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  user-select: none;
+}
+
+.titleTab:first-child {
+  margin-left: 0;
+}
+
+/* Tạo hình tab giống mẫu */
+.titleTab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: #f2e1cc;
+  /* border: 1.5px solid #e2d1c1; */
+  border-bottom: none;
+
+  /* BO GÓC NHẸ PHÍA TRÊN */
+  border-radius: 12px 200px 0 0;
+
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.08);
+
+  z-index: -1;
+
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.titleTab:hover::before {
+  background: #bb8d38;
+}
+
+/* ACTIVE TAB */
+.titleTabActive {
+  z-index: 20;
+}
+
+.titleTabActive::before {
+  background: #ffffff;
+  border-color: #e2d1c1;
+}
+
+/* ================= CONTENT ================= */
+
+.contentViewWrapper {
+  background: #ffffff;
+  /* border: 1.5px solid #e2d1c1; */
+  border-radius: 0 15px 15px 15px;
+  padding: 25px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .titleTab {
+    padding: 6px 20px 6px 15px;
+    font-size: 14px;
+    margin-left: -10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerList {
+    flex-wrap: wrap;
+    gap: 4px 0;
+  }
+
+  .titleTab {
+    padding: 5px 15px 5px 10px;
+    font-size: 12px;
+    margin-left: -8px;
+  }
+}

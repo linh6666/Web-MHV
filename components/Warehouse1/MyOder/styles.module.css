@@ -1,0 +1,547 @@
+.container {
+    padding: var(--mantine-spacing-lg);
+    background-color: white;
+    /* min-height: 100vh; */
+}
+
+.searchBox {
+    margin-bottom: 10px;
+    max-width: 300px;
+}
+
+.searchInput {
+    border: 1px solid #ebd8c5 !important;
+    background-color: white !important;
+    /* height: 40px !important; */
+    font-size: 13px !important;
+}
+
+/* .stickyTop {
+    position: sticky;
+    top: 110px;
+    background-color: white;
+    z-index: 10;
+    padding-top: 0px;
+    padding-bottom: 10px;
+} */
+
+.header {
+    margin-bottom: var(--mantine-spacing-xl);
+    align-items: center;
+    gap: var(--mantine-spacing-md);
+}
+
+.title {
+    font-weight: 700;
+    font-size: 32px;
+    color: #333;
+    letter-spacing: -0.5px;
+}
+
+.headerBadge {
+    background-color: #fff0f0 !important;
+    color: #ff5b5b !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    font-size: 14px !important;
+    height: 34px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+.mainFlex {
+    gap: var(--mantine-spacing-md);
+    align-items: flex-start;
+}
+
+/* Section 1: Sales */
+.salesCard {
+    padding: var(--mantine-spacing-lg);
+    background-color: #f4f4f4;
+    border-radius: 24px;
+    width: 230px;
+    height: 170px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.salesLabel {
+    font-weight: 800;
+    font-size: 15px;
+    color: #333;
+    margin-top: 4px;
+}
+
+.avatarCircle {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.avatarHead {
+    width: 22px;
+    height: 22px;
+    border-radius: 100%;
+    background-color: #b0b8c1;
+    margin-top: -12px;
+}
+
+.avatarShoulders {
+    width: 35px;
+    height: 25px;
+    border-radius: 100% 100% 0 0;
+    background-color: #b0b8c1;
+    position: absolute;
+    bottom: -5px;
+}
+
+.salesName {
+    font-weight: 800;
+    font-size: 17px;
+    color: #2b2b2b;
+    line-height: 1.2;
+}
+
+.salesInfo {
+    font-size: 13px;
+    font-weight: 500;
+    color: #999;
+}
+
+/* Section 2: Property */
+.propertyCard {
+    padding: var(--mantine-spacing-md);
+    background-color: #f4f4f4;
+    border-radius: 20px;
+    flex: 1;
+    position: relative;
+    min-height: 170px;
+    display: flex;
+    gap: 16px;
+}
+
+.propertyImage {
+    background-color: #ced4da;
+    border-radius: 16px;
+    width: 180px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.propertyContent {
+    flex: 1;
+    justify-content: space-between;
+}
+
+.propertyTitle {
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1.1;
+    color: #333;
+}
+
+.propertySub {
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    margin-top: 2px;
+}
+
+.propertyBadge {
+    background-color: #fff6ea !important;
+    color: #d99734 !important;
+    text-transform: none !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    height: 28px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+}
+
+.price {
+    font-weight: 700;
+    font-size: 18px;
+    color: #333;
+    margin-top: var(--mantine-spacing-sm);
+}
+
+.orderLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.orderCodeBox {
+    background-color: #e0e2e5;
+    border-radius: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.orderCodeText {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.orderDate {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.folderIconContainer {
+    position: absolute;
+    right: 25px;
+    bottom: 45px;
+    z-index: 1;
+}
+
+.folderIcon {
+    /* width: 65px;
+    height: 45px; */
+    /* border: 3px solid #fff; */
+    border-radius: 6px;
+    /* background-color: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    display: flex;
+    flex-direction: column;
+}
+
+.folderTab {
+    height: 8px;
+    width: 30%;
+    background-color: #fff;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.folderBody {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+/* Section 3: Customer */
+.customerStack {
+    width: 320px;
+    gap: var(--mantine-spacing-sm);
+}
+
+.customerCard {
+    padding: var(--mantine-spacing-md);
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    flex: 1;
+}
+
+.customerTitle {
+    font-weight: 700;
+    margin-bottom: var(--mantine-spacing-sm);
+    font-size: 16px;
+    color: #333;
+}
+
+.infoLabel {
+    font-size: 13px;
+    color: #777;
+    width: 120px;
+}
+
+.infoValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    flex: 1;
+}
+
+.emailValue {
+    word-break: break-all;
+}
+
+.buttonRefuse {
+    background-color: #f24d2a !important;
+    height: 42px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.buttonApprove {
+    background-color: #5cb85c !important;
+    height: 42px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.loadMoreButtonCustom {
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 28px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.loadMoreButtonCustom:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    background-color: #fdfdfd;
+}
+
+.loadMoreText {
+    font-size: 13px;
+    font-weight: 500;
+    color: #495057;
+    line-height: 1.2;
+}
+
+/* Section Headers Sticky logic */
+.stickyHeader {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 5;
+    padding-bottom: 15px;
+    margin-bottom: 0px !important;
+    /* Managed by scroll wrapper padding */
+}
+
+.ordersListWrapper {
+    max-height: 620px;
+    overflow-y: auto;
+    position: relative;
+    padding-right: 8px;
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but maintain functionality */
+.ordersListWrapper,
+.orderGridWrapper {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+.ordersListWrapper::-webkit-scrollbar,
+.orderGridWrapper::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
+.ordersListWrapper.expanded {
+    max-height: none;
+    overflow: visible;
+}
+
+.newOrdersSection {
+    margin-top: 40px;
+    padding-bottom: 50px;
+}
+
+.editButton {
+    border: 1px solid #e0e0e0 !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    background-color: white !important;
+    height: 38px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.orderGridWrapper {
+    max-height: 700px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.orderGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.newOrderCard {
+    background-color: #f7f7f8;
+    border-radius: 24px;
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    position: relative;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.newOrderCard:hover {
+    background-color: #f0f0f2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.notificationDot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 0;
+    transform: translate(50%, -50%);
+    z-index: 10;
+}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    background-color: #ff5b5b;
+    border-radius: 50%;
+    border: 3px solid white;
+}
+
+.newOrderImage {
+    width: 154px;
+    height: 154px;
+    border-radius: 20px;
+    background-color: #cac9d5;
+    flex-shrink: 0;
+}
+
+.newOrderContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.newOrderTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.newOrderTitle {
+    font-size: 30px;
+    font-weight: 800;
+    color: #333;
+    line-height: 1.1;
+}
+
+.newOrderSubtitle {
+    font-size: 14px;
+    color: #8b8b8b;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.newOrderPrice {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 10px;
+}
+
+.newOrderDesc {
+    font-size: 14px;
+    color: #8b8b8b;
+    font-weight: 500;
+}
+
+.newOrderFooter {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+}
+
+.footerGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footerLabel {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.footerCode {
+    background-color: #e6e7eb;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.footerDate {
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+.newOrderStatusBadge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    padding: 0 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    height: 34px !important;
+}
+
+.badgePending {
+    background-color: #fff0eb !important;
+    color: #ff8e72 !important;
+}
+
+.badgeApproved {
+    background-color: #eafff2 !important;
+    color: #00ca5f !important;
+}
+
+.folderIconGhost {
+    position: absolute;
+    right: 20px;
+    top: 65px;
+    color: #c0c4cc;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.rejectedMessage {
+    background-color: #fff0f0;
+    color: #ff5b5b;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+}
+
+.approvedMessage {
+    background-color: #f6ffed;
+    color: #52c41a;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+}

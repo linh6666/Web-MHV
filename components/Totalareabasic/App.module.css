@@ -1,0 +1,69 @@
+.container {
+  width: 100%;
+  max-width: 1300px;
+    margin: 0px auto;
+}
+
+.title {
+  font-size: 28px;
+  color: #222;
+  font-weight: 600;
+  /* margin-bottom: 20px; */
+  /* letter-spacing: 0.5px;
+  text-transform: capitalize; */
+  padding-left: 150px;
+}
+
+.imageWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 16px;
+
+  /* ⭐ Thêm dòng này để SVG đè lên được */
+  position: relative;
+}
+
+.projectImage {
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+/* ⭐ Thêm mới class này để SVG nằm đè lên ảnh */
+.overlaySvg {
+  position: absolute;
+  /* top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; */
+  /* pointer-events: none;  */
+}
+
+.overlaySvg1 {
+  position: absolute;
+  
+  left: 150px;
+
+  /* width: 100%;
+  height: 100%; */
+  /* pointer-events: none;  */
+}
+.overlaySvg2 {
+  position: absolute;
+  
+top: 23%;
+    left: 24.5%;
+
+  /* width: 100%;
+  height: 100%; */
+  /* pointer-events: none;  */
+}
+.overlaySvg4 {
+  position: absolute;
+  
+top: -18%;
+    left: 41%;
+}
