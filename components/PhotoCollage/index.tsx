@@ -219,7 +219,12 @@ export default function PhotoCollage() {
     <div className="photo-collage-container">
       <div className="collage-header">
         <h1 className="collage-title">Chào mừng Kỷ niệm 20 năm Thành lập Công ty TNHH Mô hình Việt</h1>
-        <p className="collage-subtitle">Thay khung ảnh đại diện và cùng Mô hình Việt lan tỏa tinh thần Vững Bước!</p>
+        <div className="collage-subtitle-container">
+          <p className="collage-description">
+            Hai thập kỷ vừa qua là một hành trình đầy tự hào, nơi mỗi bước tiến của Mô hình Việt đều mang theo sự cống hiến và tâm huyết của tất cả MHVer. Giờ đây, tại cột mốc 20 năm, chúng ta – Mô hình Việt và các MHVer, hãy tiếp tục cùng nhau vững bước chinh phục hành trình phía trước, cùng kiến tạo nên những giá trị bền vững và từng bước vươn xa hơn trên bản đồ mô hình kiến trúc thế giới!
+          </p>
+          <p className="collage-subtitle">Thay khung ảnh đại diện và cùng Mô hình Việt lan tỏa tinh thần Vững Bước!</p>
+        </div>
       </div>
 
       {!image ? (
