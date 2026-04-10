@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, Image, Stack, Text, Button, Loader, Modal } from "@mantine/core";
 import styles from "./Interact.module.css";
 import { getListProject } from "../../api/apigetlistProjectControl";
+import { NotificationExtension } from "../../extension/NotificationExtension";
 
 interface Project {
   id: string;
@@ -65,7 +66,11 @@ export default function DetailInteractive() {
       });
 
       setProjects(dataWithLink);
+      NotificationExtension.Success("Tải dữ liệu dự án thành công");
     } catch (error) {
+      const axiosError = error as { response?: { data?: { detail?: string } } };
+      const errorMessage = axiosError?.response?.data?.detail || "Lỗi khi tải dữ liệu dự án";
+      NotificationExtension.Fails(errorMessage);
       console.error("Failed to fetch projects:", error);
     } finally {
       setLoading(false);

@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import styles from "./Interact.module.css";
 import { getListProject } from "../../api/apigetlistProjectControl";
+import { NotificationExtension } from "../../extension/NotificationExtension";
 
 interface ProjectType {
   id: string;
@@ -48,7 +49,11 @@ export default function DetailInteractive() {
         });
 
         setProjects(res.data || []);
+        NotificationExtension.Success("Tải dữ liệu dự án thành công");
       } catch (error) {
+        const axiosError = error as { response?: { data?: { detail?: string } } };
+        const errorMessage = axiosError?.response?.data?.detail || "Lỗi khi tải dữ liệu dự án";
+        NotificationExtension.Fails(errorMessage);
         console.error("Lỗi lấy project:", error);
       } finally {
         setLoading(false);

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "./globals.css";
 
 import { MantineProvider, mantineHtmlProps } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals"; // ✅ Thêm import ModalsProvider
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-
+import { Notifications } from "@mantine/notifications";
 import { Nunito_Sans } from "next/font/google";
 
 export const metadata: Metadata = {
@@ -40,8 +41,10 @@ export default function RootLayout({
             headings: { fontFamily: "var(--font-nunito), sans-serif" },
           }}
         >
+        
           {/* ✅ Thêm ModalsProvider bọc Header, main, Footer */}
           <ModalsProvider>
+                 <Notifications position="top-center" />
             <Header />
             <main className="main">{children}</main>
             <Footer />
