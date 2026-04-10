@@ -9,6 +9,7 @@ import {
   IconBuildingWarehouse,
   IconList,
   IconExchange,
+  IconMenuOrder,
 } from "@tabler/icons-react";
 import { Loader, Container, Text } from "@mantine/core";
 import { getCurrentUser } from "../../api/apiProfile";
@@ -16,6 +17,8 @@ import ProfileInfo from "./Profile";
 import Project from "./Project";
 import ResetPasswword from "./ResetPasswword";
 import Warehouse from "./Warehouse";
+import Listcustomer from "./listcustomer";
+import Order from "./Order";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -53,6 +56,7 @@ function ProfilePageContent() {
     | "membership"
     | "promotions"
     | "listcustomer"
+    | "listorder"
     | "ResetPassword";
 
   const [user, setUser] = useState<User | null>(null);
@@ -120,7 +124,9 @@ function ProfilePageContent() {
       case "membership":
         return <Warehouse />;
       case "listcustomer":
-        return <>Danh sách khách hàng</>;
+        return <Listcustomer />;
+          case "listorder":
+        return <Order />;
           case "ResetPassword":
         return <ResetPasswword />;
       default:
@@ -151,7 +157,7 @@ function ProfilePageContent() {
                   activeTab === "bookings" ? styles.active : ""
                 }`}
               >
-                <IconCalendar size={18} /> Dự án của tôi
+                <IconCalendar size={18} /> Dự án của bạn
               </Link>
             </li>
             <li>
@@ -172,6 +178,17 @@ function ProfilePageContent() {
                 }`}
               >
                 <IconList size={18} /> Danh sách khách hàng
+              </Link>
+            </li>
+             <li>
+              <Link
+                href="/Tai-khoan?tab=listorder"
+                className={`${styles.menuItem} ${
+                  activeTab === "listorder" ? styles.active : ""
+                }`}
+              >
+                <IconMenuOrder
+ size={18} /> Danh sách đơn hàng
               </Link>
             </li>
             <li>

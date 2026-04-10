@@ -139,5 +139,7 @@ EDIT_DETAILE_HOME:"/api/v1/node_attribute/node_by_leaf/{project_id}/{leaf_id}",
 GET_DETAILE_HOME:"/api/v1/node_attribute/node_by_leaf/{project_id}/{leaf_id}",
 //Contract
 CREATE_CONTRACT:"/api/v1/contact/",
+///Customer
+GET_LIST_CUSTOMER:"/api/v1/users/customer/",
 
 }

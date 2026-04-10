@@ -1,0 +1,36 @@
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid #762f0b;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mantine-shadow-md);
+}
+
+.iconWrapper {
+    color: var(--mantine-color-dimmed);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header {
+    background-color: #fcfaf9;
+    padding: 16px;
+    border-bottom: 1px solid #eee6e2;
+}
+
+.customerName {
+    font-weight: 600;
+    color: #762f0b;
+}
+
+.userIcon {
+    /* padding: 4px; */
+    background-color: #f7f3f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
