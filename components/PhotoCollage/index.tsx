@@ -211,15 +211,21 @@ export default function PhotoCollage() {
           NotificationExtension.Fails("Không thể tạo ảnh để tải về.");
           return;
         }
+
         const url = URL.createObjectURL(blob);
+        
+        // Tải xuống trực tiếp. Mọi thiết bị (kể cả Mobile Safari/Chrome) đều dùng chung một cách.
+        // Hạn chế: Có thể không tải được trong nội bộ Zalo/FB app.
         const link = document.createElement("a");
         link.download = `PhotoCollage_${Date.now()}.png`;
         link.href = url;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        NotificationExtension.Success("Đã tải ảnh về thành công!");
+
+        // Giữ delay 2000ms để đảm bảo Safari iOS có đủ thời gian hiển thị thông báo "Bạn có muốn tải về?"
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+        NotificationExtension.Success("Đã tải ảnh về máy!");
       }, "image/png", 1.0);
     } catch (error) {
       console.error("Download error:", error);
