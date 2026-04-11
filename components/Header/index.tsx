@@ -20,10 +20,11 @@ import UserIcon from "./User/index";
 const mainLinks = [
   { link: "/Gioi-thieu", label: "GIỚI THIỆU" },
   { link: "/tuong-tac", label: "MÔ HÌNH TƯƠNG TÁC" },
+     { link: "/thong-tin-san-pham", label: "THÔNG TIN SẢN PHẨM" },
+  { link: "/quan-ly-ban-hang", label: "QUẢN LÝ BÁN HÀNG" },
   { link: "/quan-tri-du-an", label: "QUẢN TRỊ DỰ ÁN" },
   { link: "/quan-ly-he-thong", label: "QUẢN TRỊ HỆ THỐNG" },
-   { link: "/thong-tin-san-pham", label: "THÔNG TIN SẢN PHẨM" },
-  { link: "/quan-ly-ban-hang", label: "QUẢN LÝ BÁN HÀNG" },
+
   
 ];
 
@@ -118,7 +119,7 @@ export default function Header() {
   if (!isLoggedIn) {
     maxWidth = "1260px";
   } else if (isSuperUser) {
-    maxWidth = "1500px";
+    maxWidth = "1600px";
   }
 
   return (

@@ -27,58 +27,49 @@ export default function DetailInteractive() {
   const [loading, setLoading] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
- useEffect(() => {
-  const token = localStorage.getItem("access_token") ?? "";
+  useEffect(() => {
+    const token = localStorage.getItem("access_token") ?? "";
 
-  if (!token) {
-    setShowLoginModal(true);
-    setLoading(false);
-    return;
-  }
-
-  async function fetchProjects() {
-    try {
-      const { data } = await getListProject({ token, skip: 0, limit: 20 });
-
-      // Nếu đây là lần đầu fetch -> lưu lại thứ tự ID ban đầu
-      if (initialOrder.length === 0) {
-        setInitialOrder(data.map((p: Project) => p.id));
-      }
-
-      // Nếu đã có thứ tự ban đầu -> sắp xếp lại theo đúng thứ tự đó
-      const sortedData = [...data].sort((a, b) => {
-        return initialOrder.indexOf(a.id) - initialOrder.indexOf(b.id);
-      });
-
-      // Tạo mapping giữa tên dự án và đường dẫn
-      const linkMap: Record<string, string> = {
-        "Ciputra": "/tuong-tac/Ciputra",
-    
-
-        // thêm các dự án khác nếu cần
-      };
-
-      // Gán link theo name
-      const dataWithLink = sortedData.map((project: Project) => {
-        const baseLink = linkMap[project.name] || `/Dieu-khien-${project.id}`;
-        const link = `${baseLink}?id=${project.id}`;
-        return { ...project, link };
-      });
-
-      setProjects(dataWithLink);
-      NotificationExtension.Success("Tải dữ liệu dự án thành công");
-    } catch (error) {
-      const axiosError = error as { response?: { data?: { detail?: string } } };
-      const errorMessage = axiosError?.response?.data?.detail || "Lỗi khi tải dữ liệu dự án";
-      NotificationExtension.Fails(errorMessage);
-      console.error("Failed to fetch projects:", error);
-    } finally {
+    if (!token) {
+      setShowLoginModal(true);
       setLoading(false);
+      return;
     }
-  }
 
-  fetchProjects();
-}, [initialOrder]);
+    async function fetchProjects() {
+      try {
+        const { data } = await getListProject({ token, skip: 0, limit: 20 });
+
+        // Lưu lại thứ tự ID ban đầu
+        setInitialOrder(data.map((p: Project) => p.id));
+
+        // Tạo mapping giữa tên dự án và đường dẫn
+        const linkMap: Record<string, string> = {
+          "Ciputra": "/tuong-tac/Ciputra",
+          // thêm các dự án khác nếu cần
+        };
+
+        // Gán link theo name
+        const dataWithLink = data.map((project: Project) => {
+          const baseLink = linkMap[project.name] || `/Dieu-khien-${project.id}`;
+          const link = `${baseLink}?id=${project.id}`;
+          return { ...project, link };
+        });
+
+        setProjects(dataWithLink);
+        NotificationExtension.Success("Tải dữ liệu dự án thành công");
+      } catch (error) {
+        const axiosError = error as { response?: { data?: { detail?: string } } };
+        const errorMessage = axiosError?.response?.data?.detail || "Lỗi khi tải dữ liệu dự án";
+        NotificationExtension.Fails(errorMessage);
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, []); // Chỉ chạy 1 lần khi mount
 
 
   if (loading) {
