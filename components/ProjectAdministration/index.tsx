@@ -13,11 +13,14 @@ import classes from './NavbarSimple.module.css';
 import Project from './Project'; 
 import JionProject from './JionProject'; 
 import System from './System'; 
+import  LockRequest from './LockRequest';
 import User from './User'; 
 import Roles from './Roles'; 
 import UserProjectRole from './UserProjectRole';
 import Order from './Order'; 
+import  PaymentRequest from './PaymentRequest';
 import  ProjectDetails from './ProjectDetails';
+  import  LockProductRequest from './LockProductRequest';
 import HomeAdmin from '../HomeAdmin/index';  
 
 const mockdata = [
@@ -43,17 +46,20 @@ const mockdata = [
       
       { label: 'Định danh vai trò người trong dự án', link: 'Roles' },
        { label: 'Phân quyền người dùng trong dự án', link: 'UserProjectRole' },
+       { label: 'Duyệt yêu cầu tham gia dự án', link: 'JionProject' },
      
     ],
   },
   {
-    label: 'Phân quyền người dùng trong dự án',
+    label: 'Quản lý đơn hàng',
     icon: IconUser,
     initiallyOpened: true,
     links: [
-      { label: 'Quản lý người dùng vào dự án', link: 'JionProject' },
-      { label: 'Quản lý đơn hàng', link: 'Order' },
-      { label: 'Duyệt đơn thanh toán kế tiếp', link: 'Test1' },
+      { label: 'Đơn hàng', link: 'Order' },
+            { label: 'Duyệt khóa sản phẩm', link: 'LockProductRequest' },
+
+      { label: 'Duyệt đơn thanh toán kế tiếp', link: 'PaymentRequest' },
+         { label: 'Duyệt đơn thanh toán', link: 'LockRequest' },
       
     ],
   },
@@ -113,8 +119,14 @@ export function ProjectManagementContent() {
         return <div>Đây là trang dự án</div>;
            case 'projectdetails':
         return <ProjectDetails />;
+               case 'LockProductRequest':
+        return <LockProductRequest/>;
+            case 'LockRequest':
+        return <LockRequest/>;
       case 'JionProject':
        return <JionProject/>;
+         case 'PaymentRequest':
+        return <PaymentRequest/>;
          
       case 'home':
         return <HomeAdmin />;

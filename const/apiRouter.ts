@@ -4,6 +4,7 @@ export const API_ROUTE = {
   LOGIN: "/api/v1/login/access-token",
   REGISTER:"/api/v1/users/signup",
     SENDEMAIL: "/api/v1/password-recovery/{email}",
+    SENDEMAIL_AUTHENTICATION: "/api/v1/resend-verification-email",
     LOGIN_USERNAME:"/api/v1/users/me",
     UPDATE_ME:"/api/v1/users/me",
     GET_LIST_USER:"/api/v1/users/", 
@@ -117,10 +118,14 @@ DELETE_REQUEST:"/api/v1/JoinProject/{project_id}/{request_id}",
 
 
 /////deltai home
-GET_LIST_DETAIL_HOME:"/api/v1/detal_unit/get_detal_units/{project_id}/{unit_code}",
-CREATE_IMG_DETAIL_HOME:"/api/v1/detal_unit/add_multiple_files/{project_id}/{unit_code}",
-UPDATE_IMG: "/api/v1/detal_unit/update_detal_unit/{project_id}/{detal_id}",
-Delete_IMG:"/api/v1/detal_unit/delete_detal_unit/{project_id}/{detal_id}",
+GET_LIST_DETAIL_HOME:"/api/v1/detail_unit/get_detail_units/{project_id}/{unit_code}",
+CREATE_IMG_DETAIL_HOME:"/api/v1/detail_unit/add_multiple_files/{project_id}/{unit_code}",
+UPDATE_IMG:"/api/v1/detail_unit/add_multiple_files/{project_id}/{detal_id}",
+Delete_IMG:"/api/v1/detail_unit/delete_detail_unit/{project_id}/{detal_id}",
+
+
+
+
 ////Project basic
 GET_LIST_PROJECT_BASIC:"/api/v1/projects/basic",
 
@@ -131,15 +136,37 @@ CREATE_FAVORITES:"/api/v1/favorites/",
 DELETE_FAVORITES:"/api/v1/favorites/{favorite_id}",
 
 ////Order
-CREATE_ORDER:"/api/v1/order/",
+CREATE_ORDER:"/api/v1/order/{project_id}",
 GET_LIST_ORDER:"/api/v1/order/{project_id}",
 
 //Home
 EDIT_DETAILE_HOME:"/api/v1/node_attribute/node_by_leaf/{project_id}/{leaf_id}",
 GET_DETAILE_HOME:"/api/v1/node_attribute/node_by_leaf/{project_id}/{leaf_id}",
-//Contract
-CREATE_CONTRACT:"/api/v1/contact/",
+
+
+///tạo đơn hàng thanh toán
+CREATE_ODER_PAYMENT:"/api/v1/order_payment/{project_id}",
+UPDATE_ODER_PAYMENT:"/api/v1/order_payment/{order_payment_id}",
+GET_LIST_ODER_PAYMENT:"/api/v1/order_payment/{order_id}",
+GET_LIST_PAYMENT:"/api/v1/order_payment/by_id/{order_payment_id}",
+
+//xóa điều khiển
+DELETE_CONTROL:"/api/v1/control/release_control/{project_id}",
+
+///lockrequest
+LOCK_REQUEST:"/api/v1/request_lock/{request_id}",
+GET_LOCK_REQUEST:"/api/v1/request_lock/{project_id}",
+
+
 ///Customer
 GET_LIST_CUSTOMER:"/api/v1/users/customer/",
+//Contract
+CREATE_CONTRACT:"/api/v1/contact/",
+
+//MAPPING
+GET_LIST_MAPPING:"/api/v1/midi/{project_id}",
+GET_LIST_DETAIL_MAPPING:"/api/v1/midi/detail/{script_id}",
+
+///customer
 
 }
