@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-// import AppSearch from "../../../common/AppSearch";
+import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
@@ -138,7 +138,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group justify="space-between" mb={12}>
-        {/* <AppSearch /> */}
+        <AppSearch />
         <AppAction openModal={openModal} />
       </Group>
 

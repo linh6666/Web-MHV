@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Table,Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
-// import AppSearch from "../../../common/AppSearch";
+import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
@@ -208,7 +208,7 @@ const columns: ColumnsType<DataType> = [
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch />
         <AppAction openModal={openModal} />
       </Group>
 

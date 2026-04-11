@@ -111,19 +111,25 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     fetchUserDetail();
   }, [fetchUserDetail]);
 
- useEffect(() => {
+useEffect(() => {
   const fetchProvinces = async () => {
     try {
       const response = await getListSystem({
-        token: localStorage.getItem("token") || "", // hoặc lấy từ context
+        token: localStorage.getItem("token") || "",
         skip: 0,
         limit: 100,
       });
 
-      const formatted = response.data.map((item: System) => ({
+      // ✅ CHỈ lấy Sale Staff
+      const filtered = response.data.filter(
+        (item: System) => item.name === "Sale Staff"
+      );
+
+      const formatted = filtered.map((item: System) => ({
         value: item.id,
         label: item.name,
       }));
+
       setProvinceOptions(formatted);
     } catch (error) {
       console.error("Error fetching provinces:", error);
@@ -132,6 +138,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
 
   fetchProvinces();
 }, []);
+
 
   return (
     <Box
@@ -162,12 +169,12 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
   onChange={(value) => form.setFieldValue("system_id", value || "")} // string
 />
 
-      <TextInput
+      {/* <TextInput
         label="Người giới thiệu"
         placeholder="Nhập người giới thiệu"
         mt="md"
         {...form.getInputProps("introducer_id")}
-      />
+      /> */}
 
       <Switch
         label="Kích hoạt tài khoản"

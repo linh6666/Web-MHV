@@ -23,6 +23,7 @@ import UserProjectRole from './UserProjectRole';
 import TemplateAttributesLink from './TemplateAttributesLink';
 import NodeAttribute from './NodeAttribute';
 import HomeAdmin from '../HomeAdmin/index';
+import ImportData from './ImportData'
 
 const mockdata = [
   { label: 'BÁO CÁO TỔNG QUAN', icon: IconGauge, link: 'home' },
@@ -58,6 +59,7 @@ const mockdata = [
       { label: 'Cấu hình loại dự án', link: 'Template_Attributes_Link' },
       { label: 'Danh sách dự án', link: 'project' },
       { label: 'Tạo dữ liệu điều khiển', link: 'Node_Attribute' },
+        { label: 'Tải dữ liệu ', link: 'Import_Data' },
     ],
   },
 ];
@@ -116,6 +118,8 @@ export function PageAdminContent() {
         return <Project />;
       case 'Node_Attribute':
         return <NodeAttribute />;
+          case 'Import_Data':
+        return <ImportData/>
       case 'home':
         return <HomeAdmin />;
       default:
