@@ -42,9 +42,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     initialValues: {
       email: "",
       is_active: false,
-      // is_superuser: false,
       system_id:"",
-      // introducer_id: "",
     },
   });
 
@@ -96,8 +94,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         email: userData.email || "",
         system_id: userData.system_id ||"",
         is_active: userData.is_active || false,
-        // is_superuser: userData.is_superuser || false,
-        // introducer_id: userData.introducer_id || "",
+       
       });
 
       // setSelectedProvince(userData.system_id || null);
@@ -114,19 +111,25 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     fetchUserDetail();
   }, [fetchUserDetail]);
 
- useEffect(() => {
+useEffect(() => {
   const fetchProvinces = async () => {
     try {
       const response = await getListSystem({
-        token: localStorage.getItem("token") || "", // hoặc lấy từ context
+        token: localStorage.getItem("token") || "",
         skip: 0,
         limit: 100,
       });
 
-      const formatted = response.data.map((item: System) => ({
+      // ✅ CHỈ lấy Sale Staff
+      const filtered = response.data.filter(
+        (item: System) => item.name === "Sale Staff"
+      );
+
+      const formatted = filtered.map((item: System) => ({
         value: item.id,
         label: item.name,
       }));
+
       setProvinceOptions(formatted);
     } catch (error) {
       console.error("Error fetching provinces:", error);
@@ -135,6 +138,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
 
   fetchProvinces();
 }, []);
+
 
   return (
     <Box
@@ -157,32 +161,26 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("email")}
       />
 <Select
-  label="Vai trò"
-  placeholder="Chọn vai trò"
+  label="Chức vụ"
+  placeholder="Chọn chức vụ"
   data={provinceOptions}
   mt="md"
   value={form.values.system_id} // string
   onChange={(value) => form.setFieldValue("system_id", value || "")} // string
 />
 
-      <TextInput
+      {/* <TextInput
         label="Người giới thiệu"
         placeholder="Nhập người giới thiệu"
         mt="md"
         {...form.getInputProps("introducer_id")}
-      />
+      /> */}
 
       <Switch
         label="Kích hoạt tài khoản"
         mt="md"
         {...form.getInputProps("is_active", { type: "checkbox" })}
       />
-
-      {/* <Switch
-        label="Quyền quản trị"
-        mt="md"
-        {...form.getInputProps("is_superuser", { type: "checkbox" })}
-      /> */}
 
       <Group justify="flex-end" mt="lg">
         <Button

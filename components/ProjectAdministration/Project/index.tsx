@@ -9,7 +9,7 @@ import { getListProject } from "../../../api/apigetlistProject";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import EditView from "./EditView";
-import DeleteView from "./DeleteView";
+// import DeleteView from "./DeleteView";
 
 interface DataType {
   id: string;
@@ -98,24 +98,24 @@ const openEditUserModal = (role: DataType) => {
   // ===========================
   // 🔥 MỞ MODAL DELETE
   // ===========================
-const openDeleteUserModal = (role: DataType) => {
-  modals.openConfirmModal({
-    title: 
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-       Xóa dự án
-      </div>
-    ,
-    children: (
-      <DeleteView
-        idItem={[role.id]}
-              // ⬅️ TRUYỀN LANG VÀO DELETEVIEW
-        onSearch={fetchData}
-      />
-    ),
-    confirmProps: { display: "none" },
-    cancelProps: { display: "none" },
-  });
-};
+// const openDeleteUserModal = (role: DataType) => {
+//   modals.openConfirmModal({
+//     title: 
+//       <div style={{ fontWeight: 600, fontSize: 18 }}>
+//        Xóa dự án
+//       </div>
+//     ,
+//     children: (
+//       <DeleteView
+//         idItem={[role.id]}
+//               // ⬅️ TRUYỀN LANG VÀO DELETEVIEW
+//         onSearch={fetchData}
+//       />
+//     ),
+//     confirmProps: { display: "none" },
+//     cancelProps: { display: "none" },
+//   });
+// };
 
 
   // ===========================
@@ -168,7 +168,7 @@ const openDeleteUserModal = (role: DataType) => {
     },
     {
       title:  "Hành động" ,
-      width: 7,
+      width: 5,
         fixed: "right",
       render: (user: DataType) => (
         <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
@@ -180,14 +180,14 @@ const openDeleteUserModal = (role: DataType) => {
               onClick={() => openEditUserModal(user)}
             />
           </EuiFlexItem>
-          <EuiFlexItem grow={false}>
+          {/* <EuiFlexItem grow={false}>
             <EuiButtonIcon
               iconType="trash"
               aria-label="Xóa"
               color="danger"
               onClick={() => openDeleteUserModal(user)}
             />
-          </EuiFlexItem>
+          </EuiFlexItem> */}
         </EuiFlexGroup>
       ),
     },
@@ -221,7 +221,7 @@ const openDeleteUserModal = (role: DataType) => {
         columns={columns}
         dataSource={data}
         loading={loading}
-        scroll={{ x: 1300 }}
+        scroll={{ x: 1200 }}
         pagination={false}
         bordered
         rowKey="id"

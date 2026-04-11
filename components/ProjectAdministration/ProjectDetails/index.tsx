@@ -350,8 +350,8 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
         </EuiFlexItem>
         <EuiFlexItem>
           <AppSearch
-            value={searchText}
-            onSearch={(value) => setSearchText(value)}
+            // value={searchText}
+            // onSearch={(value) => setSearchText(value)}
           />
         </EuiFlexItem>
       </EuiFlexGroup>

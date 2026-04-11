@@ -34,7 +34,7 @@ const mockdata = [
   },
 
  {
-    label: 'Quản lý dự án',
+    label: 'Quản trị dự án',
     icon: IconNotes,
     initiallyOpened: true,
     links: [

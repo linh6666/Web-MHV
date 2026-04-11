@@ -3,16 +3,16 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Table, Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
-// import AppSearch from "../../../common/AppSearch";
+import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
 import { getListSystem } from "../../../api/apigetlistsystym";
-import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiToolTip } from "@elastic/eui";
+// import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiToolTip } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import CreateView from "./CreateView";
-import EditView from "./EditView";
-import DeleteView from "./DeleteView";
+// import EditView from "./EditView";
+// import DeleteView from "./DeleteView";
 
 interface DataType {
   id: string;
@@ -74,24 +74,24 @@ export default function LargeFixedTable() {
   }, [fetchData]);
 
   // Modal chỉnh sửa
-  const openEditUserModal = (role: DataType) => {
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa vai trò</div>,
-      children: <EditView id={role.id} onSearch={fetchData} />,
-      confirmProps: { display: "none" },
-      cancelProps: { display: "none" },
-    });
-  };
+  // const openEditUserModal = (role: DataType) => {
+  //   modals.openConfirmModal({
+  //     title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa vai trò</div>,
+  //     children: <EditView id={role.id} onSearch={fetchData} />,
+  //     confirmProps: { display: "none" },
+  //     cancelProps: { display: "none" },
+  //   });
+  // };
 
   // Modal xóa
-  const openDeleteUserModal = (role: DataType) => {
-    modals.openConfirmModal({
-      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa vai trò</div>,
-      children: <DeleteView idItem={[role.id]} onSearch={fetchData} />,
-      confirmProps: { display: "none" },
-      cancelProps: { display: "none" },
-    });
-  };
+  // const openDeleteUserModal = (role: DataType) => {
+  //   modals.openConfirmModal({
+  //     title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa vai trò</div>,
+  //     children: <DeleteView idItem={[role.id]} onSearch={fetchData} />,
+  //     confirmProps: { display: "none" },
+  //     cancelProps: { display: "none" },
+  //   });
+  // };
 
   // Modal thêm
   const openModal = () => {
@@ -116,43 +116,43 @@ export default function LargeFixedTable() {
   sorter: (a, b) => a.rank_total - b.rank_total,  // thêm vào đây
 },
     { title: "Mô Tả ", dataIndex: "description_vi", key: "description_vi", width: 100 },
-    {
-      title: "Hành Động",
-      width: 30,
-      fixed: "right",
-      render: (user: DataType) => (
-       <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
-  <EuiFlexItem grow={false}>
-    <EuiToolTip content="Chỉnh sửa">
-      <EuiButtonIcon
-        iconType="documentEdit"
-        aria-label="Chỉnh sửa"
-        color="success"
-        onClick={() => openEditUserModal(user)}
-      />
-    </EuiToolTip>
-  </EuiFlexItem>
+//     {
+//       title: "Hành Động",
+//       width: 30,
+//       fixed: "right",
+//       render: (user: DataType) => (
+//        <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
+//   <EuiFlexItem grow={false}>
+//     <EuiToolTip content="Chỉnh sửa">
+//       <EuiButtonIcon
+//         iconType="documentEdit"
+//         aria-label="Chỉnh sửa"
+//         color="success"
+//         onClick={() => openEditUserModal(user)}
+//       />
+//     </EuiToolTip>
+//   </EuiFlexItem>
 
-  <EuiFlexItem grow={false}>
-    <EuiToolTip content="Xóa">
-      <EuiButtonIcon
-        iconType="trash"
-        aria-label="Xóa"
-        color="danger"
-        onClick={() => openDeleteUserModal(user)}
-      />
-    </EuiToolTip>
-  </EuiFlexItem>
-</EuiFlexGroup>
+//   <EuiFlexItem grow={false}>
+//     <EuiToolTip content="Xóa">
+//       <EuiButtonIcon
+//         iconType="trash"
+//         aria-label="Xóa"
+//         color="danger"
+//         onClick={() => openDeleteUserModal(user)}
+//       />
+//     </EuiToolTip>
+//   </EuiFlexItem>
+// </EuiFlexGroup>
 
-      ),
-    },
+//       ),
+//     },
   ];
 
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch />
         <AppAction openModal={openModal} />
       </Group>
 

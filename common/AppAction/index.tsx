@@ -35,6 +35,7 @@ import { useRef, useState } from "react";
 
 const AppAction = ({
   language = "vi", // Mặc định là tiếng Việt
+  label,
   openModal,
   openModalEdit,
   openModalDelete,
@@ -184,7 +185,7 @@ const AppAction = ({
     color="blue"
     variant="outline"
   >
-    {language === 'vi' ? 'Thêm mới' : 'Add New'}
+    {label || (language === 'vi' ? 'Thêm mới' : 'Add New')}
   </Button>
           )}
           {openModalAssign && (
@@ -343,6 +344,7 @@ export default AppAction;
 
 type AppActionProps = {
   language?: 'vi' | 'en'; // Ngôn ngữ hiển thị
+  label?: string;
   openModal?: () => void;
   openModalupdateExel?: () => void;
   openModalEdit?: () => void;

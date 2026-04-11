@@ -26,7 +26,7 @@ interface FormValues {
   password: string;
   confirm_password: string;
   is_active: boolean;
-  is_superuser: boolean;
+  // is_superuser: boolean;
   phone: string;
   province_id: string[]; // Mảng chuỗi cho tỉnh
   ward_id: string[]; // Mảng chuỗi cho phường
@@ -64,7 +64,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       password: "",
       confirm_password: "",
       is_active: false,
-      is_superuser: false,
+      // is_superuser: false,
       phone: "",
       province_id: [],
       ward_id: [],
@@ -85,7 +85,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       const userData = {
         email: values.email,
         is_active: values.is_active,
-        is_superuser: values.is_superuser,
+        // is_superuser: values.is_superuser,
         full_name: values.full_name,
         phone: values.phone,
         province_id: values.province_id[0] || "",
@@ -224,16 +224,16 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       />
 
       <Checkbox
-        label="Hoạt động"
+        label="Kích hoạt tài khoản "
         mt="md"
         {...form.getInputProps("is_active", { type: "checkbox" })}
       />
 
-      <Checkbox
+      {/* <Checkbox
         label="Quản trị viên"
         mt="xs"
         {...form.getInputProps("is_superuser", { type: "checkbox" })}
-      />
+      /> */}
 
       <Group justify="flex-end" mt="lg">
         <Button
