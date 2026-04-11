@@ -187,14 +187,14 @@ const columns: ColumnsType<DataType> = [
     title: "Họ và tên",
     dataIndex: "full_name",
     key: "full_name",
-    width: 150,
+    width: 90,
     fixed: "left",
   },
   {
     title: "Chức vụ",
     dataIndex: "system_name",
     key: "system_name",
-    width: 130,
+    width: 90,
   },
   {
     title: "Email",
