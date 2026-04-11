@@ -115,11 +115,11 @@ export default function Header() {
   ));
 
   /* ============ Max Width Logic ============ */
-  let maxWidth = "1330px";
+  let maxWidth = "1300px";
   if (!isLoggedIn) {
-    maxWidth = "1260px";
+    maxWidth = "1200px";
   } else if (isSuperUser) {
-    maxWidth = "1600px";
+    maxWidth = "1450px";
   }
 
   return (
@@ -139,8 +139,8 @@ export default function Header() {
         {/* ============ Menu desktop ============ */}
         <Box className={classes.links} visibleFrom="md">
           <Group
-            gap="md"
-            justify="flex-end"
+            // gap="md"
+            // justify="flex-end"
             className={classes.mainLinks}
           >
             {mainItems}
