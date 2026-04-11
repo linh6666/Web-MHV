@@ -21,6 +21,7 @@ import {
   IconChevronLeft
 } from "@tabler/icons-react";
 import "./styles.css";
+import { NotificationExtension } from "../../extension/NotificationExtension";
 
 const CANVAS_SIZE = 450;
 const EXPORT_SIZE = 1200;
@@ -205,13 +206,24 @@ export default function PhotoCollage() {
         ctx.restore();
       });
 
-      const link = document.createElement("a");
-      link.download = `PhotoCollage_${Date.now()}.png`;
-      link.href = canvas.toDataURL("image/png", 1.0);
-      link.click();
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          NotificationExtension.Fails("Không thể tạo ảnh để tải về.");
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.download = `PhotoCollage_${Date.now()}.png`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        NotificationExtension.Success("Đã tải ảnh về thành công!");
+      }, "image/png", 1.0);
     } catch (error) {
       console.error("Download error:", error);
-      alert("Đã có lỗi xảy ra khi tải ảnh.");
+      NotificationExtension.Fails("Đã có lỗi xảy ra khi tải ảnh.");
     }
   };
 
