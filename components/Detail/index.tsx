@@ -20,13 +20,17 @@ import InfoModal from "./Infomodal/index";
 
 interface ZoningSystemProps {
   project_id: string | null;
+  layer2?: string | null;
+  layer3?: string | null;
   layer7?: string | null;
 }
 
 export default function ZoningSystem({
   project_id,
+  layer2,
+  layer3,
 }: ZoningSystemProps) {
-  const [currentLayer7, setCurrentLayer7] =
+  const [currentLayer2Prop, setCurrentLayer2Prop] =
     useState<string>("");
 
   const [activeModels, setActiveModels] = useState<string[]>(
@@ -56,14 +60,14 @@ export default function ZoningSystem({
   const urlPhase = searchParams.get("layer3");
   const urlLayer2 = searchParams.get("layer2");
 
-  const [currentLayer2] = useState(urlLayer2 || "");
-  const [currentPhase] = useState(urlPhase || "");
+  const [currentLayer2] = useState(layer2 || urlLayer2 || "");
+  const [currentPhase] = useState(layer3 || urlPhase || "");
 
   // =============================
   // LAYER 7 CHANGE
   // =============================
-  const handleLayer7Change = (newLayer7: string) => {
-    setCurrentLayer7(newLayer7);
+   const handleLayer2Change = (newLayer2: string) => {
+    setCurrentLayer2Prop(newLayer2);
   };
 
   // =============================
@@ -295,8 +299,8 @@ export default function ZoningSystem({
         <div className={styles.right}>
           <Menu
             project_id={project_id}
-            initialLayer7={currentLayer7}
-            onLayer7Change={handleLayer7Change}
+            initialLayer2={layer2 || currentLayer2}
+            onLayer2Change={handleLayer2Change}
             onModelsLoaded={setActiveModels}
             onSelectModel={handleModelSelect}
           />

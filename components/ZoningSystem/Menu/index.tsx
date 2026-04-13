@@ -129,9 +129,9 @@ useEffect(() => {
 }, [project_id, onModelsLoaded]);
 
 
-  const handleNavigate = (layer7: string) => {
+  const handleNavigate = (layer2: string) => {
     if (!project_id) return;
-    router.push(`/tuong-tac/Ciputra/Mau-cong-trinh?id=${project_id}&layer7=${encodeURIComponent(layer7)}`);
+    router.push(`/tuong-tac/Ciputra/Mau-cong-trinh?id=${project_id}&layer2=${encodeURIComponent(layer2)}`);
   };
 
   const handleBack = () => {

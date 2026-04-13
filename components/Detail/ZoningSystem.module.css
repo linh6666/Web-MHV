@@ -1,9 +1,10 @@
 .box {
   max-width: 1260px;
   width: 100%;
-  margin: auto;
+  margin: 20px auto 0;
   display: flex;
-  justify-content: center; /* Căn giữa toàn bộ cụm ảnh+menu */
+  justify-content: center;
+  /* Căn giữa toàn bộ cụm ảnh+menu */
   height: calc(100vh - 220px);
   /* Trừ Header (80px) + Footer (~140px) */
   box-sizing: border-box;
@@ -12,7 +13,8 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .left {
-  flex: 0 1 auto; /* Co lại theo chiều rộng của ảnh */
+  flex: 0 1 auto;
+  /* Co lại theo chiều rộng của ảnh */
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -46,7 +48,8 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
-  width: auto; /* Co lại theo tỉ lệ ảnh */
+  width: auto;
+  /* Co lại theo tỉ lệ ảnh */
   height: 100%;
   display: flex;
   justify-content: center;
@@ -60,7 +63,8 @@
   width: auto !important;
   max-width: none !important;
   display: block;
-  position: relative; /* Đổi sang relative để tạo kích thước thực */
+  position: relative;
+  /* Đổi sang relative để tạo kích thước thực */
   object-fit: contain;
 }
 

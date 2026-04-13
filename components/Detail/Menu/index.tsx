@@ -12,8 +12,8 @@ import ModalItem from "./ModalItem";
 
 interface MenuProps {
   project_id: string | null;
-  initialLayer7?: string | null;
-  onLayer7Change?: (layer7: string) => void;
+  initialLayer2?: string | null;
+  onLayer2Change?: (layer2: string) => void;
   onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
 }
@@ -51,6 +51,7 @@ interface DataDetail {
 }
 
 interface NodeAttributeItem {
+  layer3?: string;
   layer6?: string;
   group?: string;
   unit_code?: string;
@@ -59,29 +60,29 @@ interface NodeAttributeItem {
 
 export default function Menu({
   project_id,
-  initialLayer7,
-  onLayer7Change,
+  initialLayer2,
+  onLayer2Change,
   onModelsLoaded,
   onSelectModel,
 }: MenuProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const layer7Value = searchParams.get("layer7") || initialLayer7;
+   const layer2Value = searchParams.get("layer2") || initialLayer2;
 
   const [active, setActive] = useState<"on" | "off" | null>(null);
-  const [phase, setPhase] = useState<string>(layer7Value || "");
+  const [phase, setPhase] = useState<string>(layer2Value || "");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
 
    const [opened, setOpened] = useState(false);
      const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
 
-  useEffect(() => {
-    if (layer7Value && layer7Value !== phase) {
-      setPhase(layer7Value);
-      onLayer7Change?.(layer7Value);
+   useEffect(() => {
+     if (layer2Value && layer2Value !== phase) {
+      setPhase(layer2Value);
+      onLayer2Change?.(layer2Value);
     }
-  }, [layer7Value, phase, onLayer7Change]);
+  }, [layer2Value, phase, onLayer2Change]);
 
   // 📡 Load danh sách menu
   const fetchData = useCallback(async () => {
@@ -93,8 +94,8 @@ export default function Menu({
       const data = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer8", values: ["ct", "ct;ti"] },
-          { label: "layer7", values: [phase] },
+          { label: "layer1", values: ["ct", "ti"] },
+          { label: "layer2", values: [phase] },
         ],
       });
 
@@ -111,7 +112,7 @@ export default function Menu({
       );
 
       items.forEach((item) => {
-        const buildingType = (item.layer6 || "").trim();
+        const buildingType = (item.layer3 || "").trim();
         const groupValue = item.group;
 
         if (!buildingType) return;
@@ -145,13 +146,13 @@ export default function Menu({
   const handleSelectModel = async (modelName: string) => {
     if (!project_id || !phase) return;
 
-    try {
+     try {
       const result = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer8", values: ["ct", "ct;ti"] },
-          { label: "layer7", values: [phase] },
-          { label: "layer6", values: [modelName] },
+          { label: "layer1", values: ["ct", "ti"] },
+          { label: "layer2", values: [phase] },
+          { label: "layer3", values: [modelName] },
         ],
       });
 
@@ -246,7 +247,7 @@ export default function Menu({
 
       <div className={styles.footer}>
         <Stack align="center" gap="xs">
-          <Group gap="xs" wrap="nowrap">
+          {/* <Group gap="xs" wrap="nowrap">
             <Button
               style={getButtonStyle(active === "on")}
               onClick={handleClickOn}
@@ -260,7 +261,7 @@ export default function Menu({
             >
               <Text size="11px">TẮT TẤT CẢ</Text>
             </Button>
-          </Group>
+          </Group> */}
 
           <Button
             onClick={handleBack}
