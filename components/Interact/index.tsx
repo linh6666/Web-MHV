@@ -45,8 +45,8 @@ export default function DetailInteractive() {
 
         // Tạo mapping giữa tên dự án và đường dẫn
         const linkMap: Record<string, string> = {
-          "Ciputra": "/tuong-tac/Ciputra",
-          // thêm các dự án khác nếu cần
+          "MHV Ciputra": "/tuong-tac/Ciputra",
+          
         };
 
         // Gán link theo name

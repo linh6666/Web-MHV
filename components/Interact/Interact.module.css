@@ -56,6 +56,9 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  max-width: 250px; /* Giới hạn chiều rộng */
+  width: 100%;
+  margin: 0 auto;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -87,12 +90,12 @@
 }
 
 .primaryButton {
-  background-color: #234374;
+  background-color: #294b61;
   color: #EEEEEE;
 }
 
 .primaryButton:hover {
-  background-color: #bb8d38;
+  background-color: #406C89;
 }
 
 .disabledButton {
@@ -149,4 +152,6 @@
 .centerGrid {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
