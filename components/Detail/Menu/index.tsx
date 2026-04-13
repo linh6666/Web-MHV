@@ -94,7 +94,7 @@ export default function Menu({
       const data = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer1", values: ["ct", "ti"] },
+          { label: "layer1", values: ["ct"] },
           { label: "layer2", values: [phase] },
         ],
       });
@@ -150,7 +150,7 @@ export default function Menu({
       const result = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer1", values: ["ct", "ti"] },
+          { label: "layer1", values: ["ct",] },
           { label: "layer2", values: [phase] },
           { label: "layer3", values: [modelName] },
         ],

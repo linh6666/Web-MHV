@@ -45,7 +45,7 @@ useEffect(() => {
         filters: [
           {
             label: "layer1",
-            values: ["ct", "ti"],
+            values: ["ct"],
           },
         ],
       };
