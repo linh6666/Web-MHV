@@ -1,0 +1,342 @@
+.wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-top: 20px;
+  /* Đẩy nội dung xuống tránh bị Header (position: fixed) che khuất */
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #294b61;
+}
+
+.historyBtn {
+  background: #fff;
+  color: #294b61;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border: none; /* Khử viền đen mặc định của thẻ button */
+}
+
+/* Layout */
+.container {
+  display: flex;
+  height: 650px;
+  border-radius: 10px;
+}
+
+/* Left */
+.left {
+  width: 340px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 12px;
+
+}
+
+.sectionTitle {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card {
+  display: flex;
+  gap: 10px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+
+  max-height: 140px;
+  /* ✅ giới hạn chiều cao card */
+  overflow-y: auto;
+  /* ✅ bật scroll trong card */
+
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 4px;
+}
+
+.card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.thumb {
+  width: 120px;
+  background: #dcdce0;
+  border-radius: 8px;
+}
+
+.cardInfo {
+  flex: 1;
+}
+
+.cardTitle {
+  font-weight: 600;
+}
+
+.price {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.sub {
+  font-size: 12px;
+  color: #777;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status {
+  background: #4e7c91;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.heart {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+
+}
+
+/* Right */
+.right {
+  flex: 1;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Gallery */
+.gallery {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  /* 🔴 CỰC KỲ QUAN TRỌNG */
+}
+
+.mainImage {
+  flex: 2;
+  height: 300px;
+  background: #dcdce0;
+  border-radius: 10px;
+}
+
+.subImages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 300px;
+}
+
+.subImages>* {
+  flex: 1;
+  /* 👈 QUAN TRỌNG: chia đều chiều cao */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ép ảnh Mantine phủ đầy box */
+.subImages :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Detail */
+.detail {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Header detail */
+.topRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Right info */
+.rightInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  text-align: right;
+}
+
+.badge {
+  background: #4e7c91;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+}
+
+.location {
+  font-size: 14px;
+  color: #777;
+  margin: 6px 0;
+}
+
+/* Info row */
+.infoRow {
+  display: flex;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.infoRow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.type {
+  background: #FFFAEE;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.type1 {
+  background: #FFFAEE;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+/* Price */
+.priceDetail {
+  font-size: 13px;
+  color: #777;
+}
+
+.priceDetail b {
+  font-size: 16px;
+  color: #000;
+}
+
+/* Description */
+.desc {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+
+  max-height: 100px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Scrollbar */
+.desc::-webkit-scrollbar {
+  width: 4px;
+}
+
+.desc::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.desc::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  /* ✅ DÒNG QUYẾT ĐỊNH */
+}
+
+.compare,
+.contact {
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.compare {
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.contact {
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(122, 45, 11, 0.25);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.contact:hover {
+  box-shadow: 0 5px 12px rgba(122, 45, 11, 0.35);
+  transform: translateY(-1px);
+}
+
+.cardList {
+  height: 575px;
+  /* ✅ chiều cao cố định */
+  overflow-y: auto;
+  /* ✅ bật scroll */
+  padding-right: 6px;
+}
+
+.cardList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cardList::-webkit-scrollbar-thumb {
+  background: #ffbe00;
+  border-radius: 4px;
+}
+
+.cardList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card:hover {
+  background: #fff6f1;
+  box-shadow: 0 4px 12px rgba(122, 45, 11, 0.15);
+  transform: translateY(-1px);
+}

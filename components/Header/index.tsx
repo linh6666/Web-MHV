@@ -7,6 +7,7 @@ import {
   Group,
   Image,
   Tooltip,
+  Popover,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBell, IconHeart, IconPhoneCall } from "@tabler/icons-react";
@@ -15,6 +16,7 @@ import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
+import FavoriteHoverContent from "./favourite";
 
 /* ============ Menu config ============ */
 const mainLinks = [
@@ -38,6 +40,7 @@ interface DecodedToken {
 
 export default function Header() {
   const [opened, { toggle, close }] = useDisclosure(false);
+  const [favoriteOpened, setFavoriteOpened] = useState(false);
   const pathname = usePathname();
 
   /* ============ Auth state ============ */
@@ -180,17 +183,32 @@ export default function Header() {
             <IconBell size={14} color="#fff" stroke={1.5} />
           </IconCircle>
           </Tooltip>
-<Tooltip 
-              label="Yêu thích" 
-              position="bottom"
-              bg="#f1eeeeff"
-              c="#294b61"
-              withArrow
-            >
-          <IconCircle>
-            <IconHeart size={14} color="#fff" stroke={1.5} />
-          </IconCircle>
-          </Tooltip>
+          <Popover
+            width={320}
+            position="bottom"
+            withArrow
+            shadow="md"
+            opened={favoriteOpened}
+            onChange={setFavoriteOpened}
+          >
+            <Popover.Target>
+              <Tooltip 
+                label="Yêu thích" 
+                position="bottom"
+                bg="#f1eeeeff"
+                c="#294b61"
+                withArrow
+              >
+                <IconCircle onClick={() => setFavoriteOpened((o) => !o)}>
+                  <IconHeart size={14} color="#fff" stroke={1.5} />
+                </IconCircle>
+              </Tooltip>
+            </Popover.Target>
+
+            <Popover.Dropdown>
+              <FavoriteHoverContent />
+            </Popover.Dropdown>
+          </Popover>
 
           <UserIcon />
         </Box>
@@ -231,9 +249,32 @@ export default function Header() {
               <IconBell size={17} color="#fff" stroke={1.5} />
             </IconCircle>
 
-            <IconCircle>
-              <IconHeart size={17} color="#fff" stroke={1.5} />
-            </IconCircle>
+            <Popover
+              width={320}
+              position="bottom"
+              withArrow
+              shadow="md"
+              opened={favoriteOpened}
+              onChange={setFavoriteOpened}
+            >
+              <Popover.Target>
+                <Tooltip 
+                  label="Yêu thích" 
+                  position="bottom"
+                  bg="#f1eeeeff"
+                  c="#294b61"
+                  withArrow
+                >
+                  <IconCircle onClick={() => setFavoriteOpened((o) => !o)}>
+                    <IconHeart size={17} color="#fff" stroke={1.5} />
+                  </IconCircle>
+                </Tooltip>
+              </Popover.Target>
+
+              <Popover.Dropdown>
+                <FavoriteHoverContent />
+              </Popover.Dropdown>
+            </Popover>
 
             <UserIcon />
           </Group>
@@ -244,7 +285,7 @@ export default function Header() {
 }
 
 /* ============ Icon wrapper dùng chung ============ */
-const IconCircle = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(
+const IconCircle = React.forwardRef<HTMLDivElement, { children: React.ReactNode } & React.ComponentPropsWithoutRef<"div">>(
   ({ children, ...others }, ref) => {
     return (
       <Box

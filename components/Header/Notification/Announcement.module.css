@@ -1,0 +1,29 @@
+.userIconWrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f1f3f5; /* nền xám nhạt */
+  display: flex;
+  align-items: center;
+    border: 1px solid #762f0b ;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.userIcon {
+  color: #495057; /* màu icon xám đậm */
+  font-size: 14px;
+}
+
+/* Thông báo mới: border đỏ nổi bật */
+.userIconWrapper.new {
+  border: 1px solid #762f0b ;
+  background-color: #fff5f5; 
+}
+
+/* Hover: đổi màu icon cho đẹp */
+/* .userIconWrapper:hover .userIcon {
+  color: #228be6;
+} */

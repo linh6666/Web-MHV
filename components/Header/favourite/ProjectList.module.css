@@ -1,0 +1,74 @@
+.wrapper {
+  padding: 4px;
+}
+
+/* CARD */
+.card {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.card:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* IMAGE */
+.imagePlaceholder {
+  width: 125px;
+  border-radius: 8px;
+  background: #d9d9e3;
+  flex-shrink: 0;
+}
+.imagePlaceholder img {
+  border-radius: 8px;
+}
+/* CONTENT */
+.content {
+  flex: 1;
+}
+
+/* TEXT */
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* TITLE */
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin: 0;
+}
+
+/* ADDRESS */
+.address {
+  font-size: 12px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+/* BUTTON WRAPPER */
+.buttonWrapper {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* BUTTON */
+.button {
+  border: none;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.button:hover {
+  background: #f5f5f5;
+}
