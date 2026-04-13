@@ -309,7 +309,7 @@ export default function DetailInteractive() {
       <div className={styles.background}>
         <div className={styles.container}>
 
-          <div className={styles.cardGrid}>
+          <div className={`${styles.cardGrid} ${projects.length > 0 && projects.length < 4 ? styles.centeredItems : ""}`}>
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -349,8 +349,8 @@ export default function DetailInteractive() {
           fullWidth
           onClick={() => (window.location.href = "/dang-nhap")}
           style={{
-            backgroundColor: "#ffbe00",
-            color: "#762f0b",
+            backgroundColor: " #294b61",
+            color: "#fff",
             fontWeight: 600,
           }}
         >
