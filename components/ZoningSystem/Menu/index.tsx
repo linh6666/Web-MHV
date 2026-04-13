@@ -18,7 +18,7 @@ interface MenuItem {
 }
 
 interface NodeAttributeItem {
-  layer7?: string;
+  layer2?: string;
   [key: string]: unknown;
 }
 
@@ -44,8 +44,8 @@ useEffect(() => {
         project_id,
         filters: [
           {
-            label: "layer8",
-            values: ["ct", "ct;ti"],
+            label: "layer1",
+            values: ["ct", "ti"],
           },
         ],
       };
@@ -62,14 +62,14 @@ useEffect(() => {
         // ✅ Trả building_code ra ngoài
         onModelsLoaded?.(
           data.data
-            .map((i) => i.layer7)
+            .map((i) => i.layer2)
             .filter(Boolean) as string[]
         );
 
         // ✅ Lấy layer7 → tách → trim
         const allPhases: string[] = data.data.flatMap(
           (item: NodeAttributeItem) =>
-            String(item.layer7 || "")
+            String(item.layer2 || "")
               .split(";")
               .map((z) => z.trim())
               .filter(Boolean)
