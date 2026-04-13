@@ -64,6 +64,7 @@ const handleBack = () => {
             alt={projectName || "Hình ảnh dự án"}
             width={1000}
             height={500}
+            priority
             className={styles.projectImage}
           />
 
@@ -446,12 +447,12 @@ const handleBack = () => {
               justifyContent: "center",
               overflow: "hidden",
               transition: "background 0.3s",
-              background: "#FFFAEE",
-              color: "#752E0B",
+              background: "#21",
+              color: "#fff",
               border: "1.5px solid #752E0B",
             }}
           >
-            <IconArrowLeft size={18} color="#752E0B" />
+            <IconArrowLeft size={18} color="#fff" />
           </Button>
         </Group>
       </div>

@@ -28,6 +28,9 @@
 }
 
 .projectImage {
+  width: 100%;
+  height: auto;
+  display: block;
   border-radius: 10px;
   object-fit: contain;
 }
@@ -35,35 +38,52 @@
 /* ⭐ Thêm mới class này để SVG nằm đè lên ảnh */
 .overlaySvg {
   position: absolute;
-  /* top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; */
-  /* pointer-events: none;  */
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  height: auto;
+  pointer-events: none; 
+}
+
+.overlaySvg path, 
+.overlaySvg g {
+  pointer-events: auto;
 }
 
 .overlaySvg1 {
   position: absolute;
-  
-  left: 150px;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  height: auto;
+  pointer-events: none;
+}
 
-  /* width: 100%;
-  height: 100%; */
-  /* pointer-events: none;  */
+.overlaySvg1 path, 
+.overlaySvg1 g {
+  pointer-events: auto;
 }
 .overlaySvg2 {
   position: absolute;
-  
-top: 23%;
-    left: 24.5%;
+  top: 23%;
+  left: 24.5%;
+  pointer-events: none;
+}
 
-  /* width: 100%;
-  height: 100%; */
-  /* pointer-events: none;  */
+.overlaySvg2 path, 
+.overlaySvg2 g {
+  pointer-events: auto;
 }
 .overlaySvg4 {
   position: absolute;
-  
-top: -18%;
-    left: 41%;
+  top: -18%;
+  left: 41%;
+  pointer-events: none;
+}
+
+.overlaySvg4 path, 
+.overlaySvg4 g {
+  pointer-events: auto;
 }

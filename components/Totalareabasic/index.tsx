@@ -11,7 +11,6 @@ interface WarehouseDetailProps {
 }
 
 const folderImages = [
-  
   "mhvciputra.png",
   
 ];
@@ -447,12 +446,12 @@ const handleBack = () => {
               justifyContent: "center",
               overflow: "hidden",
               transition: "background 0.3s",
-              background: "#FFFAEE",
-              color: "#752E0B",
-              border: "1.5px solid #752E0B",
+              background: "#294b61",
+              color: "#fff",
+              // border: "1.5px solid #752E0B",
             }}
           >
-            <IconArrowLeft size={18} color="#752E0B" />
+            <IconArrowLeft size={18} color="#fff" />
           </Button>
         </Group>
       </div>
