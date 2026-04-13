@@ -11,10 +11,9 @@ interface WarehouseDetailProps {
 }
 
 const folderImages = [
-  "ttphuoctho.png",
-  "ttcitymillennia.png",
-  "ttcamau.jpg",
-  "tttimessquare.png",
+  
+  "mhvciputra.png",
+  
 ];
 
 function normalizeText(text: string) {
@@ -42,14 +41,14 @@ export default function Totalarea({
   const handleSvgClick = (target: string) => {
     // Ví dụ: chuyển sang trang /details/[target]
   router.push(
-  `/Thong-tin-san-pham/Kho-hang/${projectId}?target=${encodeURIComponent(target)}&name=${encodeURIComponent(projectName || "")}`
+  `/thong-tin-san-pham/Kho-hang/${projectId}?target=${encodeURIComponent(target)}&name=${encodeURIComponent(projectName || "")}`
 );
 
 
   };
 
 const handleBack = () => {
-  router.push("/Thong-tin-san-pham");
+  router.push("/thong-tin-san-pham");
 };
 
   return (

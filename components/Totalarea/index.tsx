@@ -11,10 +11,8 @@ interface WarehouseDetailProps {
 }
 
 const folderImages = [
-  "ttphuoctho.png",
-  "ttcitymillennia.png",
-  "ttcamau.jpg",
-  "tttimessquare.png",
+ 
+  "mhvciputra.png",
 ];
 
 function normalizeText(text: string) {
