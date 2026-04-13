@@ -133,8 +133,8 @@ export default function DetailInteractive() {
           fullWidth
           onClick={() => (window.location.href = "/dang-nhap")}
           style={{
-            backgroundColor: "#ffbe00",
-            color: "#762f0b",
+            backgroundColor: "#294b61",
+            color: "#fff",
             fontWeight: 600,
           }}
         >

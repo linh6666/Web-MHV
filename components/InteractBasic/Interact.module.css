@@ -86,12 +86,12 @@
 }
 
 .primaryButton {
-  background-color: #ffbe00;
-  color: #762f0b;
+  background-color: #294b61;
+  color: #fff;
 }
 
 .primaryButton:hover {
-  background-color: #bb8d38;
+  background-color: #406C89;
 }
 
 .disabledButton {
