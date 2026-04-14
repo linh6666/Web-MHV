@@ -15,7 +15,7 @@ import {
   ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
 import { pathsData, SvgItem } from "./Data";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import InfoModal from "./Infomodal/index";
 
 interface ZoningSystemProps {
@@ -56,6 +56,7 @@ export default function ZoningSystem({
   // =============================
   // URL PARAMS
   // =============================
+  const router = useRouter();
   const searchParams = useSearchParams();
   const urlPhase = searchParams.get("layer3");
   const urlLayer2 = searchParams.get("layer2");
@@ -213,16 +214,12 @@ export default function ZoningSystem({
       "data-model"
     );
 
-    if (!model) return;
+    if (!model || !project_id || !currentLayer2Prop) return;
 
-    setOpened(false);
-
-    requestAnimationFrame(() => {
-      setClickedModel(model);
-      setSelectedProjectId(project_id);
-      setOpened(true);
-      zoomToModel(model);
-    });
+    // Chuyển sang trang chi tiết công trình mới
+    router.push(
+      `/tuong-tac/Ciputra/Chi-tiet-cong-trinh?id=${project_id}&layer2=${currentLayer2Prop}&layer3=${model}`
+    );
   };
 
   // =============================
@@ -249,14 +246,14 @@ export default function ZoningSystem({
   // =============================
   return (
     <>
-      <InfoModal
+      {/* <InfoModal
         opened={opened}
         onClose={() => setOpened(false)}
         clickedModel={clickedModel}
         projectId={selectedProjectId}
         initialPhase={currentPhase}
         initialLayer2={currentLayer2}
-      />
+      /> */}
 
       <div className={styles.box}>
         {/* LEFT */}

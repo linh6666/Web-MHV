@@ -143,33 +143,16 @@ export default function Menu({
   }, [fetchData]);
 
   // ✅ CHỈ SỬA ĐOẠN LỖI CLICK NÚT
-  const handleSelectModel = async (modelName: string) => {
+  const handleSelectModel = (modelName: string) => {
     if (!project_id || !phase) return;
 
-     try {
-      const result = await createNodeAttribute({
-        project_id,
-        filters: [
-          { label: "layer1", values: ["ct",] },
-          { label: "layer2", values: [phase] },
-          { label: "layer3", values: [modelName] },
-        ],
-      });
+    // Chuyển sang trang chi tiết công trình mới
+    router.push(
+      `/tuong-tac/Ciputra/Chi-tiet-cong-trinh?id=${project_id}&layer2=${phase}&layer3=${modelName}`
+    );
 
-      const detail = result?.data?.[0];
-      if (!detail) return;
-
-      setSelectedData(detail); 
-      setOpened(true);         
-      // ✅ Truyền unit_code để highlight đúng block SVG
-      if (detail.unit_code) {
-        onSelectModel?.(detail.unit_code);
-      } else {
-        onSelectModel?.(modelName);
-      }
-    } catch (error) {
-      console.error("❌ Lỗi khi gọi lại API model:", error);
-    }
+    // Vẫn gọi onSelectModel để highlight (nếu cần thiết trước khi trang chuyển)
+    onSelectModel?.(modelName);
   };
 
 
@@ -278,12 +261,12 @@ export default function Menu({
           </Button>
         </Stack>
       </div>
-        <ModalItem
+      {/* <ModalItem
         opened={opened}
         onClose={() => setOpened(false)}
         data={selectedData}
         projectId={project_id}
-      />
+      /> */}
     </div>
   );
 }
