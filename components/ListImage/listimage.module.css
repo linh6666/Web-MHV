@@ -19,7 +19,7 @@
 
 .folderTitle {
     font-size: clamp(16px, 2vh, 20px) !important;
-    color: #234374;
+    color: #294b61;
 }
 
 /* Image Gallery Styles */
@@ -87,7 +87,7 @@
 }
 
 .thumbItemActive {
-    border-color: #234374;
+    border-color: #294b61;
 }
 
 .thumbImg {
@@ -102,13 +102,13 @@
     height: 40px;
     padding: 0;
     border-radius: 50%;
-    background: #234374;
+    background: #294b61;
     color: #EEEEEE;
     border: 1.5px solid #EEEEEE;
     transition: transform 0.2s;
 }
 
 .backBtn:hover {
-    background: #1a3256;
+    background: #406C89;
     transform: scale(1.1);
 }
