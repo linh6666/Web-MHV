@@ -46,7 +46,7 @@ interface DataDetail {
 }
 
 interface NodeAttributeItem {
-  layer7?: string | null;
+  layer2?: string | null;
   unit_code?: string;
   [key: string]: unknown;
 }
@@ -74,7 +74,7 @@ export default function Menu({
       try {
         const body = {
           project_id,
-          filters: [{ label: "layer8", values: ["ti", "ct;ti"] }],
+          filters: [{ label: "layer1", values: ["ti", "ct;ti"] }],
         };
 
         const res = await createNodeAttribute(body);
@@ -94,14 +94,14 @@ export default function Menu({
             .filter((code): code is string => Boolean(code))
         );
 
-        // xử lý zone từ layer7
+        // xử lý zone từ layer2
         const zoneMap = new Map<string, DataDetail>();
         const zones: { label: string; data: DataDetail }[] = [];
 
         data.forEach((item) => {
-          if (!item.layer7) return;
+          if (!item.layer2) return;
 
-          const layers = item.layer7
+          const layers = item.layer2
             .split(";")
             .map((z) => z.trim())
             .filter((z) => z && z.toLowerCase() !== "skip");
@@ -157,8 +157,8 @@ export default function Menu({
       const result = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer8", values: ["ti", "ct;ti"] },
-          { label: "layer7", values: [modelName] },
+          { label: "layer1", values: ["ti", "ct;ti"] },
+          { label: "layer2", values: [modelName] },
         ],
       });
 

@@ -101,9 +101,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
                     dangerouslySetInnerHTML={{ __html: item.svg }}
                   />
                 ))
-              ) : (
-                <p>Không có SVG nào để hiển thị.</p>
-              )}
+              ) : null}
             </div>
           </TransformComponent>
         </TransformWrapper>
