@@ -1,7 +1,7 @@
 .box {
   max-width: 1260px;
   width: 100%;
-  margin: auto;
+    margin: 20px auto 0;
   display: flex;
   aspect-ratio: 16/9;
   /* Tỉ lệ khung hình linh hoạt */
@@ -35,7 +35,7 @@
 
 .right {
   width: 240px;
-  background-color: #234374;
+  background-color: #294b61;
   color: #762f0b;
   font-size: 18px;
   text-align: center;

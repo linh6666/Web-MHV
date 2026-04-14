@@ -108,7 +108,7 @@ export default function Menu({ project_id }: MenuProps) {
     justifyContent: "center",
     overflow: "hidden",
     transition: "all 0.3s",
-    background: isActive ? "#C2923F" : "#234374",
+    background: isActive ? "#C2923F" : "#294b61",
     color: isActive ? "#12223B" : "#EEEEEE",
     border: isActive
       ? "1.5px solid #C2923F"
@@ -192,7 +192,7 @@ export default function Menu({ project_id }: MenuProps) {
               height: 30,
               padding: 0,
               borderRadius: 40,
-              background: "#234374",
+              background: "#294b61",
               border: "1.5px solid #EEEEEE",
               display: "flex",
               alignItems: "center",

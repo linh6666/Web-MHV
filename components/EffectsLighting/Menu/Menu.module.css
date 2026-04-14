@@ -41,7 +41,7 @@
 .title h1 {
   font-weight: 700;
   font-size: 15px;
-  color: #c2923f;
+  color: #BB8D38;
   margin: 0;
 }
 
@@ -72,7 +72,7 @@
   align-items: center;
   border: 1.5px solid #EEEEEE;
   border-radius: 999px;
-  background-color: #234374;
+  background-color: #294b61;
   color: #EEEEEE;
   font-size: clamp(9px, 1.2vh, 11px);
   /* Font chữ co giãn nhẹ */
