@@ -82,7 +82,7 @@ export default function MenuBuilding({
       const data = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer1", values: ["ct"] },
+          { label: "layer1", values: ["ct", "ct;ti"], },
           { label: "layer2", values: [layer2Value] },
           { label: "layer3", values: [layer3Value] }, // Lọc theo tòa nhà cụ thể
         ],
@@ -133,7 +133,7 @@ export default function MenuBuilding({
       const response = await createNodeAttribute({
         project_id,
         filters: [
-          { label: "layer1", values: ["ct"] },
+          { label: "layer1", values: ["ct", "ct;ti"] },
           { label: "layer2", values: [layer2Value] },
           { label: "layer3", values: [layer3Value] },
           { label: "layer4", values: [unitCode] },
