@@ -30,6 +30,7 @@ export default function DetailBuilding({
 }: DetailBuildingProps) {
   const [activeModels, setActiveModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const transformRef = useRef<ReactZoomPanPinchRef | null>(null);
 
   const searchParams = useSearchParams();
@@ -92,30 +93,74 @@ export default function DetailBuilding({
     }
   };
 
+  // =============================
+  // ZOOM KHI SELECT MODEL
+  // =============================
   useEffect(() => {
     if (!transformRef.current) return;
+
     if (selectedModel) {
-      requestAnimationFrame(() => zoomToModel(selectedModel));
-    } else if (activeModels.length > 0) {
-      requestAnimationFrame(() => zoomToModel(activeModels[0]));
+      requestAnimationFrame(() => {
+        zoomToModel(selectedModel);
+      });
+      return;
+    }
+
+    if (!selectedModel && activeModels.length > 0) {
+      requestAnimationFrame(() => {
+        zoomToModel(activeModels[0]);
+      });
     }
   }, [filteredPaths, selectedModel, activeModels]);
+
+  // =============================
+  // AUTO ZOOM FIRST ELEMENT
+  // =============================
+  useEffect(() => {
+    if (!transformRef.current) return;
+    if (hasUserInteracted) return;
+
+    requestAnimationFrame(() => {
+      const firstVisibleEl = document.querySelector(
+        "[data-model]"
+      ) as HTMLElement | null;
+
+      if (firstVisibleEl) {
+        transformRef.current!.zoomToElement(
+          firstVisibleEl,
+          1.5,
+          300
+        );
+      }
+    });
+  }, [filteredPaths, hasUserInteracted]);
 
   const handleSvgClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const model = (e.target as SVGElement).getAttribute("data-model");
     if (!model) return;
+    setHasUserInteracted(true);
     setSelectedModel(model);
     zoomToModel(model);
   };
 
   const handleModelSelect = (modelName: string | null) => {
+    setHasUserInteracted(true);
     setSelectedModel((prev) => (prev === modelName ? null : modelName));
   };
 
   return (
     <div className={styles.box}>
       <div className={styles.left}>
-        <TransformWrapper ref={transformRef} initialScale={1} minScale={1} maxScale={5}>
+        <TransformWrapper
+          ref={transformRef}
+          initialScale={1}
+          minScale={1}
+          maxScale={5}
+          wheel={{ step: 0.2 }}
+          doubleClick={{ disabled: true }}
+          onPanningStart={() => setHasUserInteracted(true)}
+          onZoomStart={() => setHasUserInteracted(true)}
+        >
           <TransformComponent>
             <div className={styles.imageWrapper} onClick={handleSvgClick}>
               <Image src="/HOME_BG.png" alt="Ảnh" fit="contain" className={styles.img} />
