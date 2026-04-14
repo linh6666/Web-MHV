@@ -99,12 +99,21 @@ export default function MenuBuilding({
     fetchData();
   }, [fetchData]);
 
-  const handleSelectUnit = (unitCode: string) => {
-    // Gọi callback để highlight trên Map
-    onSelectModel?.(unitCode);
-    
-    // Ở đây có thể thêm logic chuyển sang trang chi tiết tầng nếu cần
-    // console.log("Selected Unit:", unitCode);
+  const handleSelectUnit = async (unitCode: string) => {
+    if (!project_id || !layer2Value || !layer3Value) return;
+    try {
+      await createNodeAttribute({
+        project_id,
+        filters: [
+          { label: "layer1", values: ["ct"] },
+          { label: "layer2", values: [layer2Value] },
+          { label: "layer3", values: [layer3Value] },
+          { label: "layer4", values: [unitCode] },
+        ],
+      });
+    } catch (error) {
+      console.error("❌ Lỗi khi gọi API Layer 4:", error);
+    }
   };
 
   const handleBack = () => {
