@@ -193,7 +193,7 @@ useEffect(() => {
               justifyContent: "center",
               overflow: "hidden",
               transition: "background 0.3s",
-              background: "#234374",
+              background: "#294b61",
               color: "#EEEEEE",
               border: "1.5px solid #EEEEEE",
             }}

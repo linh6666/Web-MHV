@@ -282,7 +282,7 @@ export default function Menu({
               height: 30,
               padding: 0,
               borderRadius: 40,
-              background: "#234374",
+              background: "#294b61",
               border: "1.5px solid #EEEEEE",
             }}
           >
