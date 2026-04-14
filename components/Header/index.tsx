@@ -130,7 +130,7 @@ export default function Header() {
       <div className={classes.inner} style={{ maxWidth }}>
         {/* ============ Logo ============ */}
         <Image
-          src="/logo.png"
+          src="/logo1.png"
           alt="Logo"
           w={250}
           h={60}
