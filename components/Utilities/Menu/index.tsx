@@ -234,7 +234,7 @@ export default function Menu({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "#234374",
+              background: "#294b61",
               color: "#EEEEEE",
               border: "1.5px solid #EEEEEE",
             }}
