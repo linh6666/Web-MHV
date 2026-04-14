@@ -17,6 +17,7 @@ interface MenuProps {
   onLayer2Change?: (layer2: string) => void;
   onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
+  onHighlightCodes?: (codes: string[]) => void;
 }
 
 interface MenuItem {
@@ -61,6 +62,7 @@ export default function MenuBuilding({
   initialLayer2,
   initialLayer3,
   onModelsLoaded,
+  onHighlightCodes,
   onSelectModel,
 }: MenuProps) {
   const router = useRouter();
@@ -73,6 +75,7 @@ export default function MenuBuilding({
   const [opened, setOpened] = useState(false);
   const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
   const [active, setActive] = useState<"on" | "off" | null>(null);
+  const [allCodes, setAllCodes] = useState<string[]>([]);
 
   // 📡 Load danh sách tầng/căn hộ dựa trên Layer 3 (Tòa nhà)
   const fetchData = useCallback(async () => {
@@ -99,9 +102,9 @@ export default function MenuBuilding({
       const items = data.data as NodeAttributeItem[];
       
       // Truyền unit_code để highlight trên bản đồ
-      onModelsLoaded?.(
-        items.map((i: NodeAttributeItem) => i.unit_code).filter(Boolean) as string[]
-      );
+      const codes = items.map((i: NodeAttributeItem) => i.unit_code).filter(Boolean) as string[];
+      onModelsLoaded?.(codes);
+      setAllCodes(codes);
 
       // Tạo menu items từ Layer 6 (thường là số tầng hoặc mã căn)
       const uniqueMap = new Map<string, MenuItem>();
@@ -145,6 +148,7 @@ export default function MenuBuilding({
       if (response?.data && response.data.length > 0) {
         setSelectedData(response.data[0] as unknown as DataDetail);
         setOpened(true);
+        onSelectModel?.(unitCode); // <--- Thêm dòng này để highlight
       } else {
          // Fallback check layer4 if unit_code is not found
          const fallback = await createNodeAttribute({
@@ -173,11 +177,8 @@ export default function MenuBuilding({
 
   const handleClickOn = async () => {
     if (!project_id) return;
-    if (active === "on") {
-      setActive(null);
-      return;
-    }
     setActive("on");
+    onHighlightCodes?.(allCodes);
     try {
       await createON({ project_id });
     } catch (err) {
@@ -192,6 +193,7 @@ export default function MenuBuilding({
       return;
     }
     setActive("off");
+    onHighlightCodes?.([]);
     try {
       await createOFF({ project_id });
     } catch (err) {

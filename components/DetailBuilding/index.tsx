@@ -30,6 +30,7 @@ export default function DetailBuilding({
 }: DetailBuildingProps) {
   const [activeModels, setActiveModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [highlightedCodes, setHighlightedCodes] = useState<string[]>([]);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const transformRef = useRef<ReactZoomPanPinchRef | null>(null);
 
@@ -64,13 +65,27 @@ export default function DetailBuilding({
           el.setAttribute("data-model", elId);
           el.setAttribute("cursor", "pointer");
 
-          const cleanSelected = selectedModel ? selectedModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase() : null;
-          if (cleanSelected && cleanElId === cleanSelected) {
-            el.setAttribute("fill", "#bb8d38");
-            el.setAttribute("stroke", "white");
+          // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
+          const isHighlighted = highlightedCodes.some((code) => {
+            const cleanCode = (code || "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+            return cleanElId === cleanCode;
+          });
+
+          const cleanSelected = selectedModel 
+            ? selectedModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase() 
+            : null;
+
+          if (isHighlighted || (cleanSelected && cleanElId === cleanSelected)) {
+            el.setAttribute("fill", "red");
+            el.setAttribute("stroke", "red");
+            el.setAttribute("stroke-width", "2");
           } else {
             const originalFill = el.getAttribute("data-original-fill") || el.getAttribute("fill") || "#fff";
+            if (!el.hasAttribute("data-original-fill")) {
+              el.setAttribute("data-original-fill", originalFill);
+            }
             el.setAttribute("fill", originalFill);
+            el.removeAttribute("stroke");
           }
         } else {
           el.setAttribute("style", "display:none");
@@ -84,7 +99,7 @@ export default function DetailBuilding({
 
       return { ...item, svg: svgRoot.outerHTML };
     });
-  }, [activeModels, selectedModel]);
+  }, [activeModels, selectedModel, highlightedCodes]);
 
   const zoomToModel = (modelId: string) => {
     const el = document.querySelector(`[data-model="${modelId}"]`) as HTMLElement | null;
@@ -182,6 +197,7 @@ export default function DetailBuilding({
           initialLayer2={currentLayer2}
           initialLayer3={currentLayer3}
           onModelsLoaded={setActiveModels}
+          onHighlightCodes={setHighlightedCodes}
           onSelectModel={handleModelSelect}
         />
       </div>
