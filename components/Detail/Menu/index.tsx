@@ -16,6 +16,7 @@ interface MenuProps {
   onLayer2Change?: (layer2: string) => void;
   onModelsLoaded?: (models: string[]) => void;
   onSelectModel?: (modelName: string) => void;
+  onHighlightCodes?: (codes: string[]) => void;
 }
 
 interface MenuItem {
@@ -64,6 +65,7 @@ export default function Menu({
   onLayer2Change,
   onModelsLoaded,
   onSelectModel,
+  onHighlightCodes,
 }: MenuProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -73,6 +75,7 @@ export default function Menu({
   const [phase, setPhase] = useState<string>(layer2Value || "");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [allCodes, setAllCodes] = useState<string[]>([]);
 
    const [opened, setOpened] = useState(false);
      const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
@@ -110,6 +113,9 @@ export default function Menu({
       onModelsLoaded?.(
         items.map((i) => i.unit_code).filter(Boolean) as string[]
       );
+
+      const codes = items.map((i) => i.unit_code).filter(Boolean) as string[];
+      setAllCodes(codes);
 
       items.forEach((item) => {
         const buildingType = (item.layer3 || "").trim();
@@ -179,6 +185,13 @@ export default function Menu({
         setOpened(true);
         console.warn("⚠️ Hạng mục này chỉ chứa dữ liệu 'skip' hoặc rỗng, hiển thị Modal thay vì chuyển trang.");
       }
+      // Highlight codes for this specific building type if needed
+      if (response?.data && Array.isArray(response.data)) {
+        const codes = response.data
+          .map((item: NodeAttributeItem) => item.unit_code)
+          .filter((code: string | undefined): code is string => Boolean(code));
+        onHighlightCodes?.(codes);
+      }
     } catch (error) {
       console.error("❌ Lỗi khi kiểm tra dữ liệu:", error);
     }
@@ -195,6 +208,10 @@ export default function Menu({
 
   const handleClickOn = async () => {
     if (!project_id) return;
+    if (active === "on") {
+      setActive(null);
+      return;
+    }
     setActive("on");
     try {
       await createON({ project_id });
@@ -205,6 +222,10 @@ export default function Menu({
 
   const handleClickOFF = async () => {
     if (!project_id) return;
+    if (active === "off") {
+      setActive(null);
+      return;
+    }
     setActive("off");
     try {
       await createOFF({ project_id });
@@ -220,7 +241,7 @@ export default function Menu({
     display: "flex",
     justifyContent: "center",
     overflow: "hidden",
-    background: isActive ? "#C2923F" : "#234374",
+    background: isActive ? "#C2923F" : "#294b61",
     color: isActive ? "#12223B" : "#EEEEEE",
     border: isActive ? "1.5px solid #C2923F" : "1.5px solid #EEEEEE",
   });
@@ -262,7 +283,7 @@ export default function Menu({
 
       <div className={styles.footer}>
         <Stack align="center" gap="xs">
-          {/* <Group gap="xs" wrap="nowrap">
+          <Group gap="xs" wrap="nowrap">
             <Button
               style={getButtonStyle(active === "on")}
               onClick={handleClickOn}
@@ -276,7 +297,7 @@ export default function Menu({
             >
               <Text size="11px">TẮT TẤT CẢ</Text>
             </Button>
-          </Group> */}
+          </Group>
 
           <Button
             onClick={handleBack}

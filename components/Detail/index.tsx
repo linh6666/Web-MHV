@@ -40,6 +40,8 @@ export default function ZoningSystem({
   const [selectedModel, setSelectedModel] =
     useState<string | null>(null);
 
+  const [highlightedCodes, setHighlightedCodes] = useState<string[]>([]);
+
   const [hasUserInteracted, setHasUserInteracted] =
     useState(false);
 
@@ -109,13 +111,22 @@ export default function ZoningSystem({
           el.setAttribute("data-model", elId);
           el.setAttribute("cursor", "pointer");
 
+          // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
+          const isHighlighted = highlightedCodes.some((code) => {
+            const cleanCode = (code || "").trim().replace(/\s+/g, "_").toUpperCase();
+            const cleanElIdFromCode = elId.replace(/\s+/g, "_").toUpperCase();
+            return cleanElIdFromCode.includes(cleanCode) || cleanCode.includes(cleanElIdFromCode);
+          });
+
           const cleanSelected = selectedModel 
             ? selectedModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase() 
             : null;
 
-          if (cleanSelected && cleanElId === cleanSelected) {
-            el.setAttribute("fill", "#bb8d38");
-            el.setAttribute("stroke", "white");
+          if (isHighlighted || (cleanSelected && cleanElId === cleanSelected)) {
+            // Tô màu vàng nhạt cho phần được chọn
+            el.setAttribute("fill", "red");
+            el.setAttribute("stroke", "red");
+            el.setAttribute("stroke-width", "2");
           } else {
             const originalFill =
               el.getAttribute("data-original-fill") ||
@@ -147,7 +158,7 @@ export default function ZoningSystem({
     });
 
     return result;
-  }, [activeModels, selectedModel]);
+  }, [activeModels, selectedModel, highlightedCodes]);
 
   // =============================
   // ZOOM FUNCTION
@@ -299,6 +310,7 @@ export default function ZoningSystem({
             initialLayer2={layer2 || currentLayer2}
             onLayer2Change={handleLayer2Change}
             onModelsLoaded={setActiveModels}
+            onHighlightCodes={setHighlightedCodes}
             onSelectModel={handleModelSelect}
           />
         </div>
