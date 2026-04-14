@@ -129,7 +129,10 @@ export default function Menu({
         }
       });
 
-      setMenuItems(Array.from(uniqueMap.values()));
+      const sortedItems = Array.from(uniqueMap.values()).sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: "base" })
+      );
+      setMenuItems(sortedItems);
     } catch (error) {
       console.error("❌ Lỗi khi gọi API:", error);
       setMenuItems([]);
