@@ -10,7 +10,7 @@
   aspect-ratio: 16 / 9;
   /* Thay thế height: 550px bằng cái này để responsive */
   height: auto;
-  border: 5px solid #053c74;
+  border: 5px solid #294b61;
   /* Giữ nguyên màu viền cũ của bạn */
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -24,7 +24,7 @@
   padding: 0;
   border-radius: 50%;
   transition: all 0.3s ease;
-  background: #053c74;
+  background: #294b61;
   color: #EEEEEE;
   border: 1.5px solid #EEEEEE;
   margin-top: 10px;
