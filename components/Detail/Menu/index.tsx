@@ -53,6 +53,7 @@ interface DataDetail {
 
 interface NodeAttributeItem {
   layer3?: string;
+  layer4?: string;
   layer6?: string;
   group?: string;
   unit_code?: string;
@@ -79,6 +80,7 @@ export default function Menu({
 
    const [opened, setOpened] = useState(false);
      const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
+   const [canNavigate, setCanNavigate] = useState(false);
 
    useEffect(() => {
      if (layer2Value && layer2Value !== phase) {
@@ -139,6 +141,15 @@ export default function Menu({
         a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: "base" })
       );
       setMenuItems(sortedItems);
+
+      // Check if any item in the current phase can navigate to a detail page
+      const hasNavigableItem = items.some((item) => {
+        const layer4 = typeof item.layer4 === "string" ? item.layer4 : "";
+        const unitCode = typeof item.unit_code === "string" ? item.unit_code : "";
+        const label = (layer4 || unitCode || "").toLowerCase().trim();
+        return label !== "" && label !== "skip";
+      });
+      setCanNavigate(hasNavigableItem);
     } catch (error) {
       console.error("❌ Lỗi khi gọi API:", error);
       setMenuItems([]);
@@ -283,21 +294,23 @@ export default function Menu({
 
       <div className={styles.footer}>
         <Stack align="center" gap="xs">
-          <Group gap="xs" wrap="nowrap">
-            <Button
-              style={getButtonStyle(active === "on")}
-              onClick={handleClickOn}
-            >
-              <Text size="11px">BẬT TẤT CẢ</Text>
-            </Button>
+          {!canNavigate && (
+            <Group gap="xs" wrap="nowrap">
+              <Button
+                style={getButtonStyle(active === "on")}
+                onClick={handleClickOn}
+              >
+                <Text size="11px">BẬT TẤT CẢ</Text>
+              </Button>
 
-            <Button
-              style={getButtonStyle(active === "off")}
-              onClick={handleClickOFF}
-            >
-              <Text size="11px">TẮT TẤT CẢ</Text>
-            </Button>
-          </Group>
+              <Button
+                style={getButtonStyle(active === "off")}
+                onClick={handleClickOFF}
+              >
+                <Text size="11px">TẮT TẤT CẢ</Text>
+              </Button>
+            </Group>
+          )}
 
           <Button
             onClick={handleBack}
