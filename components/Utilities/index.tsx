@@ -47,8 +47,8 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           
           if (isHighlighted) {
             // Tô màu vàng nhạt cho phần được chọn
-            el.setAttribute("fill", "#c2923f");
-            el.setAttribute("stroke", "#C2923F");
+            el.setAttribute("fill", "red");
+            el.setAttribute("stroke", "red");
             el.setAttribute("stroke-width", "2");
           } else {
             // Trả về màu gốc nếu không được chọn
