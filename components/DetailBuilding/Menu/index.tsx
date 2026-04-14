@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import styles from "./Menu.module.css";
-import { Button, Loader, Stack, Text, Image } from "@mantine/core";
+import { Button, Group, Loader, Stack, Text, Image } from "@mantine/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifilter";
-import ModalItem from "../../Detail/Menu/ModalItem";
+import { createON } from "../../../api/apiON";
+import { createOFF } from "../../../api/apiOFF";
+import ModalItem from "../../Detail/Menu/ModalItem"; 
 
 interface MenuProps {
   project_id: string | null;
@@ -70,6 +72,7 @@ export default function MenuBuilding({
   const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
   const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
+  const [active, setActive] = useState<"on" | "off" | null>(null);
 
   // 📡 Load danh sách tầng/căn hộ dựa trên Layer 3 (Tòa nhà)
   const fetchData = useCallback(async () => {
@@ -136,12 +139,27 @@ export default function MenuBuilding({
           { label: "layer1", values: ["ct", "ct;ti"] },
           { label: "layer2", values: [layer2Value] },
           { label: "layer3", values: [layer3Value] },
-          { label: "layer4", values: [unitCode] },
+          { label: "unit_code", values: [unitCode] },
         ],
       });
       if (response?.data && response.data.length > 0) {
         setSelectedData(response.data[0] as unknown as DataDetail);
         setOpened(true);
+      } else {
+         // Fallback check layer4 if unit_code is not found
+         const fallback = await createNodeAttribute({
+            project_id,
+            filters: [
+              { label: "layer1", values: ["ct", "ct;ti"] },
+              { label: "layer2", values: [layer2Value] },
+              { label: "layer3", values: [layer3Value] },
+              { label: "layer4", values: [unitCode] },
+            ],
+          });
+          if (fallback?.data && fallback.data.length > 0) {
+            setSelectedData(fallback.data[0] as unknown as DataDetail);
+            setOpened(true);
+          }
       }
     } catch (error) {
       console.error("❌ Lỗi khi gọi API Layer 4:", error);
@@ -152,6 +170,46 @@ export default function MenuBuilding({
     if (!project_id) return;
     router.back(); // Quay lại trang trước (trang danh sách tòa nhà)
   };
+
+  const handleClickOn = async () => {
+    if (!project_id) return;
+    if (active === "on") {
+      setActive(null);
+      return;
+    }
+    setActive("on");
+    try {
+      await createON({ project_id });
+    } catch (err) {
+      console.error("❌ Lỗi khi gọi API ON:", err);
+    }
+  };
+
+  const handleClickOFF = async () => {
+    if (!project_id) return;
+    if (active === "off") {
+      setActive(null);
+      return;
+    }
+    setActive("off");
+    try {
+      await createOFF({ project_id });
+    } catch (err) {
+      console.error("❌ Lỗi khi gọi API OFF:", err);
+    }
+  };
+
+  const getButtonStyle = (isActive: boolean) => ({
+    width: 90,
+    height: 30,
+    borderRadius: 40,
+    display: "flex",
+    justifyContent: "center",
+    overflow: "hidden",
+    background: isActive ? "#C2923F" : "#294b61",
+    color: isActive ? "#12223B" : "#EEEEEE",
+    border: isActive ? "1.5px solid #C2923F" : "1.5px solid #EEEEEE",
+  });
 
   return (
     <div className={styles.box}>
@@ -190,6 +248,22 @@ export default function MenuBuilding({
 
       <div className={styles.footer}>
         <Stack align="center" gap="xs">
+          <Group gap="xs" wrap="nowrap">
+            <Button
+              style={getButtonStyle(active === "on")}
+              onClick={handleClickOn}
+            >
+              <Text size="11px">BẬT TẤT CẢ</Text>
+            </Button>
+
+            <Button
+              style={getButtonStyle(active === "off")}
+              onClick={handleClickOFF}
+            >
+              <Text size="11px">TẮT TẤT CẢ</Text>
+            </Button>
+          </Group>
+
           <Button
             onClick={handleBack}
             style={{
