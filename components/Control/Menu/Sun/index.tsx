@@ -90,7 +90,7 @@ export default function Sun({ project_id }: SunProps) {
     justifyContent: active === "night" ? "space-around" : "center",
     overflow: "hidden",
     transition: "width 0.3s, background-color 0.3s",
-    background: active === "night" ? "#C2923F" : "#234374",
+    background: active === "night" ? "#BB8D38" : "#294b61",
     border: "1.5px solid #EEEEEE",
   }}
 >
@@ -128,7 +128,7 @@ export default function Sun({ project_id }: SunProps) {
     justifyContent: active === "afternoon" ? "space-around" : "center",
     overflow: "hidden",
     transition: "width 0.3s, background-color 0.3s",
-    background: active === "afternoon" ? "#C2923F" : "#234374",
+    background: active === "afternoon" ? "#BB8D38" : "#294b61",
     border: "1.5px solid #EEEEEE",
   }}
 >
@@ -167,7 +167,7 @@ export default function Sun({ project_id }: SunProps) {
     justifyContent: active === "morning" ? "space-around" : "center",
     overflow: "hidden",
     transition: "width 0.3s, background-color 0.3s",
-  background: active === "morning" ? "#C2923F" : "#234374",
+  background: active === "morning" ? "#BB8D38" : "#294b61",
     border: "1.5px solid #EEEEEE",
   }}
 >
