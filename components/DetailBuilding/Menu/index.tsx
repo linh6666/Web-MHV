@@ -6,6 +6,7 @@ import { Button, Loader, Stack, Text, Image } from "@mantine/core";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { createNodeAttribute } from "../../../api/apifilter";
+import ModalItem from "../../Detail/Menu/ModalItem";
 
 interface MenuProps {
   project_id: string | null;
@@ -28,6 +29,31 @@ interface NodeAttributeItem {
   layer6?: string;
 }
 
+interface DataDetail {
+  id: number;
+  unit_code: string;
+  layer1?: string;
+  layer2?: string;
+  layer3?: string;
+  layer6?: string;
+  zone?: string;
+  building_type?: string;
+  bedroom?: number | string;
+  bathroom?: number | string;
+  view?: string;
+  status_unit?: string;
+  price?: number;
+  describe?: string;
+  describe_vi?: string;
+  main_door_direction?: string;
+  balcony_direction?: string;
+  direction?: string;
+  url?: string;
+  name_vi?: string;
+  name_en?: string;
+  description_en?: string;
+}
+
 export default function MenuBuilding({
   project_id,
   initialLayer2,
@@ -42,6 +68,8 @@ export default function MenuBuilding({
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const [selectedData, setSelectedData] = useState<DataDetail | null>(null);
 
   // 📡 Load danh sách tầng/căn hộ dựa trên Layer 3 (Tòa nhà)
   const fetchData = useCallback(async () => {
@@ -102,7 +130,7 @@ export default function MenuBuilding({
   const handleSelectUnit = async (unitCode: string) => {
     if (!project_id || !layer2Value || !layer3Value) return;
     try {
-      await createNodeAttribute({
+      const response = await createNodeAttribute({
         project_id,
         filters: [
           { label: "layer1", values: ["ct"] },
@@ -111,6 +139,10 @@ export default function MenuBuilding({
           { label: "layer4", values: [unitCode] },
         ],
       });
+      if (response?.data && response.data.length > 0) {
+        setSelectedData(response.data[0] as unknown as DataDetail);
+        setOpened(true);
+      }
     } catch (error) {
       console.error("❌ Lỗi khi gọi API Layer 4:", error);
     }
@@ -173,6 +205,12 @@ export default function MenuBuilding({
           </Button>
         </Stack>
       </div>
+      <ModalItem
+        opened={opened}
+        onClose={() => setOpened(false)}
+        data={selectedData}
+        projectId={project_id}
+      />
     </div>
   );
 }
