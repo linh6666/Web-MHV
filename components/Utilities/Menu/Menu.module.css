@@ -329,7 +329,7 @@
 .menuBtn:active,
 .menuBtn:focus-within,
 .menuBtn[data-active] {
-  background-color: #234374 !important;
+  background-color: #406C89 !important;
   color: #EEEEEE !important;
   outline: none !important;
   box-shadow: none !important;

@@ -91,7 +91,7 @@ export default function Menu({
         // callback load models
         onModelsLoaded?.(
           data
-            .map((item) => item.zone as string)
+            .map((item) => item.unit_code)
             .filter((code): code is string => Boolean(code))
         );
 
@@ -165,7 +165,7 @@ export default function Menu({
 
       if (result?.data && Array.isArray(result.data)) {
         const codes = result.data
-          .map((item: NodeAttributeItem) => item.zone as string)
+          .map((item: NodeAttributeItem) => item.unit_code)
           .filter((code: string | undefined): code is string => Boolean(code));
 
         console.log("🔦 Highlight các mã:", codes);
