@@ -75,8 +75,8 @@ export default function MenuBuilding({
       // Tạo menu items từ Layer 6 (thường là số tầng hoặc mã căn)
       const uniqueMap = new Map<string, MenuItem>();
       items.forEach((item: NodeAttributeItem) => {
-        const label = item.layer4 || item.unit_code || "";
-        if (!label) return;
+        const label = (item.layer4 || item.unit_code || "").trim();
+        if (!label || label.toLowerCase() === "skip") return;
 
         if (!uniqueMap.has(label)) {
           uniqueMap.set(label, {

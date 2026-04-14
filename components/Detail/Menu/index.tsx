@@ -143,13 +143,42 @@ export default function Menu({
   }, [fetchData]);
 
   // ✅ CHỈ SỬA ĐOẠN LỖI CLICK NÚT
-  const handleSelectModel = (modelName: string) => {
+  const handleSelectModel = async (modelName: string) => {
     if (!project_id || !phase) return;
 
-    // Chuyển sang trang chi tiết công trình mới
-    router.push(
-      `/tuong-tac/Ciputra/Chi-tiet-cong-trinh?id=${project_id}&layer2=${phase}&layer3=${modelName}`
-    );
+    try {
+      // Kiểm tra xem hạng mục này có dữ liệu chi tiết không trước khi chuyển trang
+      const response = await createNodeAttribute({
+        project_id,
+        filters: [
+          { label: "layer1", values: ["ct"] },
+          { label: "layer2", values: [phase] },
+          { label: "layer3", values: [modelName] },
+        ],
+      });
+
+      // Lọc bỏ những hạng mục là 'skip' trước khi kiểm tra để đảm bảo có dữ liệu thực tế
+      const validData = (response?.data || []).filter((item: NodeAttributeItem) => {
+        const layer4 = typeof item.layer4 === "string" ? item.layer4 : "";
+        const unitCode = typeof item.unit_code === "string" ? item.unit_code : "";
+        const label = (layer4 || unitCode || "").toLowerCase().trim();
+        return label !== "" && label !== "skip";
+      });
+
+      if (validData.length > 0) {
+        // Có dữ liệu thực tế mới chuyển sang trang chi tiết công trình mới
+        router.push(
+          `/tuong-tac/Ciputra/Chi-tiet-cong-trinh?id=${project_id}&layer2=${phase}&layer3=${modelName}`
+        );
+      } else if (response?.data && response.data.length > 0) {
+        // Nếu không có dữ liệu để sang trang mới (chỉ có 'skip' hoặc rỗng), thì hiển thị modal
+        setSelectedData(response.data[0] as unknown as DataDetail);
+        setOpened(true);
+        console.warn("⚠️ Hạng mục này chỉ chứa dữ liệu 'skip' hoặc rỗng, hiển thị Modal thay vì chuyển trang.");
+      }
+    } catch (error) {
+      console.error("❌ Lỗi khi kiểm tra dữ liệu:", error);
+    }
 
     // Vẫn gọi onSelectModel để highlight (nếu cần thiết trước khi trang chuyển)
     onSelectModel?.(modelName);
@@ -261,12 +290,12 @@ export default function Menu({
           </Button>
         </Stack>
       </div>
-      {/* <ModalItem
+      <ModalItem
         opened={opened}
         onClose={() => setOpened(false)}
         data={selectedData}
         projectId={project_id}
-      /> */}
+      />
     </div>
   );
 }
