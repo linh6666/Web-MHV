@@ -27,7 +27,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         >
           <TransformComponent>
             <div className={styles.imageWrapper}>
-              <Image src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
+              <Image src="/HOME_BG.jpg" alt="Ảnh" className={styles.img} />
             </div>
           </TransformComponent>
         </TransformWrapper>

@@ -93,7 +93,7 @@ export default function ZoningSystem({ project_id, initialBuildingType }: Zoning
         >
           <TransformComponent>
             <div className={styles.imageWrapper}>
-              <img src="/HOME_BG.png" alt="Ảnh" className={styles.img} />
+              <img src="/HOME_BG.jpg" alt="Ảnh" className={styles.img} />
               {filteredPaths.length > 0 ? (
                 filteredPaths.map((item) => (
                   <div

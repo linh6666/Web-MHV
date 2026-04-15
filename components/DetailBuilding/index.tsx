@@ -178,7 +178,7 @@ export default function DetailBuilding({
         >
           <TransformComponent>
             <div className={styles.imageWrapper} onClick={handleSvgClick}>
-              <Image src="/HOME_BG.png" alt="Ảnh" fit="contain" className={styles.img} />
+              <Image src="/HOME_BG.jpg" alt="Ảnh" fit="contain" className={styles.img} />
               {filteredPaths.map((item) => (
                 <div
                   key={item.id}

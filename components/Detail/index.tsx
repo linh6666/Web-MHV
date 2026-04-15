@@ -283,7 +283,7 @@ export default function ZoningSystem({
                 onClick={handleSvgClick}
               >
                 <Image
-                  src="/HOME_BG.png"
+                  src="/HOME_BG.jpg"
                   alt="Ảnh"
                   fit="contain"
                   className={styles.img}
