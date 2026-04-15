@@ -8,7 +8,6 @@ import {
   Image,
   LoadingOverlay,
   TextInput,
-  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -22,21 +21,23 @@ import { AxiosError } from "axios";
 import { getListProjectTemplates1 } from "../../../api/apiProjectTemplates";
 import { NotificationExtension } from "../../../extension/NotificationExtension";
 
+/* ================= TYPES ================= */
+
 interface EditViewProps {
   onSearch: () => Promise<void>;
   id: string;
 }
 
-/** Định nghĩa kiểu dữ liệu cho ProjectTemplate */
 interface ProjectTemplate {
   id: number;
   type_vi: string;
 }
 
+/* ================= COMPONENT ================= */
+
 const EditView = ({ onSearch, id }: EditViewProps) => {
   const [visible, { open, close }] = useDisclosure(false);
 
-  /** Danh sách loại dự án */
   const [templateOptions, setTemplateOptions] = useState<
     { value: string; label: string }[]
   >([]);
@@ -44,17 +45,23 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
   const form = useForm<CreateUserPayload>({
     initialValues: {
       name: "",
-      template: "",
       address: "",
       investor: "",
       overview_image: null,
-      rank: "",
     },
   });
 
   const formRef = useRef(form);
 
-  /** Submit cập nhật project */
+  /* ================= HELPER ================= */
+
+  const getImageUrl = (url: string) => {
+    if (!url) return "";
+    return url.replace("http://", "https://"); // fix mixed content
+  };
+
+  /* ================= SUBMIT ================= */
+
   const handleSubmit = async (values: CreateUserPayload) => {
     open();
     try {
@@ -62,18 +69,35 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
 
       const projectPayload = {
         name_vi: values.name,
-        project_template_id: values.template,
         address_vi: values.address,
         investor: values.investor,
-        rank: values.rank,
       };
 
       const formData = new FormData();
+
+      // ✅ project_in
       formData.append("project_in", JSON.stringify(projectPayload));
 
+      // ✅ nếu chọn ảnh mới → phải có media_metadata
       if (values.overview_image instanceof File) {
         formData.append("file", values.overview_image);
+
+        formData.append(
+          "media_metadata",
+          JSON.stringify({
+            filename: values.overview_image.name,
+            description_vi: "Ảnh đại diện dự án",
+            category: "others",
+            is_public: true,
+          })
+        );
       }
+
+      // DEBUG
+      console.log("🧾 FormData:");
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
 
       await api.put(url, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -82,15 +106,16 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
       await onSearch();
       modals.closeAll();
 
-      // ✅ Thông báo thành công
       NotificationExtension.Success("Cập nhật dự án thành công!");
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        console.error("Lỗi khi cập nhật project:", error.response?.data || error.message);
-        NotificationExtension.Fails(error.response?.data?.message || "Lỗi khi cập nhật dự án!");
-      } else if (error instanceof Error) {
-        console.error("Lỗi khi cập nhật project:", error.message);
-        NotificationExtension.Fails(error.message);
+        console.error(
+          "Lỗi khi cập nhật project:",
+          error.response?.data || error.message
+        );
+        NotificationExtension.Fails(
+          error.response?.data?.message || "Lỗi khi cập nhật dự án!"
+        );
       } else {
         console.error("Lỗi khi cập nhật project:", error);
         NotificationExtension.Fails("Đã xảy ra lỗi khi cập nhật dự án.");
@@ -100,7 +125,8 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     }
   };
 
-  /** Lấy danh sách loại dự án */
+  /* ================= FETCH TYPE ================= */
+
   const fetchProjectTemplates = useCallback(async () => {
     try {
       const token = localStorage.getItem("access_token");
@@ -116,7 +142,6 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         limit: 100,
       });
 
-      // ✅ Không dùng any, ép kiểu rõ ràng
       const options = (res.data as ProjectTemplate[]).map((item) => ({
         value: item.id.toString(),
         label: item.type_vi,
@@ -129,24 +154,24 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     }
   }, []);
 
-  /** Lấy dữ liệu chi tiết project */
+  /* ================= FETCH DETAIL ================= */
+
   const fetchUserDetail = useCallback(async () => {
     if (!id) return;
+
     open();
     try {
       let url = API_ROUTE.UPDATE_PROJECTS.replace("{project_id}", id);
       url += url.includes("?") ? "&lang=vi" : "?lang=vi";
 
       const response = await api.get(url);
-      const userData = response.data;
+      const data = response.data;
 
       formRef.current.setValues({
-        name: userData.name || "",
-        rank: userData.rank || "",
-        template: userData.template?.toString() || "",
-        address: userData.address || "",
-        investor: userData.investor || "",
-        overview_image: userData.overview_image || "",
+        name: data.name || "",
+        address: data.address || "",
+        investor: data.investor || "",
+        overview_image: data.overview_image || "",
       });
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu project:", error);
@@ -157,19 +182,25 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     }
   }, [id, open, close]);
 
+  /* ================= EFFECT ================= */
+
   useEffect(() => {
     fetchUserDetail();
     fetchProjectTemplates();
   }, [fetchUserDetail, fetchProjectTemplates]);
 
-  return (
-    <Box component="form" miw={320} mx="auto" onSubmit={form.onSubmit(handleSubmit)}>
-      <LoadingOverlay
-        visible={visible}
-        zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 2 }}
-      />
+  /* ================= RENDER ================= */
 
+  return (
+    <Box
+      component="form"
+      miw={320}
+      mx="auto"
+      onSubmit={form.onSubmit(handleSubmit)}
+    >
+      <LoadingOverlay visible={visible} zIndex={1000} />
+
+      {/* ===== Tên dự án ===== */}
       <TextInput
         label="Tên dự án"
         placeholder="Nhập Tên dự án"
@@ -178,25 +209,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("name")}
       />
 
-      <TextInput
-        label="Cấp bậc"
-        placeholder="Nhập Cấp bậc"
-        withAsterisk
-        mt="md"
-        {...form.getInputProps("rank")}
-      />
-
-      <Select
-        label="Loại dự án"
-        placeholder="Chọn loại dự án"
-        withAsterisk
-        mt="md"
-        data={templateOptions}
-        searchable
-        clearable
-        {...form.getInputProps("template")}
-      />
-
+      {/* ===== Địa chỉ ===== */}
       <TextInput
         label="Địa chỉ"
         placeholder="Nhập địa chỉ"
@@ -204,6 +217,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("address")}
       />
 
+      {/* ===== Chủ đầu tư ===== */}
       <TextInput
         label="Chủ đầu tư"
         placeholder="Nhập tên chủ đầu tư"
@@ -211,6 +225,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("investor")}
       />
 
+      {/* ===== Upload ảnh ===== */}
       <FileInput
         label="Hình ảnh đại diện"
         placeholder="Chọn file ảnh JPG/PNG"
@@ -218,10 +233,11 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         {...form.getInputProps("overview_image")}
       />
 
+      {/* ===== Preview ảnh ===== */}
       {form.values.overview_image &&
         typeof form.values.overview_image === "string" && (
           <Image
-            src={form.values.overview_image}
+            src={getImageUrl(form.values.overview_image)}
             alt="Preview"
             width={200}
             height={150}
@@ -234,6 +250,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
           />
         )}
 
+      {/* ===== ACTION ===== */}
       <Group justify="flex-end" mt="lg">
         <Button
           type="submit"
@@ -248,7 +265,6 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
           variant="outline"
           color="black"
           type="button"
-          loading={visible}
           onClick={() => modals.closeAll()}
           leftSection={<IconX size={18} />}
         >
