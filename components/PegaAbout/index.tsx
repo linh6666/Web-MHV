@@ -14,11 +14,20 @@ import styles from "./Interact.module.css";
 import { getListProject } from "../../api/apigetlistProjectControl";
 import { NotificationExtension } from "../../extension/NotificationExtension";
 
+// ===========================
+// ✅ TYPE
+// ===========================
+
+interface OverviewImage {
+  url: string;
+  thumbnail_url: string;
+}
+
 interface ProjectType {
   id: string;
   name: string;
   address?: string | null;
-  overview_image?: string | null;
+  overview_image?: OverviewImage | null; // ✅ FIX
   investor?: string | null;
   project_template_id: string;
   rank?: number;
@@ -28,6 +37,19 @@ interface ProjectType {
   type?: string | null;
   link?: string;
 }
+
+// ===========================
+// 🔥 HELPER
+// ===========================
+
+const getImageUrl = (img?: OverviewImage | null) => {
+  if (!img?.thumbnail_url) return "/image/default-project.jpg";
+  return img.thumbnail_url.replace("http://", "https://");
+};
+
+// ===========================
+// COMPONENT
+// ===========================
 
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<ProjectType[]>([]);
@@ -51,8 +73,14 @@ export default function DetailInteractive() {
         setProjects(res.data || []);
         NotificationExtension.Success("Tải dữ liệu dự án thành công");
       } catch (error) {
-        const axiosError = error as { response?: { data?: { detail?: string } } };
-        const errorMessage = axiosError?.response?.data?.detail || "Lỗi khi tải dữ liệu dự án";
+        const axiosError = error as {
+          response?: { data?: { detail?: string } };
+        };
+
+        const errorMessage =
+          axiosError?.response?.data?.detail ||
+          "Lỗi khi tải dữ liệu dự án";
+
         NotificationExtension.Fails(errorMessage);
         console.error("Lỗi lấy project:", error);
       } finally {
@@ -92,16 +120,16 @@ export default function DetailInteractive() {
                   style={{ cursor: "pointer" }}
                 >
                   {/* ===== Ảnh ===== */}
-                  <Image
-                    src={project.overview_image ?? "/image/default-project.jpg"}
-                    height={180}
-                    alt={project.name}
-                    fallbackSrc="/image/default-project.jpg"
-                    style={{
-                      borderTopLeftRadius: "var(--mantine-radius-md)",
-                      borderTopRightRadius: "var(--mantine-radius-md)",
-                    }}
-                  />
+               <Image
+  src={
+    project.overview_image?.url
+      ? project.overview_image.url.replace("http://", "https://")
+      : "/image/default-project.jpg"
+  }
+  height={180}
+  alt={project.name}
+  fallbackSrc="/image/default-project.jpg"
+/>
 
                   {/* ===== Nội dung ===== */}
                   <Stack gap={6} p="md" style={{ flexGrow: 1 }}>
@@ -152,7 +180,7 @@ export default function DetailInteractive() {
             Giới thiệu
           </Text>
 
-          <div className={styles.footerline} style={{ display: "block", textAlign: "justify" }}>
+           <div className={styles.footerline} style={{ display: "block", textAlign: "justify" }}>
             <Text size="sm" mb="sm">
               Được khởi đầu từ năm 2001, Công ty TNHH Mô hình Việt tự hào là một
               trong những công ty sản xuất mô hình chuyên nghiệp, uy tín nhất
