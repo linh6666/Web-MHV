@@ -33,7 +33,7 @@ const DeleteView = ({ idItem, onSearch }: DeleteProductProps) => {
 
       notifications.show({
         title: "Lỗi",
-        message: "Đã xảy ra lỗi khi xoá người dùng.",
+        message: "Đã xảy ra lỗi khi xoá dự án.",
         color: "red",
         icon: <IconX size={20} />,
       });
