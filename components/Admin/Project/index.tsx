@@ -13,30 +13,62 @@ import { Group } from "@mantine/core";
 import CreateView from "./CreateView";
 import EditView from "./EditView";
 import DeleteView from "./DeleteView";
+import Image from "next/image";
 
-interface DataType {
-    id: string; // ✅ thêm id để dùng cho chỉnh sửa
+// ===========================
+// ✅ TYPE
+// ===========================
+
+interface OverviewImage {
+  url: string;
+  thumbnail_url: string;
+}
+
+interface ProjectItem {
+  id: string;
   name: string;
   type: string;
   address: string;
   investor: string;
-  image_url: string;
+  overview_image: OverviewImage | null;
   rank: number;
-
-//   description_en: string;
 }
+
+interface DataType {
+  id: string;
+  name: string;
+  type: string;
+  address: string;
+  investor: string;
+  overview_image: OverviewImage | null;
+  rank: number;
+}
+
+interface ApiResponse {
+  data: ProjectItem[];
+  total: number;
+}
+
+// ===========================
+// COMPONENT
+// ===========================
 
 export default function LargeFixedTable() {
   const [data, setData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
-   const [currentPage, setCurrentPage] = useState<number>(1);
-    const pageSize = 10; 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 10;
 
-    // const [language, setLanguage] = useState<"vi" | "en">("vi");
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("access_token")
+      : null;
 
-  const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
+  // ===========================
+  // 🔥 FETCH DATA
+  // ===========================
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -50,106 +82,67 @@ export default function LargeFixedTable() {
 
     try {
       const skip = (currentPage - 1) * pageSize;
-      const result = await getListProject({ token, skip, limit: pageSize, });
-      const users = result.data.map((user: DataType) => ({
-  ...user,
-        key: user.id,
-        // description_en: user.description_en,
-      }));
-      setData(users);
-       setTotal(result.total);
 
-        const totalPages = Math.ceil(result.total / pageSize);
+      const result: ApiResponse = await getListProject({
+        token,
+        skip,
+        limit: pageSize,
+      });
+
+      const users: DataType[] = result.data.map((user: ProjectItem) => ({
+        id: user.id,
+        name: user.name,
+        type: user.type,
+        address: user.address,
+        investor: user.investor,
+        rank: user.rank,
+        overview_image: user.overview_image || null,
+      }));
+
+      setData(users);
+      setTotal(result.total);
+
+      const totalPages = Math.ceil(result.total / pageSize);
       if (currentPage > totalPages && totalPages > 0) {
         setCurrentPage(totalPages);
       }
-
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Đã xảy ra lỗi khi tải dữ liệu.");
     } finally {
       setLoading(false);
     }
-  }, [token,currentPage, ]);
+  }, [token, currentPage]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // ✅ Hàm mở modal chỉnh sửa
-  const openEditUserModal = (role: DataType) => {
+  // ===========================
+  // 🔥 MODALS
+  // ===========================
+
+  const openEditUserModal = (item: DataType) => {
     modals.openConfirmModal({
-       title: 
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-       Chỉnh sửa dự án
-      </div>
-    ,
-      children: <EditView id={role.id} onSearch={fetchData}     />, // ✅ đổi fetchRoles → fetchData
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa dự án</div>,
+      children: <EditView id={item.id} onSearch={fetchData} />,
       confirmProps: { display: "none" },
       cancelProps: { display: "none" },
     });
   };
 
-  // ✅ Định nghĩa cột bảng
-  const columns: ColumnsType<DataType> = [
-       {  title:  "Tên dự án" , dataIndex: "name", key: "name", width: 5 ,fixed: "left"},
-    { title:  "Loại dự án" , dataIndex: "type", key: "type", width: 5 },
-    { title:  "Địa chỉ" , dataIndex: "address", key: "address", width: 5 },
-    {title:  "Chủ đầu tư" , dataIndex: "investor", key: "investor", width: 5 },
-     {
-      title:  "Hình ảnh" ,
-      dataIndex: "overview_image",
-      key: "overview_image",
-      width: 5,
-      render: (url: string) => (
-        <img
-          src={url}
-          alt="overview"
-          style={{ width: 130, height: 70, objectFit: "cover", borderRadius: 8 }}
-        />
-      ),
-    },
-    {
-      title:  "Cấp bậc" ,
-      dataIndex: "rank",
-      key: "rank",
-      width: 2,
-    },
-   
-    // { title: "Mô Tả (Tiếng Anh)", dataIndex: "description_en", key: "description_en", width: 100 },
-   
-   
-    {
-     title:  "Hành động" ,
-      width: 3,
-      fixed: "right",
-      render: (user: DataType) => (
-        <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
-          <EuiFlexItem grow={false}>
-            {/* ✅ truyền đúng user vào onClick */}
-            <EuiButtonIcon
-              iconType="documentEdit"
-              aria-label="Chỉnh sửa"
-              color="success"
-              onClick={() => openEditUserModal(user)}
-            />
-          </EuiFlexItem>
-          <EuiFlexItem grow={false}>
-            <EuiButtonIcon iconType="trash" aria-label="Xóa" color="danger" onClick={() => openDeleteUserModal(user)} />
-          </EuiFlexItem>
-        </EuiFlexGroup>
-      ),
-    },
-  ];
+  const openDeleteUserModal = (item: DataType) => {
+    modals.openConfirmModal({
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Xóa dự án</div>,
+      children: <DeleteView idItem={[item.id]} onSearch={fetchData} />,
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
 
-  // ✅ Modal thêm người dùng
   const openModal = () => {
     modals.openConfirmModal({
-      title: 
-        <div style={{ fontWeight: 600, fontSize: 18 }}>
-          Thêm dự án mới
-        </div>
-      ,
+      title: <div style={{ fontWeight: 600, fontSize: 18 }}>Thêm dự án mới</div>,
       children: <CreateView onSearch={fetchData} />,
       size: "lg",
       radius: "md",
@@ -158,39 +151,127 @@ export default function LargeFixedTable() {
     });
   };
 
-    const openDeleteUserModal = (role: DataType) => {
-    modals.openConfirmModal({
- title: 
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-        Xóa dự án
-      </div>
-    ,
-      children: <DeleteView idItem={[role.id]} onSearch={fetchData}   />,
-      confirmProps: { display: 'none' },
-      cancelProps: { display: 'none' },
-    });
-  };
+  // ===========================
+  // 🔥 COLUMNS
+  // ===========================
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Tên dự án",
+      dataIndex: "name",
+      key: "name",
+      width: 150,
+      fixed: "left",
+    },
+    {
+      title: "Loại dự án",
+      dataIndex: "type",
+      key: "type",
+      width: 150,
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "address",
+      key: "address",
+      width: 200,
+    },
+    {
+      title: "Chủ đầu tư",
+      dataIndex: "investor",
+      key: "investor",
+      width: 150,
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "overview_image",
+      key: "overview_image",
+      width: 160,
+      render: (image: OverviewImage | null) => {
+        if (!image) return <span>Không có ảnh</span>;
+
+        const imgUrl = (image.thumbnail_url || image.url).replace(
+          "http://",
+          "https://"
+        );
+
+        return (
+          <Image
+            src={imgUrl}
+            alt="overview"
+            width={130}
+            height={70}
+            style={{
+              objectFit: "cover",
+              borderRadius: 8,
+              border: "1px solid #eee",
+            }}
+          />
+        );
+      },
+    },
+    {
+      title: "Hành động",
+      width: 100,
+      fixed: "right",
+      render: (item: DataType) => (
+        <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
+          <EuiFlexItem grow={false}>
+            <EuiButtonIcon
+              iconType="documentEdit"
+              aria-label="Chỉnh sửa"
+              color="success"
+              onClick={() => openEditUserModal(item)}
+            />
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiButtonIcon
+              iconType="trash"
+              aria-label="Xóa"
+              color="danger"
+              onClick={() => openDeleteUserModal(item)}
+            />
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      ),
+    },
+  ];
+
+  // ===========================
+  // 🔥 UI
+  // ===========================
 
   return (
     <>
-      <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-   
+      <Group
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <div style={{ marginBottom: 12 }}></div>
-        <AppAction openModal={openModal}  />
+        <AppAction openModal={openModal} />
       </Group>
 
       <Table
         columns={columns}
         dataSource={data}
         loading={loading}
-         scroll={{ x: 1300 }}
+        scroll={{ x: 1300 }}
         pagination={false}
         bordered
-        rowKey="id" // ✅ thêm key cho mỗi hàng
+        rowKey="id"
       />
 
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
-       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: 16,
+        }}
+      >
         <Pagination
           total={total}
           current={currentPage}
