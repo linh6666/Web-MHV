@@ -7,7 +7,7 @@ import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
-import { getListProjectTemplates } from "../../../api/apiProjectTemplates";
+import { getListProjectTemplates1 } from "../../../api/apiProjectTemplates";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import CreateView from "./CreateView";
@@ -43,7 +43,7 @@ export default function LargeFixedTable() {
 
     try {
        const skip = (currentPage - 1) * pageSize;
-      const result = await getListProjectTemplates({ token, skip, limit: pageSize });
+      const result = await getListProjectTemplates1({ token, skip, limit: pageSize });
       const users = result.data.map((user: DataType) => ({
       ...user,
         key: user.id,

@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 
 import { createUser } from "../../../api/apiCreateProject";
-import { getListProjectTemplates } from "../../../api/apiProjectTemplates";
+import { getListProjectTemplates1 } from "../../../api/apiProjectTemplates";
 
 /* ================= TYPES ================= */
 
@@ -82,7 +82,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
     const fetchProjectTemplates = async () => {
       try {
         const token = localStorage.getItem("access_token") || "";
-        const res = await getListProjectTemplates({ token });
+        const res = await getListProjectTemplates1({ token });
 
         const options: Option[] = (res.data as ProjectTemplate[]).map(
           (item) => ({

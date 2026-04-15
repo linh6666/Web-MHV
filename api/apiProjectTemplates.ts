@@ -17,7 +17,7 @@ export interface CreateUserPayload {
 }
 
 
-export const getListProjectTemplates = async ({ token, skip, limit }: GetListRolesParams) => {
+export const getListProjectTemplates1 = async ({ token, skip, limit }: GetListRolesParams) => {
   const response = await api.get(API_ROUTE.GET_LIST_PROJECTTYPE, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ export const createUser = async (payload: CreateUserPayload) => {
 };
 
 export const rolesApi = {
-  getListProjectTemplates,
+  getListProjectTemplates1,
   createUser,
 };
 

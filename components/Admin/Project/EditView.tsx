@@ -19,7 +19,7 @@ import { API_ROUTE } from "../../../const/apiRouter";
 import { api } from "../../../libray/axios";
 import { CreateUserPayload } from "../../../api/apiEditproject";
 import { AxiosError } from "axios";
-import { getListProjectTemplates } from "../../../api/apiProjectTemplates";
+import { getListProjectTemplates1 } from "../../../api/apiProjectTemplates";
 import { NotificationExtension } from "../../../extension/NotificationExtension";
 
 interface EditViewProps {
@@ -110,7 +110,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         return;
       }
 
-      const res = await getListProjectTemplates({
+      const res = await getListProjectTemplates1({
         token,
         skip: 0,
         limit: 100,
