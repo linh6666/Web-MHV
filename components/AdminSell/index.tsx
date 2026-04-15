@@ -14,7 +14,9 @@ interface Project {
   id: string;
   name: string;
   address?: string | null;
-  overview_image?: string | null;
+overview_image?: {
+  url?: string;
+} | null;
   investor?: string | null;
   project_template_id: string;
   rank?: number;
@@ -116,15 +118,21 @@ function ProjectCard({
   return (
     <Card shadow="sm" radius="md" withBorder padding="0" className={styles.card}>
 
-      <Image
-        src={project.overview_image || "/placeholder.png"}
-        height={160}
-        alt={project.name}
-        style={{
-          borderTopLeftRadius: "var(--mantine-radius-md)",
-          borderTopRightRadius: "var(--mantine-radius-md)",
-        }}
-      />
+      {/* ================== FIX IMAGE ONLY ================== */}
+     <Image
+  src={
+    project.overview_image?.url
+      ? project.overview_image.url.replace("http://", "https://")
+      : "/placeholder.png"
+  }
+  height={160}
+  alt={project.name}
+  style={{
+    borderTopLeftRadius: "var(--mantine-radius-md)",
+    borderTopRightRadius: "var(--mantine-radius-md)",
+  }}
+/>
+      {/* =================================================== */}
 
       <Text className={styles.projectName}>{project.name}</Text>
 
@@ -261,32 +269,31 @@ export default function DetailInteractive() {
         setProjects(listProjectRes.data);
         setJoinedProjects(joinedProjectRes.data);
 
-      } 
-    catch (error: unknown) {
+      } catch (error: unknown) {
 
-  console.error("Failed to fetch:", error);
+        console.error("Failed to fetch:", error);
 
-  let errorMessage = "Có lỗi xảy ra khi tải dữ liệu";
+        let errorMessage = "Có lỗi xảy ra khi tải dữ liệu";
 
-  if (typeof error === "object" && error !== null && "response" in error) {
-    const err = error as {
-      response?: {
-        data?: {
-          detail?: string;
-          message?: string;
-        };
-      };
-    };
+        if (typeof error === "object" && error !== null && "response" in error) {
+          const err = error as {
+            response?: {
+              data?: {
+                detail?: string;
+                message?: string;
+              };
+            };
+          };
 
-    errorMessage =
-      err.response?.data?.detail ||
-      err.response?.data?.message ||
-      errorMessage;
-  }
+          errorMessage =
+            err.response?.data?.detail ||
+            err.response?.data?.message ||
+            errorMessage;
+        }
 
-  NotificationExtension.Fails(errorMessage);
+        NotificationExtension.Fails(errorMessage);
 
-} finally {
+      } finally {
         setLoading(false);
       }
     }
@@ -305,7 +312,6 @@ export default function DetailInteractive() {
 
   return (
     <>
-
       <div className={styles.background}>
         <div className={styles.container}>
 

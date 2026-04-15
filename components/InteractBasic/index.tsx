@@ -1,16 +1,34 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { Card, Image, Stack, Text, Button, Loader, Modal } from "@mantine/core";
+import {
+  Card,
+  Image,
+  Stack,
+  Text,
+  Button,
+  Loader,
+  Modal,
+} from "@mantine/core";
 import styles from "./Interact.module.css";
 import { getListProject } from "../../api/apigetlistProjectBasic";
 import { useRouter } from "next/navigation";
 import { NotificationExtension } from "../../extension/NotificationExtension";
 
+// ===========================
+// ✅ TYPE
+// ===========================
+
+interface OverviewImage {
+  url: string;
+  thumbnail_url: string;
+}
+
 interface Project {
   id: string;
   name: string;
   address?: string | null;
-  overview_image?: string | null;
+  overview_image?: OverviewImage | null; // ✅ FIX
   investor?: string | null;
   project_template_id: string;
   rank?: number;
@@ -18,8 +36,20 @@ interface Project {
   timeout_minutes?: number;
   rank_name?: string | null;
   type?: string | null;
-  link?: string;
 }
+
+// ===========================
+// 🔥 HELPER
+// ===========================
+
+const getImageUrl = (img?: OverviewImage | null) => {
+  if (!img?.url) return "/placeholder.png";
+  return img.url.replace("http://", "https://");
+};
+
+// ===========================
+// COMPONENT
+// ===========================
 
 export default function DetailInteractive() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -39,16 +69,23 @@ export default function DetailInteractive() {
 
     async function fetchProjects() {
       try {
-        const [listProjectRes] = await Promise.all([
-          getListProject({ token, skip: 0, limit: 100 }),
-        ]);
+        const { data } = await getListProject({
+          token,
+          skip: 0,
+          limit: 100,
+        });
 
-        const projectData = listProjectRes.data;
-        setProjects(projectData);
+        setProjects(data);
         NotificationExtension.Success("Tải dữ liệu dự án thành công");
       } catch (error) {
-        const axiosError = error as { response?: { data?: { detail?: string } } };
-        const errorMessage = axiosError?.response?.data?.detail || "Lỗi khi tải dữ liệu dự án";
+        const axiosError = error as {
+          response?: { data?: { detail?: string } };
+        };
+
+        const errorMessage =
+          axiosError?.response?.data?.detail ||
+          "Lỗi khi tải dữ liệu dự án";
+
         NotificationExtension.Fails(errorMessage);
         console.error("Failed to fetch:", error);
       } finally {
@@ -81,8 +118,9 @@ export default function DetailInteractive() {
                 padding="0"
                 className={styles.card}
               >
+                {/* ===== IMAGE ===== */}
                 <Image
-                  src={project.overview_image || "/placeholder.png"}
+                  src={getImageUrl(project.overview_image)}
                   height={160}
                   alt={project.name}
                   style={{
@@ -90,19 +128,25 @@ export default function DetailInteractive() {
                     borderTopRightRadius: "var(--mantine-radius-md)",
                   }}
                 />
+
+                {/* ===== CONTENT ===== */}
                 <Stack gap="xs" p="md" style={{ flexGrow: 1 }}>
                   <Text fw={500}>{project.name}</Text>
+
                   <Text size="sm" c="dimmed">
                     Loại dự án: {project.type || "Thông tin chưa có"}
                   </Text>
+
                   <Text size="sm" c="dimmed">
                     Địa chỉ: {project.address || "Địa chỉ chưa có"}
                   </Text>
+
                   <Text size="sm" c="dimmed">
                     Nhà đầu tư: {project.investor || "Thông tin chưa có"}
                   </Text>
                 </Stack>
 
+                {/* ===== BUTTON ===== */}
                 <Button
                   className={`${styles.baseButton} ${styles.primaryButton}`}
                   onClick={() => {
@@ -121,6 +165,7 @@ export default function DetailInteractive() {
         </div>
       </div>
 
+      {/* ===== MODAL LOGIN ===== */}
       <Modal
         opened={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -128,6 +173,7 @@ export default function DetailInteractive() {
         centered
       >
         <Text>Bạn cần đăng nhập để xem danh sách dự án.</Text>
+
         <Button
           mt="md"
           fullWidth
