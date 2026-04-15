@@ -16,7 +16,6 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 import { useEffect, useCallback, useRef, useState } from "react";
 import { API_ROUTE } from "../../../const/apiRouter";
 import { api } from "../../../libray/axios";
-import { CreateUserPayload } from "../../../api/apiEditproject";
 import { AxiosError } from "axios";
 import { getListProjectTemplates1 } from "../../../api/apiProjectTemplates";
 import { NotificationExtension } from "../../../extension/NotificationExtension";
@@ -33,6 +32,21 @@ interface ProjectTemplate {
   type_vi: string;
 }
 
+// ✅ FIX TYPE
+interface FormValues {
+  name: string;
+  address: string;
+  investor: string;
+  overview_image:
+    | File
+    | string
+    | {
+        url: string;
+        thumbnail_url: string;
+      }
+    | null;
+}
+
 /* ================= COMPONENT ================= */
 
 const EditView = ({ onSearch, id }: EditViewProps) => {
@@ -42,7 +56,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     { value: string; label: string }[]
   >([]);
 
-  const form = useForm<CreateUserPayload>({
+  const form = useForm<FormValues>({
     initialValues: {
       name: "",
       address: "",
@@ -57,12 +71,12 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
 
   const getImageUrl = (url: string) => {
     if (!url) return "";
-    return url.replace("http://", "https://"); // fix mixed content
+    return url.replace("http://", "https://");
   };
 
   /* ================= SUBMIT ================= */
 
-  const handleSubmit = async (values: CreateUserPayload) => {
+  const handleSubmit = async (values: FormValues) => {
     open();
     try {
       const url = API_ROUTE.UPDATE_PROJECTS.replace("{project_id}", id);
@@ -75,10 +89,9 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
 
       const formData = new FormData();
 
-      // ✅ project_in
       formData.append("project_in", JSON.stringify(projectPayload));
 
-      // ✅ nếu chọn ảnh mới → phải có media_metadata
+      // ✅ chỉ gửi file khi user chọn file mới
       if (values.overview_image instanceof File) {
         formData.append("file", values.overview_image);
 
@@ -92,12 +105,6 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
           })
         );
       }
-
-      // DEBUG
-      console.log("🧾 FormData:");
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
 
       await api.put(url, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -171,7 +178,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         name: data.name || "",
         address: data.address || "",
         investor: data.investor || "",
-        overview_image: data.overview_image || "",
+        overview_image: data.overview_image || null, // ✅ giữ object
       });
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu project:", error);
@@ -230,25 +237,39 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
         label="Hình ảnh đại diện"
         placeholder="Chọn file ảnh JPG/PNG"
         mt="md"
-        {...form.getInputProps("overview_image")}
+        value={
+          form.values.overview_image instanceof File
+            ? form.values.overview_image
+            : null
+        }
+        onChange={(file) =>
+          form.setFieldValue("overview_image", file)
+        }
       />
 
       {/* ===== Preview ảnh ===== */}
-      {form.values.overview_image &&
-        typeof form.values.overview_image === "string" && (
-          <Image
-            src={getImageUrl(form.values.overview_image)}
-            alt="Preview"
-            width={200}
-            height={150}
-            style={{
-              marginTop: "10px",
-              maxWidth: "200px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          />
-        )}
+      {form.values.overview_image && (
+        <Image
+          src={
+            form.values.overview_image instanceof File
+              ? URL.createObjectURL(form.values.overview_image)
+              : typeof form.values.overview_image === "string"
+              ? getImageUrl(form.values.overview_image)
+              : getImageUrl(
+                  form.values.overview_image.thumbnail_url
+                )
+          }
+          alt="Preview"
+          width={200}
+          height={150}
+          style={{
+            marginTop: "10px",
+            maxWidth: "200px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        />
+      )}
 
       {/* ===== ACTION ===== */}
       <Group justify="flex-end" mt="lg">
@@ -276,4 +297,3 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
 };
 
 export default EditView;
-

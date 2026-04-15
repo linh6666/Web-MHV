@@ -3,21 +3,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-// import AppSearch from "../../../common/AppSearch";
 import { modals } from "@mantine/modals";
 import { getListProject } from "../../../api/apigetlistProject";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import EditView from "./EditView";
-// import DeleteView from "./DeleteView";
+import Image from "next/image"; // ✅ FIX dùng next/image
 
+// ✅ TYPE CHUẨN
 interface DataType {
   id: string;
   name: string;
   type: string;
   address: string;
   investor: string;
-  overview_image: string;
+  overview_image: {
+    url: string;
+    thumbnail_url: string;
+  } | null;
   rank: number;
 }
 
@@ -26,11 +29,13 @@ export default function LargeFixedTable() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-
-  const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("access_token")
+      : null;
 
   // ===========================
-  // 🔥 FETCH DATA CÓ THÊM LANG
+  // 🔥 FETCH DATA
   // ===========================
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -47,17 +52,17 @@ export default function LargeFixedTable() {
         token,
         skip: 0,
         limit: 100,
-     // ⬅️ thêm lang vào API
       });
 
-      const users = result.data.map((user: DataType) => ({
+      // ✅ FIX any → DataType
+      const users: DataType[] = result.data.map((user: DataType) => ({
         id: user.id,
         name: user.name,
         rank: user.rank,
         type: user.type,
         address: user.address,
         investor: user.investor,
-        overview_image: user.overview_image,
+        overview_image: user.overview_image || null,
       }));
 
       setData(users);
@@ -67,156 +72,118 @@ export default function LargeFixedTable() {
     } finally {
       setLoading(false);
     }
-  }, [token]); // ⬅️ tự động load lại khi đổi language
+  }, [token]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   // ===========================
-  // 🔥 MỞ MODAL EDIT
+  // 🔥 MODAL EDIT
   // ===========================
-const openEditUserModal = (role: DataType) => {
-  modals.openConfirmModal({
-    title: 
-      <div style={{ fontWeight: 600, fontSize: 18 }}>
-        Chỉnh sửa dự án
-      </div>
-    ,
-    children: (
-      <EditView
-        id={role.id}
-         // ⬅️ TRUYỀN LANG VÀO EDITVIEW
-        onSearch={fetchData}
-      />
-    ),
-    confirmProps: { display: "none" },
-    cancelProps: { display: "none" },
-  });
-};
+  const openEditUserModal = (item: DataType) => {
+    modals.openConfirmModal({
+      title: (
+        <div style={{ fontWeight: 600, fontSize: 18 }}>
+          Chỉnh sửa dự án
+        </div>
+      ),
+      children: <EditView id={item.id} onSearch={fetchData} />,
+      confirmProps: { display: "none" },
+      cancelProps: { display: "none" },
+    });
+  };
 
   // ===========================
-  // 🔥 MỞ MODAL DELETE
-  // ===========================
-// const openDeleteUserModal = (role: DataType) => {
-//   modals.openConfirmModal({
-//     title: 
-//       <div style={{ fontWeight: 600, fontSize: 18 }}>
-//        Xóa dự án
-//       </div>
-//     ,
-//     children: (
-//       <DeleteView
-//         idItem={[role.id]}
-//               // ⬅️ TRUYỀN LANG VÀO DELETEVIEW
-//         onSearch={fetchData}
-//       />
-//     ),
-//     confirmProps: { display: "none" },
-//     cancelProps: { display: "none" },
-//   });
-// };
-
-
-  // ===========================
-  // 🔥 CÁC CỘT — THAY ĐỔI THEO LANG
+  // 🔥 COLUMNS
   // ===========================
   const columns: ColumnsType<DataType> = [
     {
-      title:  "Tên dự án" ,
+      title: "Tên dự án",
       dataIndex: "name",
       key: "name",
-      width: 7,
+      width: 150,
       fixed: "left",
     },
     {
-      title:  "Loại dự án" ,
+      title: "Loại dự án",
       dataIndex: "type",
       key: "type",
-      width: 7,
+      width: 150,
     },
     {
-      title:  "Địa chỉ" ,
+      title: "Địa chỉ",
       dataIndex: "address",
       key: "address",
-      width: 7,
+      width: 200,
     },
     {
-      title:  "Chủ đầu tư" ,
+      title: "Chủ đầu tư",
       dataIndex: "investor",
       key: "investor",
-      width: 7,
+      width: 150,
     },
     {
-      title:  "Hình ảnh" ,
+      title: "Hình ảnh",
       dataIndex: "overview_image",
       key: "overview_image",
-      width: 10,
-      render: (url: string) => (
-        <img
-          src={url}
-          alt="overview"
-          style={{ width: 130, height: 70, objectFit: "cover", borderRadius: 8 }}
-        />
-      ),
+      width: 160,
+      render: (image: DataType["overview_image"]) => {
+        if (!image) {
+          return <span>Không có ảnh</span>;
+        }
+
+        const imgUrl = image.thumbnail_url || image.url;
+
+        return (
+          <Image
+            src={imgUrl}
+            alt="overview"
+            width={130}
+            height={70}
+            style={{
+              objectFit: "cover",
+              borderRadius: 8,
+              border: "1px solid #eee",
+            }}
+          />
+        );
+      },
     },
     {
-      title:  "Cấp bậc" ,
-      dataIndex: "rank",
-      key: "rank",
-      width: 5,
-    },
-    {
-      title:  "Hành động" ,
-      width: 5,
-        fixed: "right",
-      render: (user: DataType) => (
+      title: "Hành động",
+      width: 100,
+      fixed: "right",
+      render: (item: DataType) => (
         <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
           <EuiFlexItem grow={false}>
             <EuiButtonIcon
               iconType="documentEdit"
               aria-label="Chỉnh sửa"
               color="success"
-              onClick={() => openEditUserModal(user)}
+              onClick={() => openEditUserModal(item)}
             />
           </EuiFlexItem>
-          {/* <EuiFlexItem grow={false}>
-            <EuiButtonIcon
-              iconType="trash"
-              aria-label="Xóa"
-              color="danger"
-              onClick={() => openDeleteUserModal(user)}
-            />
-          </EuiFlexItem> */}
         </EuiFlexGroup>
       ),
     },
   ];
 
+  // ===========================
+  // 🔥 UI
+  // ===========================
   return (
     <>
       <Group
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        {/* <AppSearch /> */}
-
-        {/* 🔥 SELECT LANG */}
-        <div style={{ marginBottom: 12 }}>
-          {/* <label htmlFor="language-select" style={{ marginRight: 8 }}>
-            {language === "vi" ? "Chọn ngôn ngữ:" : "Select Language:"}
-          </label>
-          <select
-            id="language-select"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as "vi" | "en")}
-          >
-            <option value="vi">Tiếng Việt</option>
-            <option value="en">English</option>
-          </select> */}
-        </div>
+        <div style={{ marginBottom: 12 }}></div>
       </Group>
 
-      {/* 🔥 TABLE */}
       <Table
         columns={columns}
         dataSource={data}
@@ -227,7 +194,11 @@ const openEditUserModal = (role: DataType) => {
         rowKey="id"
       />
 
-      {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
+      {error && (
+        <p style={{ color: "red", marginTop: 10 }}>
+          {error}
+        </p>
+      )}
     </>
   );
 }

@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-// import AppSearch from "../../../common/AppSearch";
+
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
@@ -174,19 +174,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      {/* <div style={{ marginBottom: 12 }}>
-          <label htmlFor="language-select" style={{ marginRight: 8 }}>
-            {language === "vi" ? "Chọn ngôn ngữ:" : "Select Language:"}
-          </label>
-          <select
-            id="language-select"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as "vi" | "en")}
-          >
-            <option value="vi">Tiếng Việt</option>
-            <option value="en">English</option>
-          </select>
-        </div> */}
+   
         <div style={{ marginBottom: 12 }}></div>
         <AppAction openModal={openModal}  />
       </Group>
