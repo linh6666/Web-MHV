@@ -106,7 +106,7 @@ export default function DetailInteractive() {
             projects.map((project) => (
               <a
                 key={project.id}
-                href="https://sunshinegroup.vn/"
+                href="https://www.mohinhviet.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none" }}
