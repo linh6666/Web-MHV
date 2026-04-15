@@ -105,7 +105,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         const templateOptions: Option[] = (
           resTemplate.data as ProjectTemplateItem[]
         ).map((item) => ({
-          value: item.id.toString(), // 👈 đảm bảo string
+          value: item.id.toString(),
           label: item.template_vi || "Không có",
         }));
 
@@ -136,12 +136,26 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       };
 
       const formData = new FormData();
+
+      // ✅ project_in
       formData.append("project_in", JSON.stringify(projectPayload));
 
+      // ✅ file + media_metadata (QUAN TRỌNG)
       if (values.overview_image) {
         formData.append("file", values.overview_image);
+
+        formData.append(
+          "media_metadata",
+          JSON.stringify({
+            filename: values.overview_image.name,
+            description_vi: "Ảnh đại diện dự án",
+            category: "others",
+            is_public: true,
+          })
+        );
       }
 
+      // DEBUG
       console.log("🧾 FormData:");
       formData.forEach((value, key) => {
         console.log(key, value);
@@ -153,10 +167,8 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error("Lỗi API:", error.response?.data || error.message);
-      } else if (error instanceof Error) {
-        console.error("Lỗi:", error.message);
       } else {
-        console.error("Lỗi không xác định:", error);
+        console.error("Lỗi:", error);
       }
     } finally {
       close();
@@ -172,11 +184,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       mx="auto"
       onSubmit={form.onSubmit(handleSubmit)}
     >
-      <LoadingOverlay
-        visible={visible}
-        zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 2 }}
-      />
+      <LoadingOverlay visible={visible} zIndex={1000} />
 
       {/* ===== Mẫu dự án ===== */}
       <Select
@@ -230,7 +238,6 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         label="Hình ảnh đại diện"
         placeholder="Chọn file JPG / PNG"
         leftSection={icon}
-        leftSectionPointerEvents="none"
         mt="md"
         value={form.values.overview_image}
         onChange={(file) =>
@@ -253,7 +260,6 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
           type="button"
           variant="outline"
           color="black"
-          loading={visible}
           onClick={() => modals.closeAll()}
           leftSection={<IconX size={18} />}
         >
