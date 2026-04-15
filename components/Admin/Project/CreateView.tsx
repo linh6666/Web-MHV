@@ -23,6 +23,7 @@ import { AxiosError } from "axios";
 
 import { createUser } from "../../../api/apiCreateProject";
 import { getListProjectTemplates1 } from "../../../api/apiProjectTemplates";
+import { getListProjectTemplates } from "../../../api/apiProjectTemplates2";
 
 /* ================= TYPES ================= */
 
@@ -40,65 +41,83 @@ interface ProjectTemplate {
   type_vi: string;
 }
 
+interface ProjectTemplateItem {
+  id: string;
+  template_vi: string;
+}
+
 /* ================= COMPONENT ================= */
 
 const CreateView = ({ onSearch }: CreateViewProps) => {
   const [visible, { open, close }] = useDisclosure(false);
   const [systemOptions, setSystemOptions] = useState<Option[]>([]);
+  const [templateOptions, setTemplateOptions] = useState<Option[]>([]);
 
   const icon = <IconFileCv size={18} stroke={1.5} />;
 
   /* ================= FORM ================= */
 
-  const form = useForm<{
-    id: string;
-    name_vi: string;
-    project_template_id: string;
-    address_vi: string;
-    investor: string;
-    overview_image: File | null;
-  }>({
+  const form = useForm({
     initialValues: {
       id: "",
       name_vi: "",
+      project_type_id: "",
       project_template_id: "",
       address_vi: "",
       investor: "",
-      overview_image: null,
+      overview_image: null as File | null,
     },
 
     validate: {
       name_vi: isNotEmpty("Tên dự án không được để trống"),
-      project_template_id: isNotEmpty("Loại dự án không được để trống"),
+      project_type_id: isNotEmpty("Loại dự án không được để trống"),
+      project_template_id: isNotEmpty("Mẫu dự án không được để trống"),
       address_vi: isNotEmpty("Địa chỉ không được để trống"),
       investor: isNotEmpty("Chủ đầu tư không được để trống"),
       overview_image: isNotEmpty("Hình ảnh không được để trống"),
     },
   });
 
-  /* ================= FETCH SELECT DATA ================= */
+  /* ================= FETCH DATA ================= */
 
   useEffect(() => {
-    const fetchProjectTemplates = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("access_token") || "";
-        const res = await getListProjectTemplates1({ token });
 
-        const options: Option[] = (res.data as ProjectTemplate[]).map(
+        // ===== Loại dự án =====
+        const resType = await getListProjectTemplates1({ token });
+        const typeOptions: Option[] = (resType.data as ProjectTemplate[]).map(
           (item) => ({
             value: item.id.toString(),
             label: item.type_vi || "Không có",
           })
         );
+        setSystemOptions(typeOptions);
 
-        setSystemOptions(options);
+        // ===== Mẫu dự án =====
+        const resTemplate = await getListProjectTemplates({
+          token,
+          skip: 0,
+          limit: 100,
+        });
+
+        const templateOptions: Option[] = (
+          resTemplate.data as ProjectTemplateItem[]
+        ).map((item) => ({
+          value: item.id.toString(), // 👈 đảm bảo string
+          label: item.template_vi || "Không có",
+        }));
+
+        setTemplateOptions(templateOptions);
       } catch (error) {
-        console.error("Lỗi khi lấy danh sách loại dự án:", error);
+        console.error("Lỗi khi load dữ liệu:", error);
         setSystemOptions([]);
+        setTemplateOptions([]);
       }
     };
 
-    fetchProjectTemplates();
+    fetchData();
   }, []);
 
   /* ================= SUBMIT ================= */
@@ -110,6 +129,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       const projectPayload = {
         id: values.id,
         name_vi: values.name_vi,
+        project_type_id: values.project_type_id,
         project_template_id: values.project_template_id,
         address_vi: values.address_vi,
         investor: values.investor,
@@ -122,7 +142,6 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         formData.append("file", values.overview_image);
       }
 
-      // Debug
       console.log("🧾 FormData:");
       formData.forEach((value, key) => {
         console.log(key, value);
@@ -159,6 +178,17 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         overlayProps={{ radius: "sm", blur: 2 }}
       />
 
+      {/* ===== Mẫu dự án ===== */}
+      <Select
+        label="Mẫu dự án"
+        placeholder="Chọn mẫu dự án"
+        data={templateOptions}
+        rightSection={<IconChevronDown size={16} />}
+        mt="md"
+        withAsterisk
+        {...form.getInputProps("project_template_id")}
+      />
+
       {/* ===== Loại dự án ===== */}
       <Select
         label="Tên loại dự án"
@@ -167,7 +197,7 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         rightSection={<IconChevronDown size={16} />}
         mt="md"
         withAsterisk
-        {...form.getInputProps("project_template_id")}
+        {...form.getInputProps("project_type_id")}
       />
 
       {/* ===== Tên dự án ===== */}
@@ -235,4 +265,3 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
 };
 
 export default CreateView;
-
