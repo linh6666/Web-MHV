@@ -161,13 +161,13 @@ export default function OrderButton({ house, projectId }: OrderButtonProps) {
             gap: "8px",
           }}
         >
-          <IconMail size={20} color="#752E0B" />
+          <IconMail size={20} color="#294b61" />
 
           <span
             style={{
               fontSize: "14px",
               fontWeight: 500,
-              color: "#752E0B",
+              color: "#294b61",
             }}
           >
             Liên hệ

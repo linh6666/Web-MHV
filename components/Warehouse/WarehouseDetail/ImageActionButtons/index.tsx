@@ -178,7 +178,7 @@ export default function ImageActionButtons({
             ? "1px solid #ff4d4f"
             : "1px solid #e5e7eb",
           backgroundColor: isFavorite ? "#fff5f5" : "#ffffff",
-          color: isFavorite ? "#ff4d4f" : "#752E0B",
+          color: isFavorite ? "#ff4d4f" : "#294b61",
           boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
           cursor: loading ? "not-allowed" : "pointer",
           opacity: loading || (isChecking && !isFavorite) ? 0.8 : 1,
@@ -201,7 +201,7 @@ export default function ImageActionButtons({
       >
         <IconHeart
           size={18}
-          color={isFavorite ? "#ff4d4f" : "#752E0B"}
+          color={isFavorite ? "#ff4d4f" : "#294b61"}
           fill={isFavorite ? "#ff4d4f" : "none"}
           style={{ transition: "fill 0.2s ease, color 0.2s ease" }}
         />
