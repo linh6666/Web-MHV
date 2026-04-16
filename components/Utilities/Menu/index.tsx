@@ -234,12 +234,12 @@ export default function Menu({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "#294b61",
-              color: "#EEEEEE",
-              border: "1.5px solid #EEEEEE",
+              background: "#EEEEEE",
+              color: "#294b61",
+              border: "1.5px solid #294b61",
             }}
           >
-            <IconArrowLeft size={18} color="#EEEEEE" />
+            <IconArrowLeft size={18} color="#294b61" />
           </Button>
         </Group>
       </div>
