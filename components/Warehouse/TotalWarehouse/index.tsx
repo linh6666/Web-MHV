@@ -97,6 +97,7 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
   const [selectedFloorApartmentGroupCode, setSelectedFloorApartmentGroupCode] = useState<string[]>([]);
   const [selectedLayer3, setSelectedLayer3] = useState<string[]>([]);
   const [selectedLayer2, setSelectedLayer2] = useState<string[]>([]);
+  const [selectedUnitNames, setSelectedUnitNames] = useState<string[]>([]);
 
 
   const normalize = (value?: string) => value?.trim().toLowerCase();
@@ -290,6 +291,11 @@ useEffect(() => {
     filtered = filtered.filter((item) => item && selectedFloorApartmentGroupCode.includes(item.floor_apartment_group_code));
   }
 
+  // Filter theo tên căn (unit_name)
+  if (selectedUnitNames.length > 0) {
+    filtered = filtered.filter((item) => item && item.unit_name && selectedUnitNames.includes(item.unit_name));
+  }
+
   setFilteredItems(filtered);
   setCurrentPage(1);
 }, [
@@ -314,6 +320,7 @@ useEffect(() => {
   selectedFloorName,
   selectedFloorGroupCode,
   selectedFloorApartmentGroupCode,
+  selectedUnitNames,
 ]);
 
   const allActiveFilters = useMemo(() => {
@@ -353,6 +360,10 @@ useEffect(() => {
       filters.push({ label: `${activeBathroom} phòng tắm`, type: "bathroom", value: activeBathroom });
     }
 
+    selectedUnitNames.forEach((v) => {
+      filters.push({ type: "unitName", value: v, label: `Tên căn: ${v}` });
+    });
+
     return filters;
   }, [
     selectedZones,
@@ -374,6 +385,7 @@ useEffect(() => {
     selectedFloorApartmentGroupCode,
     activeBedroom,
     activeBathroom,
+    selectedUnitNames,
   ]);
 
   const removeFilter = (type: string, value: string) => {
@@ -431,6 +443,9 @@ useEffect(() => {
         break;
       case "status":
         setSelectedStatuses(selectedStatuses.filter((v) => v !== value));
+        break;
+      case "unitName":
+        setSelectedUnitNames(selectedUnitNames.filter((v) => v !== value));
         break;
       case "bedroom":
         setActiveBedroom(null);
@@ -604,6 +619,10 @@ const uniqueLayer3 = Array.from(
   )
 ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
 
+const uniqueUnitNames = Array.from(
+  new Set(items.map((item) => item.unit_name).filter((v): v is string => isValid(v)))
+).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
+
 // layer2 chỉ lấy từ items không có building_type hợp lệ (khớp với logic hiển thị card)
 const uniqueLayer2 = Array.from(
   new Set(
@@ -751,6 +770,9 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
           sortedBathrooms={sortedBathrooms}
           activeBathroom={activeBathroom}
           setActiveBathroom={setActiveBathroom}
+          uniqueUnitNames={uniqueUnitNames}
+          selectedUnitNames={selectedUnitNames}
+          setSelectedUnitNames={setSelectedUnitNames}
         />
       )}
 

@@ -62,6 +62,9 @@ interface FilterSidebarProps {
   uniqueFloorApartmentGroupCode: string[];
   selectedFloorApartmentGroupCode: string[];
   setSelectedFloorApartmentGroupCode: (val: string[]) => void;
+  uniqueUnitNames: string[];
+  selectedUnitNames: string[];
+  setSelectedUnitNames: (val: string[]) => void;
 }
 
 
@@ -123,6 +126,9 @@ export default function FilterSidebar({
   uniqueFloorApartmentGroupCode,
   selectedFloorApartmentGroupCode,
   setSelectedFloorApartmentGroupCode,
+  uniqueUnitNames,
+  selectedUnitNames,
+  setSelectedUnitNames,
 }: FilterSidebarProps) {
   return (
     <div
@@ -139,6 +145,20 @@ export default function FilterSidebar({
       </h1>
 
       <div className={styles.filterListContainer}>
+        {uniqueUnitNames.length > 0 && (
+          <div style={{ marginTop: "20px" }}>
+            <MultiSelect
+              label="Tên căn"
+              placeholder="Chọn tên căn"
+              data={uniqueUnitNames}
+              value={selectedUnitNames}
+              onChange={setSelectedUnitNames}
+              maxDropdownHeight={200}
+              styles={{ input: { maxHeight: "100px", overflowY: "auto" } }}
+            />
+          </div>
+        )}
+
         {uniqueZones.length > 0 && (
           <MultiSelect
             label="Phân khu"
