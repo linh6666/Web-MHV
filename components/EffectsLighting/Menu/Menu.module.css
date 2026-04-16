@@ -72,8 +72,8 @@
   align-items: center;
   border: 1.5px solid #EEEEEE;
   border-radius: 999px;
-  background-color: #294b61;
-  color: #EEEEEE;
+  background-color: #EEEEEE;
+  color: #294b61;
   font-size: clamp(9px, 1.2vh, 11px);
   /* Font chữ co giãn nhẹ */
   padding: 6px 14px;

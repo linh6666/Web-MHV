@@ -102,9 +102,9 @@
     height: 40px;
     padding: 0;
     border-radius: 50%;
-    background: #294b61;
-    color: #EEEEEE;
-    border: 1.5px solid #EEEEEE;
+    background: #EEEEEE;
+    color: #294b61;
+    border: 1.5px solid #294b61;
     transition: transform 0.2s;
 }
 

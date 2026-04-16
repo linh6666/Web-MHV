@@ -457,7 +457,7 @@ export default function GalleryByFolder({ project_id }: ListImageProps) {
             variant="filled"
             className={style.backBtn}
           >
-            <IconArrowLeft size={20} color="#EEEEEE" />
+            <IconArrowLeft size={20} color="#294b61" />
           </Button>
         </Group>
       </div>

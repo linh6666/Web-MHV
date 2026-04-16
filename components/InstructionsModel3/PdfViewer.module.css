@@ -31,9 +31,9 @@
   padding: 0;
   border-radius: 50%;
   transition: all 0.2s ease;
-  background: #294b61;
-  color: #EEEEEE;
-  border: 1.5px solid #EEEEEE;
+  background: #EEEEEE;
+  color: #294b61;
+  border: 1.5px solid #294b61;
   display: flex;
   align-items: center;
   justify-content: center;

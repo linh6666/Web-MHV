@@ -108,8 +108,8 @@ export default function Menu({ project_id }: MenuProps) {
     justifyContent: "center",
     overflow: "hidden",
     transition: "all 0.3s",
-    background: isActive ? "#C2923F" : "#294b61",
-    color: isActive ? "#12223B" : "#EEEEEE",
+    background: isActive ? "#C2923F" : "#EEEEEE",
+    color: isActive ? "#12223B" : "#294b61",
     border: isActive
       ? "1.5px solid #C2923F"
       : "1.5px solid #EEEEEE",
@@ -192,14 +192,14 @@ export default function Menu({ project_id }: MenuProps) {
               height: 30,
               padding: 0,
               borderRadius: 40,
-              background: "#294b61",
-              border: "1.5px solid #EEEEEE",
+              background: "#EEEEEE",
+              border: "1.5px solid #294b61",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <IconArrowLeft size={18} color="#EEEEEE" />
+            <IconArrowLeft size={18} color="#294b61" />
           </Button>
         </Stack>
       </div>

@@ -28,7 +28,7 @@ export default function PdfViewer() {
           onClick={handleBack}
           variant="filled"
         >
-          <IconArrowLeft size={18} color="#EEEEEE" />
+          <IconArrowLeft size={18} color="#294b61" />
         </Button>
       </Group>
     </div>
