@@ -761,8 +761,8 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               radius="md"
               size="lg"
               styles={{
-                root: { borderColor: "#762f0b", color: "#762f0b" },
-                icon: { color: "#762f0b" },
+                root: { borderColor: "#294b61", color: "#294b61" },
+                icon: { color: "#294b61" },
               }}
               onClick={toggleFilterSidebar}
             >
@@ -783,7 +783,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 <IconSearch
                   onClick={handleSearch}
                   size={16}
-                  color="#762f0b"
+                  color="#294b61"
                   style={{ cursor: "pointer" }}
                 />
               }
