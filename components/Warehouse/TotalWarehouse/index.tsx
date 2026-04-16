@@ -832,7 +832,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               }}
               onClick={() =>
                 router.push(
-                  `/Thong-tin-san-pham/tong-mat-bang/${projectId}?name=${encodeURIComponent(
+                  `/thong-tin-san-pham/tong-mat-bang/${projectId}?name=${encodeURIComponent(
                     projectName || ""
                   )}`
                 )
