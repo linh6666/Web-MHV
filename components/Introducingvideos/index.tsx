@@ -58,7 +58,7 @@ export default function VideoPage() {
         onClick={handleBack}
         variant="filled"
       >
-        <IconArrowLeft size={18} color="#EEEEEE" />
+        <IconArrowLeft size={18} color="#294b61" />
       </Button>
     </Container>
   );

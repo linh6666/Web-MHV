@@ -24,16 +24,16 @@
   padding: 0;
   border-radius: 50%;
   transition: all 0.3s ease;
-  background: #294b61;
-  color: #EEEEEE;
-  border: 1.5px solid #EEEEEE;
+  background: #EEEEEE;
+  color: #294b61;
+  border: 1.5px solid #294b61;
   margin-top: 10px;
   cursor: pointer;
 }
 
 .backButton:hover {
-  background: #053c74;
-  color: #EEEEEE;
+  background: #BB8D38;
+  color: #294b61;
   transform: scale(1.05);
   box-shadow: 0 2px 6px rgba(117, 46, 11, 0.3);
 }
