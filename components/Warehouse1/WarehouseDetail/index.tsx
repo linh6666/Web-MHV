@@ -129,7 +129,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
         <div style={{ flex: 1 }}>
         <>
   <Text fw={700} mb={12} style={{ fontSize: "18px" }}>
-    Chi tiết căn hộ: {item.unit_code}
+    Chi tiết: {item.unit_code}
   </Text>
 
   {(item.zone || item.layer3) && (

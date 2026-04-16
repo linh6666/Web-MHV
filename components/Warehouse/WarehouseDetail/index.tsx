@@ -130,7 +130,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
         <div className={styles.leftColumn}>
           <>
             <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
-              Chi tiết căn hộ: {item.zone}
+              Chi tiết: {item.zone}
             </Text>
 
             {/* Zone / Layer3 */}

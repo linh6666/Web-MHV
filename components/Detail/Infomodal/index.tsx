@@ -196,7 +196,7 @@ export default function InfoModal({
             {filteredData.map((item) => (
               <div key={item.id}>
                 <Text fw={700} mb={12} fz={18}>
-                  Chi tiết căn hộ: {item.unit_code}
+                  Chi tiết: {item.unit_code}
                 </Text>
 
                 <Text>Tòa: {item.layer3}</Text>
