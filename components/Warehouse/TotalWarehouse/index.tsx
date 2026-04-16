@@ -687,7 +687,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className={styles.mainLayout} style={{ display: "flex", flexWrap: "wrap" }}>
       {showFilterSidebar && (
         <FilterSidebar
           uniqueZones={uniqueZones}
@@ -750,7 +750,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
         />
       )}
 
-      <div style={{ flex: 1, padding: 20 }}>
+      <div className={styles.contentArea} style={{ flex: 1, minWidth: "300px", padding: "10px" }}>
         {/* Header */}
         <div>
           <Group gap="md">
@@ -772,6 +772,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
             {/* Autocomplete search */}
             <Autocomplete
               placeholder="Tìm kiếm...."
+              className={styles.searchBar}
               value={searchText}
               data={searchSuggestions}
               onChange={handleInputChange}
@@ -817,7 +818,6 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               styles={{
                 input: { paddingLeft: 36 },
               }}
-              style={{ width: 300 }}
             />
              <h1
               style={{

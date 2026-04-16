@@ -3,6 +3,23 @@
   max-width: 1440px;
   margin: 0 auto;
   min-height: 100vh;
+  padding: 10px 20px;
+}
+
+.mainTitle {
+  font-weight: 800;
+  color: #294b61;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .mainTitle {
+    font-size: 22px;
+  }
+  .containerr {
+    padding: 10px;
+  }
 }
 
 /* ================= TAB HEADER ================= */
@@ -81,6 +98,13 @@
   position: relative;
   z-index: 1;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+  .contentViewWrapper {
+    padding: 15px;
+    border-radius: 15px;
+  }
 }
 
 /* ================= RESPONSIVE ================= */

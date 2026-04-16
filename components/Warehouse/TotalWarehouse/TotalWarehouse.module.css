@@ -1,23 +1,61 @@
 .container {
- margin-top: 20px; /* hoặc 30px tùy Linh */
-padding-top: 10px; /* vẫn giữ 1 chút để đẹp */
+  margin-top: 20px;
+  padding-top: 10px;
   max-height: 65vh;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 
-  /* Ẩn scrollbar trên Chrome, Edge, Safari */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE, Edge */
+@media (max-width: 768px) {
+  .container {
+    max-height: none;
+  }
 }
 
 .container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
-/* Tùy chọn: style card nếu muốn để sạch file JSX */
 .card {
   background-color: #3d6985;
   color: white;
-  width: 220px;
+  width: 100%;
   border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 10px !important;
+  }
+}
+
+.searchBar {
+  width: 300px;
+}
+
+.mainLayout {
+  gap: 20px;
+  display: flex;
+}
+
+@media (max-width: 992px) {
+  .searchBar {
+    width: 100%;
+    order: 3;
+  }
+
+  .mainLayout {
+    flex-direction: column;
+  }
+}
+
+.contentArea {
+  overflow-x: hidden;
 }

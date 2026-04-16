@@ -126,12 +126,12 @@ export default function FilterSidebar({
 }: FilterSidebarProps) {
   return (
     <div
+      className={styles.sidebarContainer}
       style={{
         backgroundColor: "#f7f7f7",
         padding: 20,
         boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",
         borderRadius: "10px",
-        width: 300,
       }}
     >
       <h1 style={{ fontWeight: "bold", fontSize: "20px", marginBottom: "20px" }}>
