@@ -108,7 +108,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
   const current = imageData.length > 0 ? imageData[index] : null;
 
   return (
-    <div className={styles.container} style={{ padding: "20px" }}>
+    <div className={styles.container}>
       {/* Nút quay lại */}
       <Button
         onClick={onBack}
@@ -121,11 +121,11 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
       {loading && <p>Đang tải dữ liệu...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div style={{ display: "flex", height: "80vh" }}>
+      <div className={styles.detailWrapper}>
         {/* Cột trái */}
-        <div style={{ flex: 1 }}>
+        <div className={styles.leftColumn}>
           <>
-            <Text fw={700} mb={12} style={{ fontSize: "18px" }}>
+            <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
               Chi tiết căn hộ: {item.unit_code}
             </Text>
 
@@ -205,7 +205,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
             {/* Mô tả */}
             {(item.describe_vi || item.describe) && (
-              <Text>
+              <Text style={{ marginTop: "10px" }}>
                 <b>Mô tả:</b> {item.describe_vi || item.describe}
               </Text>
             )}
@@ -214,79 +214,45 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
           {/* Hiển thị PDF */}
           {pdfData.map((pdf) => (
-            <div key={pdf.id} style={{ marginTop: "10px" }}>
+            <div key={pdf.id} style={{ marginTop: "15px" }}>
               <a
                 href={pdf.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: "flex", textDecoration: "underline" }}
+                style={{ display: "flex", textDecoration: "underline", alignItems: "center", gap: "5px", color: "#228be6" }}
               >
-                <IconClipboardText /> Xem tài liệu: {pdf.name_vi || pdf.name_en || pdf.id}
+                <IconClipboardText size={20} /> Xem tài liệu: {pdf.name_vi || pdf.name_en || pdf.id}
               </a>
             </div>
           ))}
-<div
- style={{
-    display: "flex",
-    gap: "12px", // khoảng cách giữa 2 nút
-    // alignItems: "center",
-  }}
->
-           <ImageActionButtons
-  unitCode={item.unit_code}
-  projectId={projectId}
-/>
 
-<OrderButton
-  house={item}
-  projectId={projectId}
-/>
-
-
-</div>
-
+          <div className={styles.actionButtons}>
+            <ImageActionButtons
+              unitCode={item.unit_code}
+              projectId={projectId}
+            />
+            <OrderButton
+              house={item}
+              projectId={projectId}
+            />
+          </div>
         </div>
-                       {/* Cột phải: SLIDER */}
-        <div
-          style={{
-            flex: 2,
-            paddingLeft: "20px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              marginBottom: "20px",
-              position: "relative",
-            }}
-          >
+
+        {/* Cột phải: SLIDER */}
+        <div className={styles.rightColumn}>
+          <div className={styles.imageContainer}>
             <Image
               src={current?.url || "/image/test1.jpg"}
               alt={current?.description_en || "No image"}
               width={800}
               height={600}
-              style={{ maxWidth: "100%", borderRadius: "8px", height: "auto" }}
+              className={styles.sliderImage}
             />
 
             <button
               onClick={goPrev}
               disabled={index === 0}
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)",
-                background: "rgba(0,0,0,0.5)",
-                color: "white",
-                border: "none",
-                padding: "10px",
-                borderRadius: "50%",
-                cursor: "pointer",
-              }}
+              className={`${styles.navButton} ${styles.prevButton}`}
             >
               ◀
             </button>
@@ -294,66 +260,46 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
             <button
               onClick={goNext}
               disabled={index === imageData.length - 1}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "10px",
-                transform: "translateY(-50%)",
-                background: "rgba(0,0,0,0.5)",
-                color: "white",
-                border: "none",
-                padding: "10px",
-                borderRadius: "50%",
-                cursor: "pointer",
-              }}
+              className={`${styles.navButton} ${styles.nextButton}`}
             >
               ▶
             </button>
           </div>
 
           {/* Thumbnail gallery */}
-        <div
-  style={{
-    marginTop: "10px",
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
-    flexWrap: "wrap",
-  }}
->
-  {imageData.length > 0 ? (
-    imageData.map((item, i) => (
-      <div
-        key={item.id}
-        onClick={() => setIndex(i)}
-        style={{
-          border: i === index ? "2px solid blue" : "1px solid #ccc",
-          padding: "2px",
-          cursor: "pointer",
-          borderRadius: "4px",
-        }}
-      >
-       <Image src={item.url || "/image/test1.jpg"} alt={item.description_en || "No image"} width={80} height={60} style={{ objectFit: "cover", borderRadius: "4px", display: "block", maxWidth: "80px",  maxHeight: "60px"  }} />
-      </div>
-    ))
-  ) : (
-    // Nếu không có dữ liệu ảnh thì hiển thị thumbnail mặc định
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: "2px",
-        borderRadius: "4px",
-      }}
-    >
-      <Image src="/image/test1.jpg" 
-        alt="Fallback thumbnail"
-        // ảnh mặc định trong public alt="Fallback thumbnail"
-        width={80} height={60} fit="cover"
-          radius="sm"  style={{ objectFit: "cover", borderRadius: "4px", display: "block", maxWidth: "80px",  maxHeight: "60px"  }} />
-    </div>
-  )}
-</div>
-
+          <div className={styles.thumbnailGallery}>
+            {imageData.length > 0 ? (
+              imageData.map((item, i) => (
+                <div
+                  key={item.id}
+                  onClick={() => setIndex(i)}
+                  className={`${styles.thumbnailItem} ${i === index ? styles.thumbnailItemActive : ""}`}
+                >
+                  <Image 
+                    src={item.url || "/image/test1.jpg"} 
+                    alt={item.description_en || "No image"} 
+                    width={80} 
+                    height={60} 
+                    className={styles.thumbnailImage}
+                    style={{ maxWidth: "80px", maxHeight: "60px" }}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className={styles.thumbnailItem}>
+                <Image 
+                  src="/image/test1.jpg" 
+                  alt="Fallback thumbnail"
+                  width={80} 
+                  height={60} 
+                  fit="cover"
+                  radius="sm" 
+                  className={styles.thumbnailImage}
+                  style={{ maxWidth: "80px", maxHeight: "60px" }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
