@@ -279,8 +279,8 @@
   text-align: center !important;
   border: 1.5px solid #EEEEEE !important;
   border-radius: 999px !important; /* Bo góc ban đầu */
-  background-color: #294b61 !important;
-  color: #EEEEEE !important;
+  background-color: #EEEEEE !important;
+  color: #294b61 !important;
   font-size: clamp(9px, 1.2vh, 11px) !important;
   padding: 8px 15px !important; /* Tăng padding để dễ nhìn */
   transition: all 0.2s ease;
