@@ -81,6 +81,24 @@ export default function InfoModal({
 
   /* ===================== API CALLS ===================== */
 
+  // 🔹 Getlisthome
+  const fetchHomeData = useCallback(async (nodeAttributeId: string) => {
+    try {
+      const response = await Getlisthome({
+        node_attribute_id: nodeAttributeId,
+      });
+
+      // Xử lý dữ liệu trả về: lấy mảng từ các key phổ biến nếu response là Object
+      const homeArray = Array.isArray(response)
+        ? response
+        : response?.results || response?.data || [];
+      setHomeData(homeArray as HomeDetailItem[]);
+    } catch (error) {
+      console.error("❌ Getlisthome error:", error);
+      setHomeData([]);
+    }
+  }, []);
+
   // 🔹 createNodeAttribute
   const fetchNodeData = useCallback(
     async (layer1: string) => {
@@ -97,47 +115,38 @@ export default function InfoModal({
           ],
         });
 
+        let finalData: NodeAttributeItem[] = [];
         if (Array.isArray(data)) {
-          setApiData(data);
+          finalData = data;
         } else if (Array.isArray(data?.data)) {
-          setApiData(data.data);
-        } else {
-          setApiData([]);
+          finalData = data.data;
         }
 
+        setApiData(finalData);
         setIndex(0);
+
+        // Sau khi có node_attribute_id, gọi Getlisthome
+        if (finalData.length > 0 && finalData[0].id) {
+          fetchHomeData(finalData[0].id);
+        } else {
+          setHomeData([]);
+        }
       } catch (error) {
         console.error("❌ createNodeAttribute error:", error);
         setApiData([]);
+        setHomeData([]);
       }
     },
-    [projectId, phase, layer2]
+    [projectId, phase, layer2, fetchHomeData]
   );
-
-  // 🔹 Getlisthome
-  const fetchHomeData = useCallback(async () => {
-    if (!projectId || !clickedModel) return;
-
-    try {
-      const response = await Getlisthome({
-        project_id: projectId,
-        unit_code: clickedModel,
-      });
-      setHomeData(response as HomeDetailItem[]);
-    } catch (error) {
-      console.error("❌ Getlisthome error:", error);
-      setHomeData([]);
-    }
-  }, [projectId, clickedModel]);
 
   /* ===================== EFFECT ===================== */
 
   useEffect(() => {
     if (!opened || !clickedModel) return;
 
-    fetchNodeData(clickedModel); // ✅ FIX LỖI
-    fetchHomeData();
-  }, [opened, clickedModel, fetchNodeData, fetchHomeData]);
+    fetchNodeData(clickedModel); // Sẽ tự động gọi fetchHomeData bên trong
+  }, [opened, clickedModel, fetchNodeData]);
 
   /* ===================== DATA PROCESS ===================== */
 

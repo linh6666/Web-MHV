@@ -59,6 +59,8 @@ export interface WarehouseItem {
   floor_name: string;
   floor_group_code: string;
   floor_apartment_group_code: string;
+ 
+
 }
 
 export default function TotalWarehouse({ projectId, target }: TotalWarehouseProps) {

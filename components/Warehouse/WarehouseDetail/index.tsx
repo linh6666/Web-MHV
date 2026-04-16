@@ -29,6 +29,7 @@ export interface WarehouseItem {
   bathroom?: string | number;
   direction?: string;
   price?: number;
+  leaf_id?: string;
 }
 
 interface WarehouseDetailProps {
@@ -67,17 +68,18 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
       setError(null);
 
       try {
-        if (!projectId || !item.unit_code) {
-          setError("Project ID hoặc Unit Code không hợp lệ");
+        if (!item.leaf_id) {
+          setError("Leaf ID căn hộ không hợp lệ");
           return;
         }
 
         const response = await Getlisthome({
-          project_id: projectId,
-          unit_code: item.unit_code,
+          node_attribute_id: item.leaf_id,
         });
 
-        setData(response);
+        // Xử lý dữ liệu trả về: lấy mảng từ các key phổ biến nếu response là Object
+        const imagesArray = Array.isArray(response) ? response : (response.results || response.data || response.items || []);
+        setData(imagesArray);
         setIndex(0); // reset slider khi đổi căn
       } catch (err: unknown) {
         if (err instanceof AxiosError) {

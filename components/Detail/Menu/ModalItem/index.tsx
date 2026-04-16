@@ -45,24 +45,27 @@ export default function ModalItem({
 
   // ================= FETCH API =================
   const fetchHomeData = useCallback(async () => {
-    if (!projectId || !data?.unit_code) return;
+    if (!data?.id) return;
 
     try {
       setLoading(true);
 
       const response = await Getlisthome({
-        project_id: projectId,
-        unit_code: data.unit_code,
+        node_attribute_id: String(data.id),
       });
 
-      setHomeData(response || []);
+      // Xử lý dữ liệu trả về: lấy mảng từ các key phổ biến nếu response là Object
+      const homeArray = Array.isArray(response)
+        ? response
+        : response?.results || response?.data || [];
+      setHomeData(homeArray || []);
     } catch (error) {
       console.error("Getlisthome error:", error);
       setHomeData([]);
     } finally {
       setLoading(false);
     }
-  }, [projectId, data?.unit_code]);
+  }, [data?.id]);
 
   useEffect(() => {
     if (!opened || !data) return;

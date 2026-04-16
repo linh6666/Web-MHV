@@ -71,11 +71,14 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
         }
 
         const response = await Getlisthome({
-          project_id: projectId,
-          unit_code: item.unit_code,
+          node_attribute_id: item.id,
         });
 
-        setData(response);
+        // Xử lý dữ liệu trả về: lấy mảng từ các key phổ biến nếu response là Object
+        const imagesArray = Array.isArray(response)
+          ? response
+          : response.results || response.data || response.items || [];
+        setData(imagesArray);
         setIndex(0); // reset slider khi đổi căn
       } catch (err: unknown) {
         if (err instanceof AxiosError) {

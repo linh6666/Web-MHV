@@ -1,17 +1,31 @@
 import { api } from '../libray/axios';
 import { API_ROUTE } from '../const/apiRouter';
 
-interface GetListhomeParams {
-  project_id: string;
-  unit_code: string;
+export interface GetListhomeParams {
+  node_attribute_id?: string;
+  project_id?: string;
+  unit_code?: string;
 }
 
-export const Getlisthome = async ({ project_id, unit_code }: GetListhomeParams) => {
-  // Thay thế cả project_id và unit_code trong URL
-  let url = API_ROUTE.GET_LIST_DETAIL_HOME
-    .replace("{project_id}", project_id)
-    .replace("{unit_code}", unit_code);
+export const Getlisthome = async (params: GetListhomeParams) => {
+  const { node_attribute_id, project_id, unit_code } = params;
+  let url = "";
+
+  if (node_attribute_id) {
+    url = `${API_ROUTE.GET_LIST_DETAIL_HOME_NEW}?node_attribute_id=${node_attribute_id}`;
+  } else if (project_id && unit_code) {
+    url = API_ROUTE.GET_LIST_DETAIL_HOME
+      .replace("{project_id}", project_id)
+      .replace("{unit_code}", unit_code);
+  } else {
+    console.warn("Getlisthome: Missing required parameters");
+    return [];
+  }
 
   const response = await api.get(url);
-  return response.data; // trả về dữ liệu để component dùng
+  
+  // Normalize response to return an array of items
+  const data = response.data;
+  if (Array.isArray(data)) return data;
+  return data?.results || data?.data || data?.items || [];
 };
