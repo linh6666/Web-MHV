@@ -999,70 +999,93 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               cols={{ base: 1, sm: 2, md: 3, lg: 4, xl: showFilterSidebar ? 4 : 5 }}
               spacing="xl"
             >
-              {currentItems.map((item) => (
-                <Card
-                  key={item.id}
-                  shadow="md"
-                  radius="lg"
-                  className={styles.card}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setSelectedItem(item)}
-                >
-                  <Text fw={700} mb={8} style={{ fontSize: "13px" }} ta="center">
-                    {item.zone}
-                  </Text>
-                  {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
-                    <Text style={{ fontSize: "15px" }}>Phân khu: {item.zone}</Text>
-                  ) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
-                    <Text style={{ fontSize: "15px" }}>Tòa: {item.layer3}</Text>
-                  ) : null} */}
+              {currentItems.map((item) => {
+                // Xác định màu nền theo trạng thái (Chuẩn hóa về chữ thường để so sánh)
+                const status = item.status_unit?.trim().toLowerCase();
+                let backgroundColor;
+                
+                switch (status) {
+                  case "quan tâm":
+                    backgroundColor = "#b8893c";
+                    break;
+                  case "đang bán":
+                    backgroundColor = "#3d6985";
+                    break;
+                  case "đã đặt cọc":
+                    backgroundColor = "#cc5c34";
+                    break;
+                  case "đã bán":
+                    backgroundColor = "#b32f1f";
+                    break;
+                  default:
+                    backgroundColor = "#3d6985"; // Mặc định dùng màu xanh
+                }
 
-                  {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
-                    <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
-                  ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
-                    <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
-                  ) : null}
+                return (
+                  <Card
+                    key={item.id}
+                    shadow="md"
+                    radius="lg"
+                    className={styles.card}
+                    style={{ cursor: "pointer", backgroundColor }}
+                    onClick={() => setSelectedItem(item)}
+                  >
+                    <Text fw={700} mb={8} style={{ fontSize: "13px" }} ta="center">
+                      {item.zone}
+                    </Text>
+                    {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
+                      <Text style={{ fontSize: "15px" }}>Phân khu: {item.zone}</Text>
+                    ) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
+                      <Text style={{ fontSize: "15px" }}>Tòa: {item.layer3}</Text>
+                    ) : null} */}
 
-                  {item.bedroom != null &&
-                    item.bedroom !== "" &&
-                    String(item.bedroom).trim().toLowerCase() !== "skip" && (
-                      <Text style={{ fontSize: "13px" }}>Phòng ngủ: {item.bedroom}</Text>
+                    {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
+                      <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
+                    ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
+                      <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
+                    ) : null}
+
+                    {item.bedroom != null &&
+                      item.bedroom !== "" &&
+                      String(item.bedroom).trim().toLowerCase() !== "skip" && (
+                        <Text style={{ fontSize: "13px" }}>Phòng ngủ: {item.bedroom}</Text>
+                      )}
+
+                    {item.bathroom != null &&
+                      item.bathroom !== "" &&
+                      String(item.bathroom).trim().toLowerCase() !== "skip" && (
+                        <Text style={{ fontSize: "13px" }}>Phòng tắm: {item.bathroom}</Text>
+                      )}
+
+                    {item.direction &&
+                      item.direction.trim() !== "" &&
+                      item.direction.trim().toLowerCase() !== "skip" && (
+                        <Text style={{ fontSize: "15px" }}>Hướng: {item.direction}</Text>
+                      )}
+
+                    {item.main_door_direction &&
+                      item.main_door_direction.trim() !== "" &&
+                      item.main_door_direction.trim().toLowerCase() !== "skip" && (
+                        <Text style={{ fontSize: "15px" }}>
+                          Hướng cửa chính: {item.main_door_direction}
+                        </Text>
+                      )}
+                      
+
+                    {item.balcony_direction &&
+                      item.balcony_direction.trim() !== "" &&
+                      item.balcony_direction.trim().toLowerCase() !== "skip" && (
+                        <Text style={{ fontSize: "15px" }}>
+                          Hướng ban công: {item.balcony_direction}
+                        </Text>
+                      )}
+
+                    {item.status_unit && item.status_unit.trim().toLowerCase() !== "skip" && (
+                      <Text style={{ fontSize: "13px" }}>Trạng thái: {item.status_unit}</Text>
                     )}
-
-                  {item.bathroom != null &&
-                    item.bathroom !== "" &&
-                    String(item.bathroom).trim().toLowerCase() !== "skip" && (
-                      <Text style={{ fontSize: "13px" }}>Phòng tắm: {item.bathroom}</Text>
-                    )}
-
-                  {item.direction &&
-                    item.direction.trim() !== "" &&
-                    item.direction.trim().toLowerCase() !== "skip" && (
-                      <Text style={{ fontSize: "15px" }}>Hướng: {item.direction}</Text>
-                    )}
-
-                  {item.main_door_direction &&
-                    item.main_door_direction.trim() !== "" &&
-                    item.main_door_direction.trim().toLowerCase() !== "skip" && (
-                      <Text style={{ fontSize: "15px" }}>
-                        Hướng cửa chính: {item.main_door_direction}
-                      </Text>
-                    )}
-                    
-
-                  {item.balcony_direction &&
-                    item.balcony_direction.trim() !== "" &&
-                    item.balcony_direction.trim().toLowerCase() !== "skip" && (
-                      <Text style={{ fontSize: "15px" }}>
-                        Hướng ban công: {item.balcony_direction}
-                      </Text>
-                    )}
-
-                  {item.status_unit && item.status_unit.trim().toLowerCase() !== "skip" && (
-                    <Text style={{ fontSize: "13px" }}>Trạng thái: {item.status_unit}</Text>
-                  )}
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </SimpleGrid>
           )}
         </div>
