@@ -37,6 +37,7 @@ export interface WarehouseItem {
   layer3: string;
   layer4?: string;
   layer5?: string;
+  unit_name?: string;
   color: string;
   zone: string;
   status_unit: string;
@@ -187,9 +188,12 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
 useEffect(() => {
   let filtered = items;
 
-  // Filter theo trạng thái
+  // Filter theo trạng thái (Case-insensitive)
   if (selectedStatuses.length > 0) {
-    filtered = filtered.filter((item) => item && selectedStatuses.includes(item.status_unit));
+    filtered = filtered.filter((item) => 
+      item && item.status_unit && 
+      selectedStatuses.some(s => s.toLowerCase() === item.status_unit.trim().toLowerCase())
+    );
   }
 
   // Filter theo phòng ngủ
@@ -843,7 +847,6 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
           </Group>
 
           {/* Status buttons */}
-          {uniqueStatuses.length > 0 && (
           <Group gap="md" style={{ marginTop: 16 }}>
             <button
               style={{
@@ -856,9 +859,8 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Quan tâm") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("Quan tâm") ? 1 : 0.4,
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                display: uniqueStatuses.includes("Quan tâm") ? undefined : "none",
               }}
               onClick={() => {
                 const status = "Quan tâm";
@@ -883,9 +885,8 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Đang bán") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("Đang bán") ? 1 : 0.4,
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                display: uniqueStatuses.includes("Đang bán") ? undefined : "none",
               }}
               onClick={() => {
                 const status = "Đang bán";
@@ -910,9 +911,8 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Đã đặt cọc") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("Đã đặt cọc") ? 1 : 0.4,
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                display: uniqueStatuses.includes("Đã đặt cọc") ? undefined : "none",
               }}
               onClick={() => {
                 const status = "Đã đặt cọc";
@@ -937,9 +937,8 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Đã bán") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("Đã bán") ? 1 : 0.4,
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                display: uniqueStatuses.includes("Đã bán") ? undefined : "none",
               }}
               onClick={() => {
                 const status = "Đã bán";
@@ -953,7 +952,6 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               Đã bán
             </button>
           </Group>
-          )}
 
           {/* <Divider size="xs" style={{ marginTop: 16 }} /> */}
 
@@ -1044,6 +1042,15 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                     ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
                       <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
                     ) : null}
+                     {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" ? (
+  <Text style={{ fontSize: "15px" }}>
+    Tên căn: {item.unit_name}
+  </Text>
+) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
+  <Text style={{ fontSize: "15px" }}>
+    Tòa: {item.layer3}
+  </Text>
+) : null}
 
                     {item.bedroom != null &&
                       item.bedroom !== "" &&

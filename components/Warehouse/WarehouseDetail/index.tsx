@@ -12,22 +12,23 @@ import OrderButton from "./Order";
 export interface WarehouseItem {
   id: string;
   unit_code: string;
-  color: string;
-  zone: string;
-  building_type: string;
-  layer6: string;
-  view: string;
+  color?: string;
+  zone?: string;
+  building_type?: string;
+  layer6?: string;
+  unit_name?: string;
+  view?: string;
   layer3: string;
-  layer2: string;
-  main_door_direction: string;
-  balcony_direction: string;
-  describe: string;
-  describe_vi: string;
+  layer2?: string;
+  main_door_direction?: string;
+  balcony_direction?: string;
+  describe?: string;
+  describe_vi?: string;
   status_unit: string;
-  bedroom: string | number;
-  bathroom: string | number;
-  direction: string;
-  price: number;
+  bedroom?: string | number;
+  bathroom?: string | number;
+  direction?: string;
+  price?: number;
 }
 
 interface WarehouseDetailProps {
@@ -41,6 +42,7 @@ export interface WarehouseItemdeltall {
   name_vi: string;
   name_en: string;
   describe_vi: string;
+  unit_name: string;
   description_en: string;
   url: string;
   id: string;
@@ -126,15 +128,15 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
         <div className={styles.leftColumn}>
           <>
             <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
-              Chi tiết căn hộ: {item.unit_code}
+              Chi tiết căn hộ: {item.zone}
             </Text>
 
             {/* Zone / Layer3 */}
-            {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
-              <Text style={{ fontSize: "15px" }}>Phân khu: {item.zone}</Text>
+            {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
+              <Text style={{ fontSize: "15px" }}>Phân khu: {item.}</Text>
             ) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
               <Text style={{ fontSize: "15px" }}>Tòa: {item.layer3}</Text>
-            ) : null}
+            ) : null} */}
 
             {/* Building type / Layer2 */}
             {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
@@ -142,6 +144,15 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
             ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
               <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
             ) : null}
+            {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" ? (
+  <Text style={{ fontSize: "15px" }}>
+    Tên căn: {item.unit_name}
+  </Text>
+) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
+  <Text style={{ fontSize: "15px" }}>
+    Tòa: {item.layer3}
+  </Text>
+) : null}
 
             {/* Phòng ngủ */}
             {item.bedroom != null &&
