@@ -1008,14 +1008,14 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                   style={{ cursor: "pointer" }}
                   onClick={() => setSelectedItem(item)}
                 >
-                  <Text fw={700} mb={8} style={{ fontSize: "15px" }} ta="center">
-                    {item.unit_code}
+                  <Text fw={700} mb={8} style={{ fontSize: "13px" }} ta="center">
+                    {item.zone}
                   </Text>
-                  {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
+                  {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
                     <Text style={{ fontSize: "15px" }}>Phân khu: {item.zone}</Text>
                   ) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
                     <Text style={{ fontSize: "15px" }}>Tòa: {item.layer3}</Text>
-                  ) : null}
+                  ) : null} */}
 
                   {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
                     <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
