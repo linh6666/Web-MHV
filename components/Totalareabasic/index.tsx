@@ -11,7 +11,7 @@ interface WarehouseDetailProps {
 }
 
 const folderImages = [
-  "mhvciputra.png",
+  "mhvciputra.jpg",
   
 ];
 
