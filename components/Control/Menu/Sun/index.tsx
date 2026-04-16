@@ -90,14 +90,14 @@ export default function Sun({ project_id }: SunProps) {
     justifyContent: active === "night" ? "space-around" : "center",
     overflow: "hidden",
     transition: "width 0.3s, background-color 0.3s",
-    background: active === "night" ? "#BB8D38" : "#294b61",
+    background: active === "night" ? "#BB8D38" : "#EEEEEE",
     border: "1.5px solid #EEEEEE",
   }}
 >
   <Group gap={active === "night" ? 4 : 0} align="center">
     <IconSunHigh
       size={18}
-      color={active === "night" ? "#12223B" : "#EEEEEE"}
+      color={active === "night" ? "#12223B" : "#294b61"}
     />
     {active === "night" && (
       <span
@@ -128,14 +128,14 @@ export default function Sun({ project_id }: SunProps) {
     justifyContent: active === "afternoon" ? "space-around" : "center",
     overflow: "hidden",
     transition: "width 0.3s, background-color 0.3s",
-    background: active === "afternoon" ? "#BB8D38" : "#294b61",
+    background: active === "afternoon" ? "#BB8D38" : "#EEEEEE",
     border: "1.5px solid #EEEEEE",
   }}
 >
   <Group gap={active === "afternoon" ? 4 : 0} align="center">
     <IconSunset2
       size={18}
-      color={active === "afternoon" ? "#12223B" : "#EEEEEE"}
+      color={active === "afternoon" ? "#12223B" : "#294b61"}
     />
     {active === "afternoon" && (
       <span
@@ -167,14 +167,14 @@ export default function Sun({ project_id }: SunProps) {
     justifyContent: active === "morning" ? "space-around" : "center",
     overflow: "hidden",
     transition: "width 0.3s, background-color 0.3s",
-  background: active === "morning" ? "#BB8D38" : "#294b61",
+  background: active === "morning" ? "#BB8D38" : "#EEEEEE",
     border: "1.5px solid #EEEEEE",
   }}
 >
   <Group gap={active === "morning" ? 4 : 0} align="center">
     <IconMoonStars
       size={18}
-      color={active === "morning" ? "#12223B" : "#EEEEEE"}
+      color={active === "morning" ? "#12223B" : "#294b61"}
     />
     {active === "morning" && (
       <span

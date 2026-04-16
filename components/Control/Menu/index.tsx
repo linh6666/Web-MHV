@@ -77,13 +77,13 @@ export default function Menu({ project_id }: MenuProps) {
     justifyContent: "center",
     overflow: "hidden",
     transition: "background 0.3s",
-    background: "#294b61",
-    color: "#EEEEEE",
+    background: "#EEEEEE",
+    color: "#294b61",
     border: "1.5px solid #EEEEEE",
   }}
 >
   <Group gap={0} align="center">
-    <IconArrowLeft size={18} color="#EEEEEE" />
+    <IconArrowLeft size={18} color="#294b61" />
   </Group>
 </Button>
         </Group>
