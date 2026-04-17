@@ -9,6 +9,7 @@ import { IconMaximize, IconX, IconChevronLeft, IconChevronRight } from "@tabler/
 
 interface DataDetail {
   id: number;
+  leaf_id?: string;
   unit_code: string;
   layer6?: string;
   describe?: string;
@@ -23,6 +24,8 @@ interface HomeDetailItem {
   description_vi?: string;
   description_en?: string;
   url?: string;
+  file_name?: string;
+  file_type?: string;
 }
 
 interface ModalItemProps {
@@ -45,13 +48,15 @@ export default function ModalItem({
 
   // ================= FETCH API =================
   const fetchHomeData = useCallback(async () => {
-    if (!data?.id) return;
+    const targetId = data?.leaf_id || data?.id;
+    if (!targetId || !projectId) return;
 
     try {
       setLoading(true);
 
       const response = await Getlisthome({
-        node_attribute_id: String(data.id),
+        node_attribute_id: String(targetId),
+        project_id: projectId,
       });
 
       // Xử lý dữ liệu trả về: lấy mảng từ các key phổ biến nếu response là Object
@@ -65,7 +70,7 @@ export default function ModalItem({
     } finally {
       setLoading(false);
     }
-  }, [data?.id]);
+  }, [data, projectId]);
 
   useEffect(() => {
     if (!opened || !data) return;
@@ -76,7 +81,9 @@ export default function ModalItem({
 
   // ================= IMAGE DATA =================
   const imageData = homeData.filter((item) =>
-    item.url?.match(/\.(jpg|jpeg|png|gif)$/i)
+    (item.file_type && item.file_type.startsWith("image/")) ||
+    (item.file_name && item.file_name.match(/\.(jpg|jpeg|png|gif)$/i)) ||
+    (item.url && item.url?.match(/\.(jpg|jpeg|png|gif)$/i))
   );
 
   const currentImage = imageData[index];
