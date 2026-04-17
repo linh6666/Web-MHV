@@ -51,6 +51,9 @@ export interface WarehouseItemdeltall {
   bedroom?: number;
   bathroom?: string;
   price?: number;
+  thumbnail_url?: string;
+  file_name?: string;
+  file_type?: string;
 }
 
 export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDetailProps) {
@@ -59,8 +62,16 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
   const [error, setError] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
 
-  const imageData = data.filter((item) => item.url.match(/\.(jpg|jpeg|png|gif)$/i));
-  const pdfData = data.filter((item) => item.url.match(/\.pdf$/i));
+  const imageData = data.filter((item) => 
+    (item.file_type && item.file_type.startsWith("image/")) ||
+    (item.file_name && item.file_name.match(/\.(jpg|jpeg|png|gif)$/i)) ||
+    (item.url && item.url.match(/\.(jpg|jpeg|png|gif)$/i))
+  );
+  const pdfData = data.filter((item) => 
+    (item.file_type === "application/pdf") ||
+    (item.file_name && item.file_name.match(/\.pdf$/i)) ||
+    (item.url && item.url.match(/\.pdf$/i))
+  );
 
   useEffect(() => {
     const fetchData = async () => {

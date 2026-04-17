@@ -41,6 +41,7 @@ interface HomeImage {
   name_en?: string | null;
   description_vi?: string | null;
   description_en?: string | null;
+  thumbnail_url?: string;
 }
 
 export interface CreateImgProps {
