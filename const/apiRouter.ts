@@ -126,6 +126,8 @@ export const API_ROUTE = {
   //// deltail home new
   GET_LIST_DETAIL_HOME_NEW: "/api/v1/medias/node_attribute/files",
   CREATE_IMG_DETAIL_HOME_NEW: "/api/v1/medias/node_attribute",
+  UPDATE_IMG_DETAIL_HOME_NEW: "/api/v1/medias/node_attribute/{media_id}",
+  DELETE_IMG_DETAIL_HOME_NEW: "/api/v1/medias/{media_id}",
 
 
   ////Project basic

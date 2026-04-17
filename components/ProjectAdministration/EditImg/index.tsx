@@ -20,10 +20,10 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import {
-  IconUpload,
+  
   IconTrash,
   IconCheck,
-  IconPhotoOff,
+ 
 } from "@tabler/icons-react";
 
 import { Getlisthome } from "../../../api/apiGetListHome";
@@ -112,7 +112,7 @@ const EditImg: React.FC<CreateImgProps> = ({
     if (window.confirm("Xác nhận xóa hình ảnh này?")) {
       try {
         setLoading(true);
-        await deleteImg(projectId, selectedImageId);
+        await deleteImg(selectedImageId);
         setSelectedImageId(null);
         setFile(null);
         await fetchListHome();
@@ -130,7 +130,7 @@ const EditImg: React.FC<CreateImgProps> = ({
       <LoadingOverlay visible={loading} overlayProps={{ blur: 0, opacity: 0.3 }} />
 
       <Group justify="space-between" mb="xs">
-        <Title order={4}>Căn hộ: (ID: {leafId}) ({images.length} ảnh)</Title>
+        <Title order={4}>Hình ảnh:({images.length} ảnh)</Title>
       </Group>
 
       <SimpleGrid cols={{ base: 1, md: 10 }} spacing="sm">
