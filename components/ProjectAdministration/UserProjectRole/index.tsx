@@ -138,7 +138,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group justify="space-between" mb={12}>
-        <AppSearch />
+        {/* <AppSearch /> */}
         <AppAction openModal={openModal} />
       </Group>
 

@@ -270,7 +270,8 @@ const columns: ColumnsType<DataType> = [
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <AppSearch /><AppAction openModal={openModal} label="Tạo tài khoản" />
+        {/* <AppSearch /> */}
+        <AppAction openModal={openModal} label="Tạo tài khoản" />
         
       </Group>
 

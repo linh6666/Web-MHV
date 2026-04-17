@@ -130,7 +130,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <AppSearch />
+     {/* <AppSearch />    */}
         <AppAction openModal={openModal} />
       </Group>
 

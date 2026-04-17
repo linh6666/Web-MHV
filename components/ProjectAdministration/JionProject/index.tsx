@@ -251,7 +251,7 @@ export default function LargeFixedTable() {
          <Group
         style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
-        <AppSearch />
+        {/* <AppSearch /> */}
       </Group>
 
 

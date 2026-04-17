@@ -198,7 +198,7 @@ const fetchOptions = useCallback(async () => {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <AppSearch />
+        {/* <AppSearch /> */}
         <AppAction openModal={openModal} />
       </Group>
 

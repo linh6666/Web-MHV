@@ -5,7 +5,7 @@ import { Table, Pagination } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import AppSearch from "../../../common/AppSearch";
 import axios from "axios";
-import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiSelect } from "@elastic/eui";
+import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiSelect, EuiFieldSearch, EuiFormControlLayout } from "@elastic/eui";
 import { createWarehouse } from "../../../api/apiFilterWarehouse";
 import { getListProject } from "../../../api/apigetlistProject";
 
@@ -73,6 +73,8 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   // ✅ SEARCH & FILTER STATE
   const [searchText, setSearchText] = useState("");
   const [selectedLayer7, setSelectedLayer7] = useState("");
+  const [selectedBuildingType, setSelectedBuildingType] = useState("");
+  const [selectedStatusUnit, setSelectedStatusUnit] = useState("");
 
   const [templateOptions, setTemplateOptions] = useState<
     { value: string; label: string }[]
@@ -207,6 +209,32 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
     ];
   }, [data]);
 
+  const buildingTypeOptions = useMemo(() => {
+    const uniqueValues = new Set<string>();
+    data.forEach((item) => {
+      const val = item.building_type?.trim();
+      if (val && val !== "-") uniqueValues.add(val);
+    });
+    
+    return [
+      { value: "", text: "Loại nhà" },
+      ...Array.from(uniqueValues).sort().map(val => ({ value: val, text: val }))
+    ];
+  }, [data]);
+
+  const statusUnitOptions = useMemo(() => {
+    const uniqueValues = new Set<string>();
+    data.forEach((item) => {
+      const val = item.status_unit?.trim();
+      if (val && val !== "-" && val.toLowerCase() !== "skip") uniqueValues.add(val);
+    });
+    
+    return [
+      { value: "", text: "Trạng thái" },
+      ...Array.from(uniqueValues).sort().map(val => ({ value: val, text: val }))
+    ];
+  }, [data]);
+
   /* =======================
      SEARCH & FILTER LOGIC
   ======================= */
@@ -217,27 +245,37 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
       if (itemLayer !== selectedLayer7) return false;
     }
 
-    // 2. Keyword search
-    const keyword = searchText.toLowerCase();
+    // 2. Loại nhà filter
+    if (selectedBuildingType && item.building_type !== selectedBuildingType) {
+      return false;
+    }
+
+    // 3. Trạng thái filter
+    if (selectedStatusUnit && item.status_unit !== selectedStatusUnit) {
+      return false;
+    }
+
+    // 4. Keyword search
+    const keyword = searchText.toLowerCase().trim();
     if (!keyword) return true;
 
-    return (
-      item.unit_code?.toLowerCase().includes(keyword) ||
-      item.layer7?.toLowerCase().includes(keyword) ||
-      item.layer3?.toLowerCase().includes(keyword) ||
-      item.layer2?.toLowerCase().includes(keyword) ||
-      item.building_type?.toLowerCase().includes(keyword) ||
-      item.direction?.toLowerCase().includes(keyword) ||
-      item.main_door_direction?.toLowerCase().includes(keyword) ||
-      item.balcony_direction?.toLowerCase().includes(keyword) ||
-      item.status_unit?.toLowerCase().includes(keyword)
-    );
+    // Join all critical fields for searching.
+    const searchableBuffer = [
+      item.unit_code || "",
+      item.layer7 || "",
+      item.layer3 || "",
+      item.building_type || "",
+      item.direction || "",
+      item.status_unit || "",
+    ].map(v => v.toString().toLowerCase()).join(" ");
+
+    return searchableBuffer.includes(keyword);
   });
 
   // reset page khi filter thay đổi
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchText, selectedLayer7]);
+  }, [searchText, selectedLayer7, selectedBuildingType, selectedStatusUnit]);
 
   /* =======================
      PAGINATION
@@ -345,20 +383,65 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   return (
     <>
       {/* ✅ SEARCH & FILTER */}
-      <EuiFlexGroup gutterSize="s" style={{ marginBottom: 16 }}>
-        <EuiFlexItem grow={false} style={{ width: 150  }}>
-          <EuiSelect
-            options={layer7Options}
-            value={selectedLayer7}
-            onChange={(e) => setSelectedLayer7(e.target.value)}
-            fullWidth
-          />
-        </EuiFlexItem>
+      <EuiFlexGroup gutterSize="s" style={{ marginBottom: 8 }}>
         <EuiFlexItem>
           <AppSearch
-            // value={searchText}
-            // onSearch={(value) => setSearchText(value)}
+            value={searchText}
+            onSearch={(value) => setSearchText(value)}
           />
+        </EuiFlexItem>
+      </EuiFlexGroup>
+
+      <EuiFlexGroup gutterSize="s" style={{ marginBottom: 16 }}>
+        <EuiFlexItem grow={false} style={{ width: 180 }}>
+          <EuiFormControlLayout
+            clear={
+              selectedLayer7
+                ? { onClick: () => setSelectedLayer7("") }
+                : undefined
+            }
+          >
+            <EuiSelect
+              options={layer7Options}
+              value={selectedLayer7}
+              onChange={(e) => setSelectedLayer7(e.target.value)}
+              fullWidth
+            />
+          </EuiFormControlLayout>
+        </EuiFlexItem>
+
+        <EuiFlexItem grow={false} style={{ width: 180 }}>
+          <EuiFormControlLayout
+            clear={
+              selectedBuildingType
+                ? { onClick: () => setSelectedBuildingType("") }
+                : undefined
+            }
+          >
+            <EuiSelect
+              options={buildingTypeOptions}
+              value={selectedBuildingType}
+              onChange={(e) => setSelectedBuildingType(e.target.value)}
+              fullWidth
+            />
+          </EuiFormControlLayout>
+        </EuiFlexItem>
+
+        <EuiFlexItem grow={false} style={{ width: 180 }}>
+          <EuiFormControlLayout
+            clear={
+              selectedStatusUnit
+                ? { onClick: () => setSelectedStatusUnit("") }
+                : undefined
+            }
+          >
+            <EuiSelect
+              options={statusUnitOptions}
+              value={selectedStatusUnit}
+              onChange={(e) => setSelectedStatusUnit(e.target.value)}
+              fullWidth
+            />
+          </EuiFormControlLayout>
         </EuiFlexItem>
       </EuiFlexGroup>
 

@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   EuiButton,
   EuiFieldSearch,
@@ -11,25 +11,30 @@ import {
 } from "@elastic/eui";
 
 interface AppSearchProps {
-  // language?: "vi" | "en";
-  // value: string;
-  // onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // onSearch?: (value: string) => void;
+  language?: "vi" | "en";
+  value: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearch?: (value: string) => void;
 }
 
 const AppSearch: React.FC<AppSearchProps> = ({
-  // language = "vi",
-  // value,
-  // onChange,
-  // onSearch,
+  language = "vi",
+  value,
+  onChange,
+  onSearch,
 }) => {
-  // const [innerValue, setInnerValue] = useState(value);
+  const [innerValue, setInnerValue] = useState(value);
 
-  // const handleSearch = () => {
-  //   if (onSearch) {
-  //     onSearch(innerValue); // 👉 chỉ search khi nhấn nút
-  //   }
-  // };
+  // Sync internal state when prop changes (e.g. cleared by parent)
+  useEffect(() => {
+    setInnerValue(value);
+  }, [value]);
+
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(innerValue); // 👉 chỉ search khi nhấn nút
+    }
+  };
 
   return (
     <EuiFlexGroup>
@@ -37,21 +42,20 @@ const AppSearch: React.FC<AppSearchProps> = ({
         <EuiFlexGroup alignItems="flexEnd">
           <EuiFlexItem grow>
             <EuiFieldSearch
-              placeholder="Tìm kiếm..."
-              // placeholder={
-              //   language === "vi" ? "Nhập từ khóa..." : "Enter keywords..."
-              // }
-              // aria-label={language === "vi" ? "Trường tìm kiếm" : "Search field"}
-              // fullWidth
-              // value={value}
-              // onChange={(e) => {
-              //   setInnerValue(e.target.value);
-              //   onChange(e); // cập nhật input nhưng chưa search
-              // }}
-              // // ❌ Bỏ onSearch ở đây, chỉ search khi nhấn nút
-              // onKeyDown={(e) => {
-              //   if (e.key === "Enter") handleSearch(); // search khi nhấn Enter
-              // }}
+              placeholder={
+                language === "vi" ? "Nhận từ khóa..." : "Enter keywords..."
+              }
+              aria-label={language === "vi" ? "Trường tìm kiếm" : "Search field"}
+              fullWidth
+              value={innerValue}
+              onChange={(e) => {
+                setInnerValue(e.target.value);
+                if (onChange) onChange(e); // cập nhật input nhưng chưa search
+              }}
+              // ❌ Bỏ onSearch ở đây, chỉ search khi nhấn nút
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch(); // search khi nhấn Enter
+              }}
             />
           </EuiFlexItem>
 
@@ -64,10 +68,9 @@ const AppSearch: React.FC<AppSearchProps> = ({
                 backgroundColor: "rgb(64, 108, 136)",
                 color: "#fff",
               }}
-              // onClick={handleSearch} 
+              onClick={handleSearch} 
             >
-              {/* {language === "vi" ? "Tìm kiếm" : "Search"} */}
-              Tìm kiếm
+              {language === "vi" ? "Tìm kiếm" : "Search"}
             </EuiButton>
           </EuiFlexItem>
         </EuiFlexGroup>
