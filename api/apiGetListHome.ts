@@ -5,14 +5,16 @@ export interface GetListhomeParams {
   node_attribute_id?: string;
   project_id?: string;
   unit_code?: string;
+  leaf_id?: string;
 }
 
 export const Getlisthome = async (params: GetListhomeParams) => {
-  const { node_attribute_id, project_id, unit_code } = params;
+  const { node_attribute_id, project_id, unit_code, leaf_id } = params;
   let url = "";
 
-  if (node_attribute_id) {
-    url = `${API_ROUTE.GET_LIST_DETAIL_HOME_NEW}?node_attribute_id=${node_attribute_id}`;
+  if (leaf_id || node_attribute_id) {
+    const id = leaf_id || node_attribute_id;
+    url = `${API_ROUTE.GET_LIST_DETAIL_HOME_NEW}?node_attribute_id=${id}&project_id=${project_id || ''}`;
   } else if (project_id && unit_code) {
     url = API_ROUTE.GET_LIST_DETAIL_HOME
       .replace("{project_id}", project_id)

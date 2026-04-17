@@ -7,7 +7,7 @@ import EditImg from "../EditImg";
 interface DetailsImngProps {
   idItem?: string[];
   projectId: string;
-  unitCode: string;
+  leafId: string;
   onSearch: () => Promise<void> | void;
   opened?: boolean;
   onClose?: () => void;
@@ -19,7 +19,7 @@ interface DetailsImngProps {
 const DetailsImng: React.FC<DetailsImngProps> = ({
   idItem,
   projectId,
-  unitCode,
+  leafId,
   onSearch,
   onClose,
 }) => {
@@ -39,7 +39,7 @@ const DetailsImng: React.FC<DetailsImngProps> = ({
       <Tabs.Panel value="gallery" pt="md">
         <CreateImg
           projectId={projectId}
-          unitCode={unitCode}
+          leafId={leafId}
           idItem={idItem}
           onSearch={onSearch}
           onClose={onClose}
@@ -50,7 +50,7 @@ const DetailsImng: React.FC<DetailsImngProps> = ({
       <Tabs.Panel value="messages" pt="md">
        <EditImg 
           projectId={projectId}
-          unitCode={unitCode}
+          leafId={leafId}
           idItem={idItem}
           onSearch={onSearch}
           onClose={onClose}

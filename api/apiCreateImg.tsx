@@ -14,33 +14,35 @@ export interface CreateImgPayload {
 ======================= */
 export const createImg = async (
   projectId: string,
-  unitCode: string,
+  leafId: string,
   payload: CreateImgPayload
 ) => {
-  // Tạo URL động
-  const url = API_ROUTE.CREATE_IMG_DETAIL_HOME
-    .replace("{project_id}", projectId)
-    .replace("{unit_code}", unitCode);
+  // Tạo URL động với query parameters
+  const url = `${API_ROUTE.CREATE_IMG_DETAIL_HOME_NEW}?project_id=${projectId}&node_attribute_id=${leafId}`;
 
   console.log("👉 FINAL API URL:", url);
 
   // Khởi tạo FormData
   const formData = new FormData();
 
-  // Append file và metadata tương ứng theo index (file_1, description_vi_1, ...)
-  payload.files.forEach((file, index) => {
-    const fileIndex = index + 1;
-    console.log(`👉 Appending file_${fileIndex} and its metadata...`);
+  const mediaMetadata: any[] = [];
+
+  // Append file array
+  payload.files.forEach((file) => {
+    formData.append("files", file);
     
-    formData.append(`file_${fileIndex}`, file);
-    
-    if (payload.description_vi) {
-      formData.append(`description_vi_${fileIndex}`, payload.description_vi);
-    }
+    // Thêm metadata cho từng file với trường bắt buộc là filename
+    mediaMetadata.push({
+      filename: file.name,
+      description_vi: payload.description_vi || "",
+    });
   });
 
-  // Gửi request sử dụng PUT (trả về PUT do 405 Method Not Allowed với POST)
-  const response = await api.put(url, formData, {
+  // Gửi metadata dạng JSON chuỗi
+  formData.append("media_metadata", JSON.stringify(mediaMetadata));
+
+  // Gửi request sử dụng POST theo như screenshot Postman
+  const response = await api.post(url, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

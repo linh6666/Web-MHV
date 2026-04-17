@@ -27,15 +27,15 @@ import { useDisclosure } from "@mantine/hooks";
 import { NotificationExtension } from "../../../../extension/NotificationExtension";
 import { createImg } from "../../../../api/apiCreateImg";
 
-interface Props {
-  unitCode: string;
+export interface CreateImgProps {
+  leafId: string;
   projectId: string;
   idItem?: string[];
   onSearch: () => void;
   onClose?: () => void;
 }
 
-const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
+const CreateImg = ({ leafId, projectId, onSearch, onClose }: CreateImgProps) => {
   const [visible, { open, close }] = useDisclosure(false);
 
   // danh sách file và mô tả tương ứng
@@ -89,7 +89,7 @@ const CreateImg = ({ unitCode, projectId, onSearch, onClose }: Props) => {
     try {
       // Gọi API cho từng hình ảnh để có mô tả riêng
       for (const item of validItems) {
-        await createImg(projectId, unitCode, {
+        await createImg(projectId, leafId, {
           files: [item.file as File],
           description_vi: item.description.trim(),
         });

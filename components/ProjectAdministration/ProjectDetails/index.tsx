@@ -371,7 +371,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
       children: (
         <DetailsImng
           projectId={project_id}
-          unitCode={record.unit_code}
+          leafId={record.leaf_id}
           onSearch={fetchWarehouse}
         />
       ),

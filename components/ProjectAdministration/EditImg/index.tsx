@@ -45,7 +45,7 @@ interface HomeImage {
 
 export interface CreateImgProps {
   projectId: string;
-  unitCode: string;
+  leafId: string;
   idItem?: string[];
   onSearch: () => Promise<void> | void;
   onClose?: () => void;
@@ -53,7 +53,7 @@ export interface CreateImgProps {
 
 const EditImg: React.FC<CreateImgProps> = ({
   projectId,
-  unitCode,
+  leafId,
   onSearch,
   onClose,
 }) => {
@@ -68,7 +68,7 @@ const EditImg: React.FC<CreateImgProps> = ({
   const fetchListHome = async () => {
     try {
       setLoading(true);
-      const data = await Getlisthome({ project_id: projectId, unit_code: unitCode });
+      const data = await Getlisthome({ project_id: projectId, leaf_id: leafId });
       setImages(data || []);
     } catch (error) {
       console.error("Lỗi:", error);
@@ -79,7 +79,7 @@ const EditImg: React.FC<CreateImgProps> = ({
 
   useEffect(() => {
     fetchListHome();
-  }, [projectId, unitCode]);
+  }, [projectId, leafId]);
 
   const handleSelectImage = (id: string) => {
     setSelectedImageId(id);
@@ -129,7 +129,7 @@ const EditImg: React.FC<CreateImgProps> = ({
       <LoadingOverlay visible={loading} overlayProps={{ blur: 0, opacity: 0.3 }} />
 
       <Group justify="space-between" mb="xs">
-        <Title order={4}>Căn hộ: {unitCode} ({images.length} ảnh)</Title>
+        <Title order={4}>Căn hộ: (ID: {leafId}) ({images.length} ảnh)</Title>
       </Group>
 
       <SimpleGrid cols={{ base: 1, md: 10 }} spacing="sm">
