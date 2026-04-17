@@ -133,7 +133,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
       project_id: templateId,
       filters: [
         {
-          label: "layer8",
+          label: "layer1",
           values: ["ct", "ti"],
         },
       ],
@@ -251,14 +251,10 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
      TABLE COLUMNS
   ======================= */
   const columns: ColumnsType<DataType> = [
-    {
-      title: "Mã căn",
-      dataIndex: "unit_code",
-      width: 50,
-    },
+ 
     {
       title: "Phân khu/Tòa",
-      dataIndex: "layer7",
+      dataIndex: "zone",
       width: 40,
       render: (layer7: unknown, record: DataType) => {
         if (typeof layer7 === "string" && layer7.trim() !== "") return layer7;
@@ -266,6 +262,16 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
           return record.layer3;
         return "-";
       },
+    },
+       {
+      title: "Loại nhà",
+      dataIndex: "building_type",
+      width: 50,
+    },
+     {
+      title: "Trạng thái",
+      dataIndex: "status_unit",
+      width: 50,
     },
     {
       title: "Hành động",
