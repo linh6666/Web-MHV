@@ -21,7 +21,10 @@ export interface Project {
   id: string;
   name: string;
   address?: string | null;
-  overview_image?: string | null;
+  overview_image?: {
+    url: string;
+  } | null;
+  url?: string | null;
   investor?: string | null;
   project_template_id: string;
   rank?: number;
@@ -30,6 +33,7 @@ export interface Project {
   rank_name?: string | null;
   type?: string | null;
 }
+
 
 /* =======================
    COMPONENT
@@ -117,7 +121,8 @@ export default function Listcustomer() {
                 onClick={() => setSelectedProject(project)}
               >
                 <Image
-                  src={project.overview_image || "/placeholder.png"}
+                  src={project.url || project.overview_image?.url || "/placeholder.png"}
+
                   height={160}
                   alt={project.name}
                   style={{

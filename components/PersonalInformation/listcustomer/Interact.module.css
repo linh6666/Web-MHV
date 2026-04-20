@@ -41,9 +41,10 @@
 
 @media (min-width: 1024px) {
   .cardGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
+
 
 .card {
   display: flex;
@@ -95,9 +96,16 @@
   cursor: not-allowed;
   border: none;
 }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
 @media (max-width: 768px) {
   .Box {
     padding-left: 10px;
     padding-right: 10px;
   }
-}
+}
