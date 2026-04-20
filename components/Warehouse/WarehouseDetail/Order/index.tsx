@@ -45,12 +45,15 @@ const theme = createTheme({
 /* ================= TYPE ================= */
 
 interface HouseData {
+  id: string;
   unit_code: string;
+  leaf_id?: string;
   zone?: string;
   layer3?: string;
   layer2?: string;
   building_type?: string;
 }
+
 
 interface OrderButtonProps {
   house: HouseData;
@@ -115,10 +118,11 @@ export default function OrderButton({ house, projectId }: OrderButtonProps) {
     try {
       const payload = {
         project_id: projectId,
-        unit_code: house.unit_code,
+        node_attribute_id: house.leaf_id || house.id,
         topic: values.subject,
         message: values.content,
       };
+
 
       const res = await createContact(payload);
 
@@ -211,9 +215,9 @@ export default function OrderButton({ house, projectId }: OrderButtonProps) {
                 />
               </Grid.Col>
 
-              <Grid.Col span={12}>
+              {/* <Grid.Col span={12}>
                 <TextInput label="Mã căn" value={house.unit_code} readOnly />
-              </Grid.Col>
+              </Grid.Col> */}
 
               {/* ===== THÔNG TIN NGƯỜI DÙNG ===== */}
 
