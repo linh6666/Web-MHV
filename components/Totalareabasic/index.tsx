@@ -75,7 +75,6 @@ const handleBack = () => {
   <svg
    xmlns="http://www.w3.org/2000/svg"
      className={styles.overlaySvg}
-    width="1154.229" height="707.119" 
     viewBox="0 0 1154.229 707.119">
   <path 
   id="NOBLE_PALACE_TAY_HO_-_PHÂN_KHU_THE_GOLF_MANSION" 
