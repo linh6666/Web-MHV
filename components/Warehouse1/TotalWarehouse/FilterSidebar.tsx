@@ -56,7 +56,11 @@ interface FilterSidebarProps {
   uniqueFloorApartmentGroupCode: string[];
   selectedFloorApartmentGroupCode: string[];
   setSelectedFloorApartmentGroupCode: (val: string[]) => void;
+  uniqueUnitNames: string[];
+  selectedUnitNames: string[];
+  setSelectedUnitNames: (val: string[]) => void;
 }
+
 
 
 export default function FilterSidebar({
@@ -111,7 +115,11 @@ export default function FilterSidebar({
   uniqueFloorApartmentGroupCode,
   selectedFloorApartmentGroupCode,
   setSelectedFloorApartmentGroupCode,
+  uniqueUnitNames,
+  selectedUnitNames,
+  setSelectedUnitNames,
 }: FilterSidebarProps) {
+
   return (
     <div
       style={{
@@ -119,7 +127,9 @@ export default function FilterSidebar({
         padding: 20,
         boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",
         borderRadius: "10px",
-        width: 300,
+        width: "100%",
+        maxWidth: 300,
+        minWidth: 280,
       }}
     >
       <h1 style={{ fontWeight: "bold", fontSize: "20px", marginBottom: "20px" }}>
@@ -409,7 +419,26 @@ export default function FilterSidebar({
             />
           </div>
         )}
+        {uniqueUnitNames.length > 0 && (
+          <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <MultiSelect
+              label="Tên căn"
+              placeholder="Chọn tên căn"
+              data={uniqueUnitNames}
+              value={selectedUnitNames}
+              onChange={setSelectedUnitNames}
+              maxDropdownHeight={200}
+              styles={{
+                input: {
+                  maxHeight: "100px",
+                  overflowY: "auto",
+                },
+              }}
+            />
+          </div>
+        )}
       </div>
+
 
       {sortedBedrooms.length > 0 && (
         <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -427,15 +456,16 @@ export default function FilterSidebar({
                   onClick={() => setActiveBedroom(isActive ? null : String(num))}
                   style={{
                     padding: "8px 16px",
-                    border: "1px solid #762f0b",
+                    border: "1px solid #294b61",
                     borderRadius: "20px",
-                    backgroundColor: isActive ? "#762f0b" : "#fff",
-                    color: isActive ? "#fff" : "#762f0b",
+                    backgroundColor: isActive ? "#294b61" : "#fff",
+                    color: isActive ? "#fff" : "#294b61",
                     fontWeight: "bold",
                     fontSize: "14px",
                     cursor: "pointer",
                     transition: "all 0.3s ease",
                   }}
+
                 >
                   {num}
                 </button>
@@ -461,15 +491,16 @@ export default function FilterSidebar({
                   onClick={() => setActiveBathroom(isActive ? null : String(num))}
                   style={{
                     padding: "8px 16px",
-                    border: "1px solid #762f0b",
+                    border: "1px solid #294b61",
                     borderRadius: "20px",
-                    backgroundColor: isActive ? "#762f0b" : "#fff",
-                    color: isActive ? "#fff" : "#762f0b",
+                    backgroundColor: isActive ? "#294b61" : "#fff",
+                    color: isActive ? "#fff" : "#294b61",
                     fontWeight: "bold",
                     fontSize: "14px",
                     cursor: "pointer",
                     transition: "all 0.3s ease",
                   }}
+
                 >
                   {num}
                 </button>

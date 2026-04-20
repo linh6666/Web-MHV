@@ -22,8 +22,9 @@
 }
 
 .filterListContainer::-webkit-scrollbar-thumb:hover {
-    background: #762f0b;
+    background: #294b61;
 }
+
 
 /* Firefox */
 .filterListContainer {

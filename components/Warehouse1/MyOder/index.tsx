@@ -47,7 +47,9 @@ export interface OrderItem {
   customer_email?: string;
   customer_phone?: string;
   id_cccd?: string;
+  zone?: string;
 }
+
 
 const statusConfig: Record<string, { label: string; color: string }> = {
   pending: { label: "Chờ khóa căn hộ ", color: "yellow" },
@@ -156,8 +158,9 @@ export default function MyOder({ projectId }: MyOderProps) {
       <Box className={styles.searchBox}>
         <TextInput
           placeholder="Tìm kiếm mã căn, khách hàng, mã đơn..."
-          leftSection={<IconSearch size={20} stroke={1.5} color="#8c5b3f" />}
+          leftSection={<IconSearch size={20} stroke={1.5} color="#294b61" />}
           radius="xl"
+
           classNames={{ input: styles.searchInput }}
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.currentTarget.value)}
@@ -176,7 +179,8 @@ export default function MyOder({ projectId }: MyOderProps) {
         value={activeTab} 
         onChange={setActiveTab} 
         variant="pills" 
-        color="#8c5b3f" 
+        color="#294b61" 
+ 
         // px="xl" 
         mb="md"
         styles={{
@@ -244,8 +248,9 @@ export default function MyOder({ projectId }: MyOderProps) {
                   <Box>
                     <Flex justify="space-between" align="flex-start">
                       <Box>
-                        <Text className={styles.propertyTitle}>{order.unit_code || "SH1.7"}</Text>
+                        <Text className={styles.propertyTitle}>{order.zone || order.unit_code || "SH1.7"}</Text>
                       </Box>
+
                       <Badge
                         className={styles.propertyBadge}
                         radius="xl"
@@ -266,8 +271,9 @@ export default function MyOder({ projectId }: MyOderProps) {
                             }
                           }}
                         >
-                          <IconFolder size={75} color="#8c5b3f" stroke={1.5} />
+                          <IconFolder size={75} color="#294b61" stroke={1.5} />
                         </Box>
+
                       )}
                     </Flex>
                   </Box>

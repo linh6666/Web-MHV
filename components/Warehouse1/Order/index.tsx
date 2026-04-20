@@ -135,14 +135,15 @@ export default function OrderButton({ unitCode, projectId }: OrderButtonProps) {
             whiteSpace: "nowrap",
           }}
         >
-          <IconPlus size={20} color="#752E0B" />
+          <IconPlus size={20} color="#294b61" />
           <span
             style={{
               fontSize: "14px",
               fontWeight: 500,
-              color: "#752E0B",
+              color: "#294b61",
             }}
           >
+
             Tạo đơn hàng
           </span>
         </button>
@@ -166,25 +167,26 @@ export default function OrderButton({ unitCode, projectId }: OrderButtonProps) {
           >
             <LoadingOverlay visible={visible} />
 
-           <Grid mt="md">
-  <Grid.Col span={6}>
-    <TextInput
-      label="Email khách hàng"
-      placeholder="Nhập email khách hàng"
-      withAsterisk
-      {...form.getInputProps("email")}
-    />
-  </Grid.Col>
+            <Grid mt="md">
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Email khách hàng"
+                  placeholder="Nhập email khách hàng"
+                  withAsterisk
+                  {...form.getInputProps("email")}
+                />
+              </Grid.Col>
 
-  <Grid.Col span={6}>
-    <TextInput
-      label="Mã hợp đồng"
-      placeholder="Nhập mã hợp đồng"
-      withAsterisk
-      {...form.getInputProps("contract_code")}
-    />
-  </Grid.Col>
-</Grid>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Mã hợp đồng"
+                  placeholder="Nhập mã hợp đồng"
+                  withAsterisk
+                  {...form.getInputProps("contract_code")}
+                />
+              </Grid.Col>
+            </Grid>
+
 
             <TextInput
               label="Giá trị đơn hàng"

@@ -12,6 +12,8 @@ import {
   Autocomplete,
   Divider,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+
 import { createWarehouse } from "../../../api/apiFilterWarehouse";
 import styles from "./TotalWarehouse.module.css";
 import WarehouseDetail from "../WarehouseDetail";
@@ -60,6 +62,8 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectName = searchParams.get("name") || "";
+  const isMobile = useMediaQuery("(max-width: 992px)");
+
 
   const [items, setItems] = useState<WarehouseItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,6 +94,8 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
   const [activeBedroom, setActiveBedroom] = useState<string | null>(null);
   const [activeBathroom, setActiveBathroom] = useState<string | null>(null);
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
+  const [selectedUnitNames, setSelectedUnitNames] = useState<string[]>([]);
+
 
 
   const normalize = (value?: string) => value?.trim().toLowerCase();
@@ -106,7 +112,9 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
         main_door_direction?: string;
         balcony_direction?: string;
         status_unit?: string;
+        unit_name?: string;
       }
+
     >();
     for (const i of items) {
       map.set(i.unit_code, {
@@ -118,7 +126,9 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
         main_door_direction: i.main_door_direction,
         balcony_direction: i.balcony_direction,
         status_unit: i.status_unit,
+        unit_name: i.unit_name,
       });
+
     }
     return map;
   }, [items]);
@@ -254,6 +264,12 @@ useEffect(() => {
     filtered = filtered.filter((item) => item && selectedFloorApartmentGroupCode.includes(item.floor_apartment_group_code));
   }
 
+  // Filter theo tên căn (unit_name)
+  if (selectedUnitNames.length > 0) {
+    filtered = filtered.filter((item) => item && item.unit_name && selectedUnitNames.includes(item.unit_name));
+  }
+
+
   setFilteredItems(filtered);
   setCurrentPage(1);
 }, [
@@ -276,7 +292,9 @@ useEffect(() => {
   selectedFloorName,
   selectedFloorGroupCode,
   selectedFloorApartmentGroupCode,
+  selectedUnitNames,
 ]);
+
 
   const allActiveFilters = useMemo(() => {
     const filters: { label: string; type: string; value: string }[] = [];
@@ -300,6 +318,11 @@ useEffect(() => {
     selectedFloorApartmentGroupCode.forEach((v) =>
       filters.push({ label: v, type: "floorApartmentGroupCode", value: v })
     );
+
+    selectedUnitNames.forEach((v) => {
+      filters.push({ type: "unitName", value: v, label: `Tên căn: ${v}` });
+    });
+
 
     selectedStatuses.forEach((v) => {
       filters.push({ label: v, type: "status", value: v });
@@ -381,7 +404,11 @@ useEffect(() => {
       case "floorApartmentGroupCode":
         setSelectedFloorApartmentGroupCode(selectedFloorApartmentGroupCode.filter((v) => v !== value));
         break;
+      case "unitName":
+        setSelectedUnitNames(selectedUnitNames.filter((v) => v !== value));
+        break;
       case "status":
+
         setSelectedStatuses(selectedStatuses.filter((v) => v !== value));
         break;
       case "bedroom":
@@ -428,7 +455,9 @@ useEffect(() => {
         ${item.main_door_direction ?? ""}
         ${item.balcony_direction ?? ""}
         ${item.status_unit ?? ""}
+        ${item.unit_name ?? ""}
       `
+
           .toLowerCase()
           .includes(value.toLowerCase())
       )
@@ -445,7 +474,9 @@ useEffect(() => {
         main_door_direction: item.main_door_direction,
         balcony_direction: item.balcony_direction,
         status_unit: item.status_unit,
+        unit_name: item.unit_name,
       }));
+
     setSearchSuggestions(suggestions);
   };
 
@@ -463,7 +494,9 @@ useEffect(() => {
         ${item.main_door_direction ?? ""}
         ${item.balcony_direction ?? ""}
         ${item.status_unit ?? ""}
+        ${item.unit_name ?? ""}
       `
+
         .toLowerCase()
         .includes(searchText.toLowerCase())
     );
@@ -595,6 +628,11 @@ const uniqueZones = Array.from(
   )
 ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
 
+const uniqueUnitNames = Array.from(
+  new Set(items.map((item) => item.unit_name).filter((v): v is string => v !== undefined && v !== null && v.trim() !== "" && v.trim().toLowerCase() !== "skip"))
+).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
+
+
 const uniqueFloorApartmentGroupCode = Array.from(
   new Set(
     items
@@ -676,7 +714,8 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className={styles.mainLayout}>
+
       {showFilterSidebar && (
         <FilterSidebar
           uniqueZones={uniqueZones}
@@ -730,10 +769,15 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
           sortedBathrooms={sortedBathrooms}
           activeBathroom={activeBathroom}
           setActiveBathroom={setActiveBathroom}
+          uniqueUnitNames={uniqueUnitNames}
+          selectedUnitNames={selectedUnitNames}
+          setSelectedUnitNames={setSelectedUnitNames}
         />
+
       )}
 
-      <div style={{ flex: 1, padding: 20 }}>
+      <div className={styles.contentArea} style={{ flex: 1, padding: isMobile ? 10 : 20 }}>
+
         {/* Header */}
         <div>
           <Group gap="md">
@@ -742,9 +786,10 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               radius="md"
               size="lg"
               styles={{
-                root: { borderColor: "#762f0b", color: "#762f0b" },
-                icon: { color: "#762f0b" },
+                root: { borderColor: "#294b61", color: "#294b61" },
+                icon: { color: "#294b61" },
               }}
+
               onClick={toggleFilterSidebar}
             >
               <IconFilter2 size={20} />
@@ -764,8 +809,9 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 <IconSearch
                   onClick={handleSearch}
                   size={16}
-                  color="#762f0b"
+                  color="#294b61"
                   style={{ cursor: "pointer" }}
+
                 />
               }
            renderOption={({ option }) => {
@@ -781,11 +827,13 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
     meta?.main_door_direction,
     meta?.balcony_direction,
     meta?.status_unit,
-  ].filter(Boolean);
+  ].filter((val) => val && String(val).trim().toLowerCase() !== "skip");
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <strong>{option.value}</strong>
+      <strong>{meta?.zone || option.value}</strong>
+
       {details.length > 0 && (
         <span style={{ fontSize: "12px", color: "#666" }}>
           {details.join(" • ")}
@@ -798,8 +846,9 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               styles={{
                 input: { paddingLeft: 36 },
               }}
-              style={{ width: 300 }}
+              className={styles.searchBar}
             />
+
             <h1
               style={{
                 cursor: "pointer",

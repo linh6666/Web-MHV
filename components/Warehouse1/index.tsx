@@ -28,9 +28,10 @@ export default function Managent({ projectId, target, projectName }: AppProps) {
 
   return (
     <div className={styles.containerr}>
-      <h2 style={{ fontWeight: "800", color: "#762f0b", fontSize: "28px", marginBottom: "10px" }}>
+      <h2 style={{ fontWeight: "800", color: "#294b61", fontSize: "28px", marginBottom: "10px" }}>
         Dự án {projectName}
       </h2>
+
 
       <div className={styles.headerList}>
         <div
@@ -66,15 +67,16 @@ export default function Managent({ projectId, target, projectName }: AppProps) {
         
         {/* Các view khác nếu cần thêm nội dung */}
         {activeView === "amenities" && (
-          <div style={{ padding: "40px", textAlign: "center", color: "#762f0b" }}>
+          <div style={{ padding: "40px", textAlign: "center", color: "#294b61" }}>
             <h3>Nội dung Tài liệu đang được cập nhật...</h3>
           </div>
         )}
         {activeView === "houseType" && (
-          <div style={{ padding: "40px", textAlign: "center", color: "#762f0b" }}>
+          <div style={{ padding: "40px", textAlign: "center", color: "#294b61" }}>
             <h3>Nội dung Ghi chú đang được cập nhật...</h3>
           </div>
         )}
+
       </div>
     </div>
   );

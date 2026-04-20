@@ -17,6 +17,7 @@ export interface WarehouseItem {
   building_type: string;
   layer6: string;
   view: string;
+  unit_name: string;
   layer3: string;
   layer2: string;
   main_door_direction: string;
@@ -111,7 +112,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
   const current = imageData.length > 0 ? imageData[index] : null;
 
   return (
-    <div className={styles.container} style={{ padding: "20px" }}>
+    <div className={styles.container}>
       {/* Nút quay lại */}
       <Button
         onClick={onBack}
@@ -124,165 +125,141 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
       {loading && <p>Đang tải dữ liệu...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div style={{ display: "flex", height: "80vh" }}>
+      <div className={styles.detailWrapper}>
         {/* Cột trái */}
-        <div style={{ flex: 1 }}>
-        <>
-  <Text fw={700} mb={12} style={{ fontSize: "18px" }}>
-    Chi tiết: {item.unit_code}
-  </Text>
+        <div className={styles.leftColumn}>
+          <>
+            <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
+              Chi tiết: {item.zone}
+            </Text>
 
-  {(item.zone || item.layer3) && (
-    <Text style={{ fontSize: "15px" }}>
-      {item.zone ? `Phân khu: ${item.zone}` : `Tòa: ${item.layer3}`}
-    </Text>
-  )}
 
-  {(item.building_type || item.layer2) && (
-    <Text style={{ fontSize: "15px" }}>
-      {item.building_type
-        ? `Loại công trình: ${item.building_type}`
-        : `Vị trí: ${item.layer2}`}
-    </Text>
-  )}
+            {/* Zone / Layer3 */}
+          
+            
+           
 
-  {item.bedroom &&
-    typeof item.bedroom === "string" &&
-    item.bedroom.trim().toLowerCase() !== "skip" && (
-      <Text style={{ fontSize: "15px" }}>
-        Phòng ngủ: {item.bedroom}
-      </Text>
-    )}
+            {/* Building type / Layer2 */}
+            {item.building_type && item.building_type.trim().toLowerCase() !== "skip" && (
+              <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
+            )}
+             {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" && (
+              <Text style={{ fontSize: "15px" }}>Căn hộ: {item.unit_name}</Text>
+            )}
+            
+            {item.layer2 && item.layer2.trim().toLowerCase() !== "skip" && (
+              <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
+            )}
 
-  {item.bathroom &&
-    (typeof item.bathroom !== "string" ||
-      item.bathroom.trim().toLowerCase() !== "skip") && (
-      <Text style={{ fontSize: "15px" }}>
-        Phòng tắm: {item.bathroom}
-      </Text>
-    )}
+            {/* Phòng ngủ */}
+            {item.bedroom != null &&
+              item.bedroom !== "" &&
+              String(item.bedroom).trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>Phòng ngủ: {item.bedroom}</Text>
+              )}
 
-  {item.direction &&
-    item.direction.trim().toLowerCase() !== "skip" && (
-      <Text style={{ fontSize: "15px" }}>
-        Hướng: {item.direction}
-      </Text>
-    )}
+            {/* Phòng tắm */}
+            {item.bathroom != null &&
+              item.bathroom !== "" &&
+              String(item.bathroom).trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>Phòng tắm: {item.bathroom}</Text>
+              )}
 
-  {item.main_door_direction &&
-    item.main_door_direction.trim().toLowerCase() !== "skip" && (
-      <Text style={{ fontSize: "15px" }}>
-        Hướng cửa chính: {item.main_door_direction}
-      </Text>
-    )}
+            {/* Hướng */}
+            {item.direction &&
+              item.direction.trim() !== "" &&
+              item.direction.trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>Hướng: {item.direction}</Text>
+              )}
 
-  {item.balcony_direction &&
-    item.balcony_direction.trim().toLowerCase() !== "skip" && (
-      <Text style={{ fontSize: "15px" }}>
-        Hướng ban công: {item.balcony_direction}
-      </Text>
-    )}
+            {/* Hướng cửa chính */}
+            {item.main_door_direction &&
+              item.main_door_direction.trim() !== "" &&
+              item.main_door_direction.trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>
+                  Hướng cửa chính: {item.main_door_direction}
+                </Text>
+              )}
 
-  {item.view && (
-    <Text style={{ fontSize: "15px" }}>
-      Cảnh quan: {item.view}
-    </Text>
-  )}
+            {/* Hướng ban công */}
+            {item.balcony_direction &&
+              item.balcony_direction.trim() !== "" &&
+              item.balcony_direction.trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>
+                  Hướng ban công: {item.balcony_direction}
+                </Text>
+              )}
 
-  {item.status_unit && (
-    <Text style={{ fontSize: "15px" }}>
-      Trạng thái: {item.status_unit}
-    </Text>
-  )}
+            {/* Cảnh quan */}
+            {item.view &&
+              item.view.trim() !== "" &&
+              item.view.trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>Cảnh quan: {item.view}</Text>
+              )}
 
-{item.price !== null && (
-  <Text style={{ fontSize: "15px" }}>
-    Giá: {item.price.toLocaleString()}đ
-  </Text>
-)}
+            {/* Trạng thái */}
+            {item.status_unit &&
+              item.status_unit.trim() !== "" &&
+              item.status_unit.trim().toLowerCase() !== "skip" && (
+                <Text style={{ fontSize: "15px" }}>Trạng thái: {item.status_unit}</Text>
+              )}
 
-  {(item.describe_vi || item.describe) && (
-    <Text>
-      <b>Mô tả:</b> {item.describe_vi || item.describe}
-    </Text>
-  )}
-</>
+            {/* Giá */}
+            {item.price != null && item.price !== 0 && (
+              <Text style={{ fontSize: "15px" }}>
+                Giá: {item.price.toLocaleString()}đ
+              </Text>
+            )}
+
+            {/* Mô tả */}
+            {(item.describe_vi || item.describe) && (
+              <Text style={{ marginTop: "10px" }}>
+                <b>Mô tả:</b> {item.describe_vi || item.describe}
+              </Text>
+            )}
+          </>
 
           {/* Hiển thị PDF */}
           {pdfData.map((pdf) => (
-            <div key={pdf.id} style={{ marginTop: "10px" }}>
+            <div key={pdf.id} style={{ marginTop: "15px" }}>
               <a
                 href={pdf.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: "flex", textDecoration: "underline" }}
+                style={{ display: "flex", textDecoration: "underline", alignItems: "center", gap: "5px", color: "#228be6" }}
               >
-                <IconClipboardText /> Xem tài liệu: {pdf.name_vi || pdf.name_en || pdf.id}
+                <IconClipboardText size={20} /> Xem tài liệu: {pdf.name_vi || pdf.name_en || pdf.id}
               </a>
             </div>
           ))}
-<div
- style={{
-    display: "flex",
-    gap: "12px", // khoảng cách giữa 2 nút
-    // alignItems: "center",
-  }}
->
-           <ImageActionButtons
-  unitCode={item.unit_code}
-  projectId={projectId}
-/>
 
-           <OrderButton
-  unitCode={item.unit_code}
-  projectId={projectId}
-/>
-
-
-</div>
-
+          <div className={styles.actionButtons}>
+            <ImageActionButtons
+              unitCode={item.unit_code}
+              projectId={projectId}
+            />
+            <OrderButton
+              unitCode={item.unit_code}
+              projectId={projectId}
+            />
+          </div>
         </div>
-                       {/* Cột phải: SLIDER */}
-        <div
-          style={{
-            flex: 2,
-            paddingLeft: "20px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              marginBottom: "20px",
-              position: "relative",
-            }}
-          >
+
+        {/* Cột phải: SLIDER */}
+        <div className={styles.rightColumn}>
+          <div className={styles.imageContainer}>
             <Image
               src={current?.url || "/image/test1.jpg"}
               alt={current?.description_en || "No image"}
               width={800}
               height={600}
-              style={{ maxWidth: "100%", borderRadius: "8px", height: "auto" }}
+              className={styles.sliderImage}
             />
 
             <button
               onClick={goPrev}
               disabled={index === 0}
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)",
-                background: "rgba(0,0,0,0.5)",
-                color: "white",
-                border: "none",
-                padding: "10px",
-                borderRadius: "50%",
-                cursor: "pointer",
-              }}
+              className={`${styles.navButton} ${styles.prevButton}`}
             >
               ◀
             </button>
@@ -290,68 +267,49 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
             <button
               onClick={goNext}
               disabled={index === imageData.length - 1}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "10px",
-                transform: "translateY(-50%)",
-                background: "rgba(0,0,0,0.5)",
-                color: "white",
-                border: "none",
-                padding: "10px",
-                borderRadius: "50%",
-                cursor: "pointer",
-              }}
+              className={`${styles.navButton} ${styles.nextButton}`}
             >
               ▶
             </button>
           </div>
 
           {/* Thumbnail gallery */}
-        <div
-  style={{
-    marginTop: "10px",
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
-    flexWrap: "wrap",
-  }}
->
-  {imageData.length > 0 ? (
-    imageData.map((item, i) => (
-      <div
-        key={item.id}
-        onClick={() => setIndex(i)}
-        style={{
-          border: i === index ? "2px solid blue" : "1px solid #ccc",
-          padding: "2px",
-          cursor: "pointer",
-          borderRadius: "4px",
-        }}
-      >
-       <Image src={item.url || "/image/test1.jpg"} alt={item.description_en || "No image"} width={80} height={60} style={{ objectFit: "cover", borderRadius: "4px", display: "block", maxWidth: "80px",  maxHeight: "60px"  }} />
-      </div>
-    ))
-  ) : (
-    // Nếu không có dữ liệu ảnh thì hiển thị thumbnail mặc định
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: "2px",
-        borderRadius: "4px",
-      }}
-    >
-      <Image src="/image/test1.jpg" 
-        alt="Fallback thumbnail"
-        // ảnh mặc định trong public alt="Fallback thumbnail"
-        width={80} height={60} fit="cover"
-          radius="sm"  style={{ objectFit: "cover", borderRadius: "4px", display: "block", maxWidth: "80px",  maxHeight: "60px"  }} />
-    </div>
-  )}
-</div>
-
+          <div className={styles.thumbnailGallery}>
+            {imageData.length > 0 ? (
+              imageData.map((item, i) => (
+                <div
+                  key={item.id}
+                  onClick={() => setIndex(i)}
+                  className={`${styles.thumbnailItem} ${i === index ? styles.thumbnailItemActive : ""}`}
+                >
+                  <Image 
+                    src={item.url || "/image/test1.jpg"} 
+                    alt={item.description_en || "No image"} 
+                    width={80} 
+                    height={60} 
+                    className={styles.thumbnailImage}
+                    style={{ maxWidth: "80px", maxHeight: "60px" }}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className={styles.thumbnailItem}>
+                <Image 
+                  src="/image/test1.jpg" 
+                  alt="Fallback thumbnail"
+                  width={80} 
+                  height={60} 
+                  fit="cover"
+                  radius="sm" 
+                  className={styles.thumbnailImage}
+                  style={{ maxWidth: "80px", maxHeight: "60px" }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
+
   );
 }

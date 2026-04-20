@@ -545,3 +545,49 @@
     font-size: 16px;
     width: 100%;
 }
+
+@media (max-width: 1024px) {
+    .mainFlex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .salesCard,
+    .propertyCard,
+    .customerStack {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .propertyCard {
+        flex-direction: column;
+    }
+
+    .propertyImage {
+        width: 100%;
+        height: 200px;
+    }
+
+    .folderIconContainer {
+        bottom: 10px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .propertyTitle {
+        font-size: 24px;
+    }
+
+    .salesCard {
+        height: auto;
+    }
+}
