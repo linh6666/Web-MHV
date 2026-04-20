@@ -181,8 +181,11 @@ useEffect(() => {
 
   // Filter theo trạng thái
   if (selectedStatuses.length > 0) {
-    filtered = filtered.filter((item) => item && selectedStatuses.includes(item.status_unit));
+    filtered = filtered.filter((item) => 
+      item && item.status_unit && selectedStatuses.some(s => s.toLowerCase() === item.status_unit.trim().toLowerCase())
+    );
   }
+
 
   // Filter theo phòng ngủ
   if (activeBedroom) {
@@ -876,7 +879,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
           <Group gap="md" style={{ marginTop: 16 }}>
             <button
               style={{
-                backgroundColor: selectedStatuses.includes("Quan tâm") ? "#b8893c" : "#c99945",
+                backgroundColor: selectedStatuses.includes("QUAN TÂM") ? "#b8893c" : "#c99945",
                 color: "#fff",
                 padding: "10px 24px",
                 borderRadius: "100px",
@@ -885,11 +888,13 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Quan tâm") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("QUAN TÂM") ? 1 : 0.4,
+
+
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
               }}
               onClick={() => {
-                const status = "Quan tâm";
+                const status = "QUAN TÂM";
                 if (selectedStatuses.includes(status)) {
                   setSelectedStatuses(selectedStatuses.filter((s) => s !== status));
                 } else {
@@ -902,7 +907,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
 
             <button
               style={{
-                backgroundColor: selectedStatuses.includes("Đang bán") ? "#2f566d" : "#3d6985",
+                backgroundColor: selectedStatuses.includes("ĐANG BÁN") ? "#2f566d" : "#3d6985",
                 color: "#fff",
                 padding: "10px 24px",
                 borderRadius: "100px",
@@ -911,11 +916,13 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Đang bán") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("ĐANG BÁN") ? 1 : 0.4,
+
+
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
               }}
               onClick={() => {
-                const status = "Đang bán";
+                const status = "ĐANG BÁN";
                 if (selectedStatuses.includes(status)) {
                   setSelectedStatuses(selectedStatuses.filter((s) => s !== status));
                 } else {
@@ -928,7 +935,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
 
             <button
               style={{
-                backgroundColor: selectedStatuses.includes("Đã đặt cọc") ? "#cc5c34" : "#e56a3e",
+                backgroundColor: selectedStatuses.includes("ĐÃ ĐẶT CỌC") ? "#cc5c34" : "#e56a3e",
                 color: "#fff",
                 padding: "10px 24px",
                 borderRadius: "100px",
@@ -937,11 +944,13 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Đã đặt cọc") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("ĐÃ ĐẶT CỌC") ? 1 : 0.4,
+
+
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
               }}
               onClick={() => {
-                const status = "Đã đặt cọc";
+                const status = "ĐÃ ĐẶT CỌC";
                 if (selectedStatuses.includes(status)) {
                   setSelectedStatuses(selectedStatuses.filter((s) => s !== status));
                 } else {
@@ -954,7 +963,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
 
             <button
               style={{
-                backgroundColor: selectedStatuses.includes("Đã bán") ? "#b32f1f" : "#d73a24",
+                backgroundColor: selectedStatuses.includes("ĐÃ BÁN") ? "#b32f1f" : "#d73a24",
                 color: "#fff",
                 padding: "10px 24px",
                 borderRadius: "100px",
@@ -963,11 +972,13 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                 fontSize: "15px",
                 fontWeight: 500,
                 transition: "all 0.3s ease",
-                opacity: selectedStatuses.includes("Đã bán") ? 1 : (selectedStatuses.length === 0 ? 0.7 : 0.4),
+                opacity: selectedStatuses.length === 0 || selectedStatuses.includes("ĐÃ BÁN") ? 1 : 0.4,
+
+
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
               }}
               onClick={() => {
-                const status = "Đã bán";
+                const status = "ĐÃ BÁN";
                 if (selectedStatuses.includes(status)) {
                   setSelectedStatuses(selectedStatuses.filter((s) => s !== status));
                 } else {
