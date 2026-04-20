@@ -34,6 +34,7 @@ export interface WarehouseItem {
   layer3: string;
   color: string;
   zone: string;
+  unit_name: string;
   status_unit: string;
   building_type: string;
   describe_vi: string;
@@ -986,16 +987,16 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
           // Xác định màu nền theo trạng thái
           let backgroundColor;
           switch (item.status_unit) {
-            case "Quan tâm":
+            case "QUAN TÂM":
               backgroundColor = "#b8893c"; // Tùy chỉnh màu này theo nhu cầu
               break;
-            case "Đang bán":
+            case "ĐANG BÁN":
               backgroundColor = "#3d6985"; // Tùy chỉnh màu này theo nhu cầu
               break;
-            case "Đã đặt cọc":
+            case "ĐÃ ĐẶT CỌC":
               backgroundColor = "#cc5c34"; // Tùy chỉnh màu này theo nhu cầu
               break;
-            case "Đã bán":
+            case "ĐÃ BÁN":
               backgroundColor = "#b32f1f"; // Tùy chỉnh màu này theo nhu cầu
               break;
             default:
@@ -1012,14 +1013,14 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
               onClick={() => setSelectedItem(item)}
             >
               {/* Mã căn hộ */}
-              <Text fw={700} mb={8} style={{ fontSize: "15px" }} ta="center">
-                {item.unit_code}
+              <Text fw={700} mb={8} style={{ fontSize: "13px" }} ta="center">
+                {item.zone}
               </Text>
 
               {/* Phân khu hoặc Tòa */}
-              <Text style={{ fontSize: "15px" }}>
-                {item.zone ? `Phân khu: ${item.zone}` : `Tòa: ${item.layer3}`}
-              </Text>
+             <Text style={{ fontSize: "15px" }}>
+  {item.unit_name && `Tên căn: ${item.unit_name}`}
+</Text>
 
               {/* Loại công trình hoặc Vị trí */}
               <Text style={{ fontSize: "15px" }}>
