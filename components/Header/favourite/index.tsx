@@ -9,7 +9,10 @@ interface Project {
   id: string;
   name: string;
   address?: string | null;
-  overview_image?: string | null;
+  overview_image?: {
+    url: string;
+  } | null;
+  url?: string | null;
   investor?: string | null;
   project_template_id?: string;
   rank?: number;
@@ -19,6 +22,7 @@ interface Project {
   type?: string | null;
   link?: string;
 }
+
 
 export default function ProjectList() {
   const router = useRouter();
@@ -64,9 +68,9 @@ export default function ProjectList() {
         projects.map((item) => (
           <div key={item.id} className={styles.card}>
             <div className={styles.imagePlaceholder}>
-              {item.overview_image ? (
+              {item.url || item.overview_image?.url ? (
                 <img
-                  src={item.overview_image}
+                  src={item.url || item.overview_image?.url || ""}
                   alt={item.name}
                   loading="lazy"
                   onError={(e) => {
@@ -78,6 +82,7 @@ export default function ProjectList() {
                 <div className={styles.noImage}>No Image</div>
               )}
             </div>
+
 
             <div className={styles.content}>
               <div className={styles.text}>

@@ -16,13 +16,20 @@
 /* IMAGE */
 .imagePlaceholder {
   width: 125px;
+  height: 80px;
   border-radius: 8px;
   background: #d9d9e3;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .imagePlaceholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 8px;
+  display: block;
 }
+
 /* CONTENT */
 .content {
   flex: 1;
