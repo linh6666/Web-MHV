@@ -29,7 +29,9 @@ export interface WarehouseItem {
   bathroom: string | number;
   direction: string;
   price: number;
+  leaf_id?: string;
 }
+
 
 interface WarehouseDetailProps {
   item: WarehouseItem;
@@ -235,14 +237,15 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
           <div className={styles.actionButtons}>
             <ImageActionButtons
-              unitCode={item.unit_code}
+              nodeAttributeId={item.leaf_id || item.id}
               projectId={projectId}
             />
             <OrderButton
-              unitCode={item.unit_code}
+              house={item}
               projectId={projectId}
             />
           </div>
+
         </div>
 
         {/* Cột phải: SLIDER */}

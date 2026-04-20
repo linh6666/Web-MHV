@@ -33,13 +33,18 @@ import { NotificationExtension } from "../../../extension/NotificationExtension"
 import { AxiosError } from "axios";
 
 interface OrderButtonProps {
-  unitCode: string;
+  house: {
+    id: string;
+    unit_code: string;
+    leaf_id?: string;
+    zone?: string;
+  };
   projectId: string;
 }
 
 /* ======================
    THEME CONFIG
-====================== */
+ ====================== */
 
 const theme = createTheme({
   components: {
@@ -57,7 +62,7 @@ const theme = createTheme({
   },
 });
 
-export default function OrderButton({ unitCode, projectId }: OrderButtonProps) {
+export default function OrderButton({ house, projectId }: OrderButtonProps) {
   const [opened, setOpened] = useState(false);
   const [visible, { open, close }] = useDisclosure(false);
 
@@ -86,7 +91,7 @@ export default function OrderButton({ unitCode, projectId }: OrderButtonProps) {
 
     try {
       const payload = {
-        unit_code: unitCode,
+        unit_code: house.leaf_id || house.id || house.unit_code, // Thử dùng ID mới trước
         project_id: projectId,
         email: values.email,
         contract_code: values.contract_code,
@@ -115,6 +120,7 @@ export default function OrderButton({ unitCode, projectId }: OrderButtonProps) {
       close();
     }
   };
+
 
   return (
     <MantineProvider theme={theme}>

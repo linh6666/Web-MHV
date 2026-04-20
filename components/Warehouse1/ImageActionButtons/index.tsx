@@ -8,18 +8,18 @@ import { deleteFavorites } from "../../../api/apiDeteleFavorites";
 import { getListFavorites } from "../../../api/apiGetListFavorites";
 
 interface ImageActionButtonsProps {
-  unitCode: string;
+  nodeAttributeId: string;
   projectId: string;
 }
 
 interface FavoriteItem {
   id?: string;
   favorite_id?: string;
-  unit_code: string;
+  node_attribute_id: string;
 }
 
 export default function ImageActionButtons({
-  unitCode,
+  nodeAttributeId,
   projectId,
 }: ImageActionButtonsProps) {
   const [loading, setLoading] = useState(false);
@@ -30,14 +30,14 @@ export default function ImageActionButtons({
   // Kiểm tra trạng thái yêu thích khi load trang
   useEffect(() => {
     // Thử lấy kết quả từ cache local (nếu có) để hiển thị tức thì
-    const cacheKey = `fav_${projectId}_${unitCode}`;
+    const cacheKey = `fav_${projectId}_${nodeAttributeId}`;
     const cached = localStorage.getItem(cacheKey);
     if (cached === "true") {
       setIsFavorite(true);
     }
 
     const checkFavoriteStatus = async () => {
-      if (!projectId || !unitCode) {
+      if (!projectId || !nodeAttributeId) {
         setIsChecking(false);
         return;
       }
@@ -49,7 +49,7 @@ export default function ImageActionButtons({
 
         const favoriteItem = favorites.find(
           (item) =>
-            String(item.unit_code).trim() === String(unitCode).trim()
+            String(item.node_attribute_id).trim() === String(nodeAttributeId).trim()
         );
 
         if (favoriteItem) {
@@ -71,7 +71,7 @@ export default function ImageActionButtons({
     };
 
     checkFavoriteStatus();
-  }, [projectId, unitCode]);
+  }, [projectId, nodeAttributeId]);
 
   const handleFavorite = async () => {
     if (loading) return;
@@ -89,7 +89,7 @@ export default function ImageActionButtons({
 
           const item = list.find(
             (i) =>
-              String(i.unit_code).trim() === String(unitCode).trim()
+              String(i.node_attribute_id).trim() === String(nodeAttributeId).trim()
           );
 
           idToDelete = item?.id || item?.favorite_id || null;
@@ -99,15 +99,15 @@ export default function ImageActionButtons({
           await deleteFavorites(idToDelete);
           setIsFavorite(false);
           setFavoriteId(null);
-          localStorage.removeItem(`fav_${projectId}_${unitCode}`); // Xóa cache
+          localStorage.removeItem(`fav_${projectId}_${nodeAttributeId}`); // Xóa cache
         } else {
           setIsFavorite(false);
-          localStorage.removeItem(`fav_${projectId}_${unitCode}`); // Xóa cache
+          localStorage.removeItem(`fav_${projectId}_${nodeAttributeId}`); // Xóa cache
         }
       } else {
         // --- CHƯA YÊU THÍCH -> THÊM ---
         const response = await createFavorite({
-          unit_code: unitCode,
+          node_attribute_id: nodeAttributeId,
           project_id: projectId,
         });
 
@@ -128,13 +128,13 @@ export default function ImageActionButtons({
 
           const item = list.find(
             (i) =>
-              String(i.unit_code).trim() === String(unitCode).trim()
+              String(i.node_attribute_id).trim() === String(nodeAttributeId).trim()
           );
 
           setFavoriteId(item?.id || item?.favorite_id || null);
         }
         // Cập nhật cache
-        localStorage.setItem(`fav_${projectId}_${unitCode}`, "true");
+        localStorage.setItem(`fav_${projectId}_${nodeAttributeId}`, "true");
       }
     } catch (error: unknown) {
       if (
@@ -142,14 +142,14 @@ export default function ImageActionButtons({
         error.response?.status === 409
       ) {
         setIsFavorite(true);
-        localStorage.setItem(`fav_${projectId}_${unitCode}`, "true");
+        localStorage.setItem(`fav_${projectId}_${nodeAttributeId}`, "true");
 
         const reloadResponse = await getListFavorites(projectId);
         const list: FavoriteItem[] = reloadResponse.data || [];
 
         const item = list.find(
           (i) =>
-            String(i.unit_code).trim() === String(unitCode).trim()
+            String(i.node_attribute_id).trim() === String(nodeAttributeId).trim()
         );
 
         setFavoriteId(item?.id || item?.favorite_id || null);
