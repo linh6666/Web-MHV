@@ -252,9 +252,10 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
           <div className={styles.actionButtons}>
             <ImageActionButtons
-              unitCode={item.unit_code}
+              nodeAttributeId={item.leaf_id || item.id}
               projectId={projectId}
             />
+
             <OrderButton
               house={item}
               projectId={projectId}
