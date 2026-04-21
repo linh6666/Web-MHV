@@ -19,13 +19,16 @@ import { Image } from "@mantine/core";
 interface FavoriteItem {
   id: string;
   unit_code: string;
+  status_unit: string;
+  unit_name: string;
+  leaf_id: string; // Thêm leaf_id
   price: string;
   building_type: string;
   location: string;
   bedrooms: number;
   bathrooms: number;
   status: string;
-  desc?: string;
+  describe_vi?: string;
   favorite_id: string;
 }
 
@@ -108,18 +111,18 @@ export default function FavoriteDetails() {
         try {
           const res: HomeImage[] = await Getlisthome({
             project_id: projectId,
-            unit_code: item.unit_code,
+            leaf_id: item.leaf_id, // Chuyền leaf_id thay vì unit_code
           });
 
-          map[item.unit_code] =
+          map[item.leaf_id] =
             res?.map((img) => img.url) || [];
         } catch (error) {
           console.error(
             "Lỗi lấy ảnh:",
-            item.unit_code,
+            item.leaf_id,
             error
           );
-          map[item.unit_code] = [];
+          map[item.leaf_id] = [];
         }
       }
 
@@ -128,6 +131,26 @@ export default function FavoriteDetails() {
 
     fetchImages();
   }, [projectId, favorites]);
+
+  /* =======================
+     HELPERS
+  ======================= */
+  const getStatusColor = (status?: string) => {
+    if (!status) return "#3d6985";
+    const s = status.trim().toLowerCase();
+    switch (s) {
+      case "quan tâm":
+        return "#b8893c";
+      case "đang bán":
+        return "#3d6985";
+      case "đã đặt cọc":
+        return "#cc5c34";
+      case "đã bán":
+        return "#b32f1f";
+      default:
+        return "#3d6985";
+    }
+  };
 
   /* =======================
      RENDER
@@ -175,7 +198,7 @@ export default function FavoriteDetails() {
                     {/* IMAGE LEFT */}
                     <Image
                       src={
-                        imageMap[item.unit_code]?.[0] ||
+                        imageMap[item.leaf_id]?.[0] ||
                         "/no-image.png"
                       }
                       alt={item.unit_code}
@@ -198,20 +221,23 @@ export default function FavoriteDetails() {
                         {item.price}
                       </div>
                       <div className={styles.sub}>
-                        {item.building_type}
+                        {item.unit_name}
                       </div>
 
                       <div className={styles.meta}>
-                        <span className={styles.type1}>
+                        {/* <span className={styles.type1}>
                           <IconBed size={14} />{" "}
                           {item.bedrooms}
                         </span>
                         <span className={styles.type1}>
                           <IconBath size={14} />{" "}
                           {item.bathrooms}
-                        </span>
-                        <span className={styles.status}>
-                          {item.status}
+                        </span> */}
+                        <span 
+                          className={styles.status}
+                          style={{ backgroundColor: getStatusColor(item.status_unit) }}
+                        >
+                          {item.status_unit}
                         </span>
                       </div>
                     </div>
@@ -268,7 +294,7 @@ export default function FavoriteDetails() {
               <div className={styles.gallery}>
                 <Image
                   src={
-                    imageMap[previewItem.unit_code]?.[0] ||
+                    imageMap[previewItem.leaf_id]?.[0] ||
                     "/no-image.png"
                   }
                   alt={previewItem.unit_code}
@@ -281,7 +307,7 @@ export default function FavoriteDetails() {
                   <Image
                     src={
                       imageMap[
-                        previewItem.unit_code
+                        previewItem.leaf_id
                       ]?.[1] || "/no-image.png"
                     }
                     alt={`${previewItem.unit_code} - ảnh phụ 1`}
@@ -294,7 +320,7 @@ export default function FavoriteDetails() {
                   <Image
                     src={
                       imageMap[
-                        previewItem.unit_code
+                        previewItem.leaf_id
                       ]?.[2] || "/no-image.png"
                     }
                     alt={`${previewItem.unit_code} - ảnh phụ 2`}
@@ -314,38 +340,41 @@ export default function FavoriteDetails() {
                       {previewItem.unit_code}
                     </h2>
                     <div className={styles.location}>
-                      {previewItem.building_type},{" "}
+                      {previewItem.unit_name},{" "}
                       {previewItem.location}
                     </div>
                   </div>
 
                   <div className={styles.rightInfo}>
-                    <span className={styles.badge}>
-                      {previewItem.status}
+                    <span 
+                      className={styles.badge}
+                      style={{ backgroundColor: getStatusColor(previewItem.status_unit) }}
+                    >
+                      {previewItem.status_unit}
                     </span>
-                    <div className={styles.priceDetail}>
+                    {/* <div className={styles.priceDetail}>
                       Giá niêm yết{" "}
                       <b>{previewItem.price}</b>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
                 <div className={styles.infoRow}>
-                  <span className={styles.type}>
+                  {/* <span className={styles.type}>
                     <IconBed size={14} />{" "}
                     {previewItem.bedrooms}
                   </span>
                   <span className={styles.type}>
                     <IconBath size={14} />{" "}
                     {previewItem.bathrooms}
-                  </span>
+                  </span> */}
                   <span className={styles.type}>
                     {previewItem.building_type}
                   </span>
                 </div>
 
                 <div className={styles.desc}>
-                  {previewItem.desc ||
+                  {previewItem.describe_vi ||
                     "Chưa có mô tả cho dự án này."}
                 </div>
 
