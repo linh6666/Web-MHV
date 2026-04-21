@@ -15,7 +15,7 @@ export const API_ROUTE = {
 
   //Roles
   GET_LIST_ROLES: "/api/v1/roles/",
-  CREATE_ROLES: "/api/v1/roles",
+  CREATE_ROLES: "/api/v1/roles/",
   UPDATE_ROLES: "/api/v1/roles/{role_id}",
   DELETE_ROLES: "/api/v1/roles/{role_id}",
 
