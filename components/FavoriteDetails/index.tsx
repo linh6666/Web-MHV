@@ -304,7 +304,7 @@ export default function FavoriteDetails() {
                         src={galleryImages[0] || "/no-image.png"}
                         alt={previewItem.unit_code}
                         className={styles.mainImage}
-                        fit="cover"
+                        fit={count === 1 ? "contain" : "cover"}
                         radius={16}
                       />
                     )}
