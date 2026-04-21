@@ -26,22 +26,49 @@
 .links {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Để cuộn ngang không bị mất phần đầu */
   flex: 1;
+  overflow: hidden;
+  margin-left: 20px;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1350px) {
   .mainLink {
-    font-size: 12px;
-    padding: 7px 8px;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .inner {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .mainLink {
+    padding: 7px 6px;
+    font-size: 11px;
   }
   .inner {
     gap: 10px;
   }
+  .links {
+    margin-left: 0;
+  }
 }
 
 .mainLinks {
-  margin-right: calc(var(--mantine-spacing-sm) * -1);
+  display: flex !important;
+  flex-wrap: nowrap !important; /* Không cho phép xuống dòng */
+  overflow-x: auto; /* Cho phép cuộn ngang */
+  gap: var(--mantine-spacing-md);
+  
+  /* Ẩn thanh cuộn để menu trông đẹp hơn */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  padding-bottom: 5px; /* Một chút padding để không bị cắt chữ khi cuộn */
+}
+
+.mainLinks::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .mainLink {

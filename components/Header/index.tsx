@@ -22,12 +22,10 @@ import FavoriteHoverContent from "./favourite";
 const mainLinks = [
   { link: "/Gioi-thieu", label: "GIỚI THIỆU" },
   { link: "/tuong-tac", label: "MÔ HÌNH TƯƠNG TÁC" },
-     { link: "/thong-tin-san-pham", label: "THÔNG TIN SẢN PHẨM" },
+  { link: "/thong-tin-san-pham", label: "THÔNG TIN SẢN PHẨM" },
   { link: "/quan-ly-ban-hang", label: "QUẢN LÝ BÁN HÀNG" },
   { link: "/quan-tri-du-an", label: "QUẢN TRỊ DỰ ÁN" },
   { link: "/quan-ly-he-thong", label: "QUẢN TRỊ HỆ THỐNG" },
-
-  
 ];
 
 /* ============ Token interface ============ */
@@ -140,7 +138,7 @@ export default function Header() {
         />
 
         {/* ============ Menu desktop ============ */}
-        <Box className={classes.links} visibleFrom="md">
+        <Box className={classes.links} visibleFrom="lg">
           <Group
             // gap="md"
             // justify="flex-end"
@@ -152,7 +150,7 @@ export default function Header() {
 
         {/* ============ Icons desktop ============ */}
         <Box
-          visibleFrom="md"
+          visibleFrom="lg"
           style={{ display: "flex", gap: "20px" }}
         >
            <Link href="/lien-he">
@@ -215,7 +213,7 @@ export default function Header() {
 
         {/* ============ Burger mobile ============ */}
         <Box
-          hiddenFrom="md"
+          hiddenFrom="lg"
           style={{ paddingLeft: 12, paddingRight: 12 }}
         >
           <Burger
@@ -232,7 +230,7 @@ export default function Header() {
       {opened && (
         <Box
           className={classes.mobileMenu}
-          hiddenFrom="md"
+          hiddenFrom="lg"
         >
           <Box className={classes.mobileLinks}>
             {mainItems}
