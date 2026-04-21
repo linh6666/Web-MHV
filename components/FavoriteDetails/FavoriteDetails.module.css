@@ -194,14 +194,14 @@
 }
 
 .subImages>* {
-  height: 144px; /* Fixed height instead of flex: 1 to keep them consistent */
-  flex-shrink: 0;
+  flex: 1; 
+  min-height: 144px; /* Giữ kích thước tương đương khi hiển thị 2 ảnh như ban đầu */
   border-radius: 10px;
   overflow: hidden;
 }
 
 .subImageItem {
-  height: 144px;
+  height: 100%;
   width: 100%;
 }
 
