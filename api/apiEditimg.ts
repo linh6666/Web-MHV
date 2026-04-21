@@ -15,7 +15,7 @@ export interface CreateImgPayload {
 export const createImg = async (
   projectId: string, // Có thể giữ tham số này nếu API cũ cần hoặc bỏ qua
   detailid: string,
-  payload: { files: File[]; description_vi?: string }
+  payload: CreateImgPayload
 ) => {
   // 1. Đưa projectId quay lại URL theo chuẩn API Server
   const url = API_ROUTE.UPDATE_IMG

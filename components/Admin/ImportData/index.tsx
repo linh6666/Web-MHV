@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import Image from "next/image";
 // import AppSearch from "../../../common/AppSearch";
 import { modals } from "@mantine/modals";
 import { getListProject } from "../../../api/apigetlistProject";
@@ -21,7 +22,19 @@ interface DataType {
   investor: string;
   overview_image: string;
   rank: number;
-  notification_count?: number; // Thêm trường count nếu có
+  notification_count?: number;
+  thumbnail_url?: string;
+}
+
+interface APIProject {
+  id: string;
+  name: string;
+  type: string;
+  address: string;
+  investor: string;
+  rank: number;
+  overview_image?: { url: string };
+  thumbnail_url?: string;
 }
 
 export default function LargeFixedTable() {
@@ -53,14 +66,14 @@ export default function LargeFixedTable() {
       });
 
       // Lấy danh sách project cơ bản
-      const projects = result.data.map((user: DataType) => ({
-        id: user.id,
-        name: user.name,
-        rank: user.rank,
-        type: user.type,
-        address: user.address,
-        investor: user.investor,
-        overview_image: user.overview_image,
+      const projects = result.data.map((item: APIProject) => ({
+        id: item.id,
+        name: item.name,
+        rank: item.rank,
+        type: item.type,
+        address: item.address,
+        investor: item.investor,
+        overview_image: item.thumbnail_url || item.overview_image?.url || "",
         notification_count: 0,
       }));
 
@@ -141,10 +154,13 @@ const openEditUserModal = (role: DataType) => {
       key: "overview_image",
       width:40,
       render: (url: string) => (
-        <img
-          src={url}
+        <Image
+          src={url || "/placeholder.png"}
           alt="overview"
-          style={{ width: 130, height: 70, objectFit: "cover", borderRadius: 8 }}
+          width={130}
+          height={70}
+          style={{ objectFit: "cover", borderRadius: 8 }}
+          unoptimized // Tắt tối ưu hóa nếu chưa config domain trong next.config.js
         />
       ),
     },
