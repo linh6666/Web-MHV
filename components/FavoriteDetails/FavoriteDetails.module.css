@@ -54,20 +54,16 @@
 
 .card {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 10px;
-  margin-bottom: 10px;
-  position: relative;
-
-  max-height: 140px;
-  /* ✅ giới hạn chiều cao card */
-  overflow-y: auto;
-  /* ✅ bật scroll trong card */
-
+  margin-bottom: 12px;
+  height: 110px; /* Fixed height for uniformity */
+  overflow: hidden;
   cursor: pointer;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .card::-webkit-scrollbar {
@@ -84,8 +80,23 @@
 }
 
 
+.cardImage {
+  width: 110px;
+  height: 90px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.cardImage :global(img) {
+  width: 110px !important;
+  height: 90px !important;
+  object-fit: cover !important;
+}
+
 .thumb {
-  width: 120px;
+  width: 110px;
+  height: 90px;
   background: #dcdce0;
   border-radius: 8px;
 }
@@ -169,13 +180,29 @@
   flex-direction: column;
   gap: 12px;
   height: 300px;
+  overflow-y: auto; /* Cho phép cuộn */
+  padding-right: 4px;
+}
+
+/* Ẩn thanh cuộn để giao diện sạch hơn */
+.subImages::-webkit-scrollbar {
+  width: 4px;
+}
+.subImages::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
 }
 
 .subImages>* {
-  flex: 1;
-  /* 👈 QUAN TRỌNG: chia đều chiều cao */
+  height: 144px; /* Fixed height instead of flex: 1 to keep them consistent */
+  flex-shrink: 0;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.subImageItem {
+  height: 144px;
+  width: 100%;
 }
 
 /* ép ảnh Mantine phủ đầy box */

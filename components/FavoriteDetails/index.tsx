@@ -4,8 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import styles from "./FavoriteDetails.module.css";
 import {
-  IconBath,
-  IconBed,
   IconHeartFilled,
 } from "@tabler/icons-react";
 import { getListFavorites } from "../../api/apiGetListFavorites";
@@ -21,7 +19,9 @@ interface FavoriteItem {
   unit_code: string;
   status_unit: string;
   unit_name: string;
-  leaf_id: string; // Thêm leaf_id
+  leaf_id: string;
+  node_attribute_id?: string;
+  unit_id?: string;
   price: string;
   building_type: string;
   location: string;
@@ -34,6 +34,8 @@ interface FavoriteItem {
 
 interface HomeImage {
   url: string;
+  file_name?: string;
+  file_type?: string;
 }
 
 export default function FavoriteDetails() {
@@ -50,13 +52,10 @@ export default function FavoriteDetails() {
   const [activeItem, setActiveItem] =
     useState<FavoriteItem | null>(null);
 
-  // map unit_code -> danh sách ảnh
+  // map (id/leaf_id/unit_code) -> danh sách ảnh
   const [imageMap, setImageMap] = useState<
     Record<string, string[]>
   >({});
-
-  // chặn fetch ảnh nhiều lần
-  const fetchedImagesRef = useRef(false);
 
   /* =======================
      FETCH FAVORITES
@@ -77,9 +76,6 @@ export default function FavoriteDetails() {
           setActiveItem(data[0]);
           setPreviewItem(data[0]);
         }
-
-        // reset để fetch ảnh lại khi project đổi
-        fetchedImagesRef.current = false;
       } catch (error) {
         console.error("Lỗi khi lấy favorites:", error);
       } finally {
@@ -91,46 +87,51 @@ export default function FavoriteDetails() {
   }, [projectId]);
 
   /* =======================
-     FETCH IMAGES (LOGIC FIX)
+     FETCH ALL IMAGES (INCREMENTAL & SEQUENTIAL)
   ======================= */
   useEffect(() => {
-    if (
-      !projectId ||
-      favorites.length === 0 ||
-      fetchedImagesRef.current
-    )
-      return;
+    if (!projectId || favorites.length === 0) return;
 
-    fetchedImagesRef.current = true;
-
-    const fetchImages = async () => {
-      const map: Record<string, string[]> = {};
-
-      // ❗ không Promise.all → tránh race condition
+    const fetchImagesSequentially = async () => {
       for (const item of favorites) {
+        // Ưu tiên lấy ID theo thứ tự chính xác nhất của API
+        const id = item.leaf_id || item.node_attribute_id || item.unit_id || item.unit_code;
+        
+        // Nếu đã có ảnh trong imageMap thì bỏ qua
+        if (!id || imageMap[id]) continue;
+
         try {
           const res: HomeImage[] = await Getlisthome({
             project_id: projectId,
-            leaf_id: item.leaf_id, // Chuyền leaf_id thay vì unit_code
+            leaf_id: item.leaf_id || item.node_attribute_id || item.unit_id,
+            unit_code: (item.leaf_id || item.node_attribute_id || item.unit_id) ? undefined : item.unit_code,
           });
 
-          map[item.leaf_id] =
-            res?.map((img) => img.url) || [];
-        } catch (error) {
-          console.error(
-            "Lỗi lấy ảnh:",
-            item.leaf_id,
-            error
-          );
-          map[item.leaf_id] = [];
+          const validImages = (res || [])
+            .filter((img) => {
+              const url = img.url || "";
+              const fileName = img.file_name || "";
+              const fileType = img.file_type || "";
+              return (
+                fileType.startsWith("image/") ||
+                url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ||
+                fileName.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+              );
+            })
+            .map((img) => img.url)
+            .filter((url) => !!url && !url.includes("undefined"));
+
+          // Cập nhật ngay lập tức cho từng căn để người dùng thấy ảnh hiện ra dần dần
+          setImageMap((prev) => ({ ...prev, [id]: validImages }));
+        } catch (err) {
+          console.error("Lỗi lấy ảnh cho căn:", id, err);
+          setImageMap((prev) => ({ ...prev, [id]: [] }));
         }
       }
-
-      setImageMap(map);
     };
 
-    fetchImages();
-  }, [projectId, favorites]);
+    fetchImagesSequentially();
+  }, [projectId, favorites, imageMap]);
 
   /* =======================
      HELPERS
@@ -195,22 +196,16 @@ export default function FavoriteDetails() {
                       setPreviewItem(item);
                     }}
                   >
-                    {/* IMAGE LEFT */}
                     <Image
                       src={
-                        imageMap[item.leaf_id]?.[0] ||
+                        imageMap[item.leaf_id || ""]?.[0] ||
+                        imageMap[item.node_attribute_id || ""]?.[0] ||
+                        imageMap[item.unit_id || ""]?.[0] ||
+                        imageMap[item.unit_code]?.[0] ||
                         "/no-image.png"
                       }
                       alt={item.unit_code}
-                      width={120}
-                      height={1}
-                      style={{
-                        width: 120,
-                        height: "auto",
-                        borderRadius: 12,
-                        objectFit: "contain",
-                        flexShrink: 0,
-                      }}
+                      className={styles.cardImage}
                     />
 
                     <div className={styles.cardInfo}>
@@ -294,7 +289,10 @@ export default function FavoriteDetails() {
               <div className={styles.gallery}>
                 <Image
                   src={
-                    imageMap[previewItem.leaf_id]?.[0] ||
+                    imageMap[previewItem.leaf_id || ""]?.[0] ||
+                    imageMap[previewItem.node_attribute_id || ""]?.[0] ||
+                    imageMap[previewItem.unit_id || ""]?.[0] ||
+                    imageMap[previewItem.unit_code]?.[0] ||
                     "/no-image.png"
                   }
                   alt={previewItem.unit_code}
@@ -304,31 +302,24 @@ export default function FavoriteDetails() {
                 />
 
                 <div className={styles.subImages}>
-                  <Image
-                    src={
-                      imageMap[
-                        previewItem.leaf_id
-                      ]?.[1] || "/no-image.png"
-                    }
-                    alt={`${previewItem.unit_code} - ảnh phụ 1`}
-                    fit="cover"
-                    radius={12}
-                    width={300}
-                    height={50}
-                  />
-
-                  <Image
-                    src={
-                      imageMap[
-                        previewItem.leaf_id
-                      ]?.[2] || "/no-image.png"
-                    }
-                    alt={`${previewItem.unit_code} - ảnh phụ 2`}
-                    fit="cover"
-                    radius={12}
-                    width={120}
-                    height={90}
-                  />
+                  {(
+                    imageMap[previewItem.leaf_id || ""] || 
+                    imageMap[previewItem.node_attribute_id || ""] || 
+                    imageMap[previewItem.unit_id || ""] || 
+                    imageMap[previewItem.unit_code] || 
+                    []
+                  )
+                    .slice(1)
+                    .map((url, idx) => (
+                      <Image
+                        key={idx}
+                        src={url || "/no-image.png"}
+                        alt={`${previewItem.unit_code || "Căn hộ"} - ảnh phụ ${idx + 1}`}
+                        fit="cover"
+                        radius={12}
+                        className={styles.subImageItem}
+                      />
+                    ))}
                 </div>
               </div>
 
