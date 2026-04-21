@@ -139,6 +139,7 @@ export default function LargeFixedTable() {
     <>
       <Group justify="space-between" mb={12}>
         {/* <AppSearch /> */}
+        <div></div>
         <AppAction openModal={openModal} />
       </Group>
 
@@ -146,6 +147,7 @@ export default function LargeFixedTable() {
       {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
 
       <Table
+      
         columns={columns}
         dataSource={paginatedData}
         loading={loading}

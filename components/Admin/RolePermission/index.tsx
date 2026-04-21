@@ -199,10 +199,12 @@ const fetchOptions = useCallback(async () => {
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         {/* <AppSearch /> */}
+        <div></div>
         <AppAction openModal={openModal} />
       </Group>
 
       <Table
+        style={{ marginTop: 12 }}
         columns={columns}
         dataSource={data}
         loading={loading}

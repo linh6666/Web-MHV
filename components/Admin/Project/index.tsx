@@ -254,6 +254,7 @@ export default function LargeFixedTable() {
       </Group>
 
       <Table
+       style={{ marginTop: 12 }} 
         columns={columns}
         dataSource={data}
         loading={loading}
