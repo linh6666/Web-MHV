@@ -286,42 +286,45 @@ export default function FavoriteDetails() {
           {previewItem ? (
             <>
               {/* GALLERY */}
-              <div className={styles.gallery}>
-                <Image
-                  src={
-                    imageMap[previewItem.leaf_id || ""]?.[0] ||
-                    imageMap[previewItem.node_attribute_id || ""]?.[0] ||
-                    imageMap[previewItem.unit_id || ""]?.[0] ||
-                    imageMap[previewItem.unit_code]?.[0] ||
-                    "/no-image.png"
-                  }
-                  alt={previewItem.unit_code}
-                  className={styles.mainImage}
-                  fit="cover"
-                  radius={16}
-                />
+              {(() => {
+                const galleryImages = (
+                  imageMap[previewItem.leaf_id || ""] || 
+                  imageMap[previewItem.node_attribute_id || ""] || 
+                  imageMap[previewItem.unit_id || ""] || 
+                  imageMap[previewItem.unit_code] || 
+                  []
+                );
+                const count = galleryImages.length;
 
-                <div className={styles.subImages}>
-                  {(
-                    imageMap[previewItem.leaf_id || ""] || 
-                    imageMap[previewItem.node_attribute_id || ""] || 
-                    imageMap[previewItem.unit_id || ""] || 
-                    imageMap[previewItem.unit_code] || 
-                    []
-                  )
-                    .slice(1)
-                    .map((url, idx) => (
+                return (
+                  <div className={styles.gallery} data-count={count}>
+                    {count > 0 && (
                       <Image
-                        key={idx}
-                        src={url || "/no-image.png"}
-                        alt={`${previewItem.unit_code || "Căn hộ"} - ảnh phụ ${idx + 1}`}
+                        src={galleryImages[0] || "/no-image.png"}
+                        alt={previewItem.unit_code}
+                        className={styles.mainImage}
                         fit="cover"
-                        radius={12}
-                        className={styles.subImageItem}
+                        radius={16}
                       />
-                    ))}
-                </div>
-              </div>
+                    )}
+
+                    {count > 1 && (
+                      <div className={styles.subImages}>
+                        {galleryImages.slice(1).map((url, idx) => (
+                          <Image
+                            key={idx}
+                            src={url || "/no-image.png"}
+                            alt={`${previewItem.unit_code || "Căn hộ"} - ảnh phụ ${idx + 1}`}
+                            fit="cover"
+                            radius={12}
+                            className={styles.subImageItem}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               {/* DETAIL */}
               <div className={styles.detail}>
