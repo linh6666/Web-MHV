@@ -22,7 +22,7 @@ export const API_ROUTE = {
 
   //System
   GET_LIST_SYSTEM: "/api/v1/system/",
-  CREATE_SYSTEM: "/api/v1/system",
+  CREATE_SYSTEM: "/api/v1/system/",
   UPDATE_SYSTEM: "/api/v1/system/{system_id}",
   DELETE_SYSTEM: "/api/v1/system/{system_id}",
 
