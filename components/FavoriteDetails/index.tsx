@@ -10,6 +10,7 @@ import { getListFavorites } from "../../api/apiGetListFavorites";
 import { deleteFavorites } from "../../api/apiDeteleFavorites";
 import { Getlisthome } from "../../api/apiGetListHome";
 import { Image } from "@mantine/core";
+import OrderButton from "../Warehouse/WarehouseDetail/Order";
 
 /* =======================
    TYPE
@@ -372,11 +373,21 @@ export default function FavoriteDetails() {
                     "Chưa có mô tả cho dự án này."}
                 </div>
 
-                <div className={styles.actions}>
-                  <button className={styles.contact}>
-                    Liên hệ
-                  </button>
-                </div>
+                {projectId && (
+                  <div className={styles.actions}>
+                    <OrderButton
+                      projectId={projectId}
+                      house={{
+                        id: previewItem.id,
+                        unit_code: previewItem.unit_code,
+                        leaf_id: previewItem.leaf_id || previewItem.node_attribute_id,
+                        zone: previewItem.unit_name, 
+                        building_type: previewItem.building_type,
+                        layer2: previewItem.location
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </>
           ) : (
