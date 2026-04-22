@@ -52,27 +52,27 @@ export default function DetailBuilding({
       const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
 
       Array.from(svgDoc.querySelectorAll("rect, path, circle")).forEach((el) => {
-        const elId = el.id || "";
-        const cleanElId = elId.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+        const elIdentifier = el.getAttribute("data-name") || "";
+        const cleanElId = elIdentifier.trim().toUpperCase();
 
         const isMatch = activeModels.some((model) => {
-          const cleanModel = (model || "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+          const cleanModel = (model || "").trim().toUpperCase();
           return cleanElId === cleanModel;
         });
 
         if (isMatch) {
           el.removeAttribute("style");
-          el.setAttribute("data-model", elId);
+          el.setAttribute("data-model", elIdentifier);
           el.setAttribute("cursor", "pointer");
 
           // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
           const isHighlighted = highlightedCodes.some((code) => {
-            const cleanCode = (code || "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+            const cleanCode = (code || "").trim().toUpperCase();
             return cleanElId === cleanCode;
           });
 
           const cleanSelected = selectedModel 
-            ? selectedModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase() 
+            ? selectedModel.trim().toUpperCase() 
             : null;
 
           if (isHighlighted || (cleanSelected && cleanElId === cleanSelected)) {

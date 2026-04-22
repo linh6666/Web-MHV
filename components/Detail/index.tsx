@@ -94,27 +94,25 @@ export default function ZoningSystem({
       Array.from(
         svgDoc.querySelectorAll("rect, path, circle")
       ).forEach((el) => {
-        const elId = el.id || "";
-        // Chuẩn hóa: xóa sạch toàn bộ ký tự không phải chữ và số
-        const cleanElId = elId.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+        const elIdentifier = el.getAttribute("data-name") || "";
+        // Chuẩn hóa: chỉ trim và viết hoa, giữ nguyên dấu chấm để phân biệt 2.12 và 21.2
+        const cleanElId = elIdentifier.trim().toUpperCase();
 
         const isMatch = activeModels.some((model) => {
-          const cleanModel = (model || "")
-            .replace(/[^a-zA-Z0-9]/g, "")
-            .toUpperCase();
+          const cleanModel = (model || "").trim().toUpperCase();
           // SO SÁNH BẰNG TUYỆT ĐỐI
           return cleanElId === cleanModel;
         });
 
         if (isMatch) {
           el.removeAttribute("style");
-          el.setAttribute("data-model", elId);
+          el.setAttribute("data-model", elIdentifier);
           el.setAttribute("cursor", "pointer");
 
           // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
           const isHighlighted = highlightedCodes.some((code) => {
             const cleanCode = (code || "").trim().replace(/\s+/g, "_").toUpperCase();
-            const cleanElIdFromCode = elId.replace(/\s+/g, "_").toUpperCase();
+            const cleanElIdFromCode = elIdentifier.replace(/\s+/g, "_").toUpperCase();
             return cleanElIdFromCode.includes(cleanCode) || cleanCode.includes(cleanElIdFromCode);
           });
 

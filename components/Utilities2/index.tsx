@@ -28,19 +28,19 @@ export default function ZoningSystem({ project_id, initialBuildingType }: Zoning
       const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
 
       Array.from(svgDoc.querySelectorAll("rect, path, circle")).forEach((el) => {
-        const elId = el.id || "";
-        const cleanElId = elId.replace(/\s+/g, "_").toUpperCase();
+        const elIdentifier = el.getAttribute("data-name") || "";
+        const cleanElId = elIdentifier.trim().toUpperCase();
 
         // Kiểm tra xem ID có thuộc danh sách hiển thị chung không
         const isMatch = activeModels.some((model) => {
-          const cleanModel = (model || "").trim().replace(/\s+/g, "_").toUpperCase();
-          return cleanElId.includes(cleanModel) || cleanModel.includes(cleanElId);
+          const cleanModel = (model || "").trim().toUpperCase();
+          return cleanElId === cleanModel;
         });
 
         // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
         const isHighlighted = highlightedCodes.some((code) => {
-          const cleanCode = (code || "").trim().replace(/\s+/g, "_").toUpperCase();
-          return cleanElId.includes(cleanCode) || cleanCode.includes(cleanElId);
+          const cleanCode = (code || "").trim().toUpperCase();
+          return cleanElId === cleanCode;
         });
 
         if (isMatch) {

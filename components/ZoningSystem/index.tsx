@@ -31,19 +31,20 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
       const svgDoc = parser.parseFromString(item.svg, "image/svg+xml");
   
       Array.from(svgDoc.querySelectorAll("rect, path,circle")).forEach((el) => {
-        const elId = el.id || "";
-        const cleanElId = elId.replace(/\s+/g, "_").toUpperCase();
+        const elIdentifier = el.getAttribute("data-name") || "";
+        // Chuẩn hóa: chỉ trim và viết hoa, giữ nguyên dấu chấm để phân biệt 2.12 và 21.2
+        const cleanElId = elIdentifier.trim().toUpperCase();
   
-        // So sánh với activeModels → chuẩn hóa tên
+        // So sánh tuyệt đối với activeModels
         const isMatch = activeModels.some((model) => {
-          const cleanModel = (model || "").replace(/\s+/g, "_").toUpperCase();
-          return cleanElId.includes(cleanModel) || cleanModel.includes(cleanElId);
+          const cleanModel = (model || "").trim().toUpperCase();
+          return cleanElId === cleanModel;
         });
   
-        if (elId) {
+        if (elIdentifier) {
           console.log(
             isMatch ? "✅ MATCH → SVG hiển thị:" : "⛔ HIDE →",
-            elId
+            elIdentifier
           );
         }
   
