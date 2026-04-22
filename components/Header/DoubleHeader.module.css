@@ -26,7 +26,7 @@
 .links {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Để cuộn ngang không bị mất phần đầu */
+  justify-content: center;
   flex: 1;
   overflow: hidden;
   margin-left: 20px;

@@ -95,7 +95,6 @@ export default function Header() {
         "MÔ HÌNH TƯƠNG TÁC",
         "QUẢN LÝ BÁN HÀNG",
         "THÔNG TIN SẢN PHẨM",
-     
       ].includes(link.label);
     }
   });
@@ -140,9 +139,8 @@ export default function Header() {
         {/* ============ Menu desktop ============ */}
         <Box className={classes.links} visibleFrom="lg">
           <Group
-            // gap="md"
-            // justify="flex-end"
             className={classes.mainLinks}
+            justify="center"
           >
             {mainItems}
           </Group>
