@@ -111,13 +111,12 @@ export default function ZoningSystem({
 
           // Kiểm tra xem ID có thuộc danh sách được chọn để highlight không
           const isHighlighted = highlightedCodes.some((code) => {
-            const cleanCode = (code || "").trim().replace(/\s+/g, "_").toUpperCase();
-            const cleanElIdFromCode = elIdentifier.replace(/\s+/g, "_").toUpperCase();
-            return cleanElIdFromCode.includes(cleanCode) || cleanCode.includes(cleanElIdFromCode);
+            const cleanCode = (code || "").trim().toUpperCase();
+            return cleanElId === cleanCode;
           });
 
           const cleanSelected = selectedModel 
-            ? selectedModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase() 
+            ? selectedModel.trim().toUpperCase() 
             : null;
 
           if (isHighlighted || (cleanSelected && cleanElId === cleanSelected)) {

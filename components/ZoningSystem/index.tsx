@@ -50,7 +50,8 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   
         if (isMatch) {
           el.removeAttribute("style");
-          if (selectedModel && cleanElId.includes(selectedModel.replace(/\s+/g, "_").toUpperCase())) {
+          const cleanSelected = selectedModel ? selectedModel.trim().toUpperCase() : null;
+          if (cleanSelected && cleanElId === cleanSelected) {
             el.setAttribute("fill", "#bb8d38");
             el.setAttribute("stroke", "white");
           } else {
