@@ -28,7 +28,7 @@ export const API_ROUTE = {
 
   //Permission
   GET_LIST_PERMISSION: "/api/v1/permission/",
-  CREATE_PERMISSION: "/api/v1/permission",
+  CREATE_PERMISSION: "/api/v1/permission/",
   UPDATE_PERMISSION: "/api/v1/permission/{Permission_id}",
   DELETE_PERMISSION: "/api/v1/permission/{Permission_id}",
 
