@@ -43,7 +43,7 @@ const mockdata = [
     icon: IconUser,
     initiallyOpened: true,
     links: [
-      { label: 'Cấu hình chức năng trong dự án', link: 'tesst' },
+      { label: 'Cấu hình chức năng trong dự án', link: 'permissions' },
       { label: 'Định danh vai trò trong dự án', link: 'Roles' },
       { label: 'Cấu hình vai trò trong dự án', link: 'RolePermission' },
       { label: 'Phân quyền người dùng trong dự án', link: 'UserProjectRole' },
@@ -101,6 +101,8 @@ export function PageAdminContent() {
       case 'User':
         return <User />;
       case 'permission':
+        return <Permission />;
+           case 'permissions':
         return <Permission />;
       case 'RolePermission':
         return <RolePermission />;
