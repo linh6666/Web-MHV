@@ -44,7 +44,7 @@ export default function VideoPage() {
   }, [project_id]); // Chạy lại nếu project_id thay đổi
 
   return (
-    <Container className={styles.videoContainer} pt={80}>
+    <Container className={styles.videoContainer} pt={40}>
       <iframe
         className={styles.videoIframe}
         src="https://www.youtube.com/embed/mq6pQgVI-Fc?autoplay=1&mute=1"
