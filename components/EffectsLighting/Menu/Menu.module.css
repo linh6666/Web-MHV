@@ -102,6 +102,35 @@
   justify-content: center;
   align-items: center;
   gap: clamp(5px, 1vh, 10px);
+  padding: 10px;
+}
+
+.toggleBtn {
+  width: 90px;
+  height: 30px;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s;
+  font-size: 11px;
+}
+
+.backBtn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 40px;
+  background: #EEEEEE;
+  border: 1.5px solid #294b61;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+  background-color: #d1d1d1;
 }
 
 @media (max-width: 1400px) {
@@ -141,24 +170,38 @@
   }
 
   .logo {
-    height: 100px;
+    height: 80px;
+    min-height: unset;
   }
 
   .Function {
     width: 100%;
     height: auto;
     padding: 5px;
+    min-height: unset;
   }
 
   .footer {
     width: 100%;
     height: auto;
-    gap: 10px;
+    gap: 15px;
+    padding: 15px 0;
   }
   
   .imgea {
-    width: 200px;
+    width: 150px;
     height: auto;
+  }
+
+  .toggleBtn {
+    width: 120px; /* To hơn trên mobile */
+    height: 35px;
+    font-size: 12px;
+  }
+
+  .backBtn {
+    width: 40px;
+    height: 40px;
   }
 }
 

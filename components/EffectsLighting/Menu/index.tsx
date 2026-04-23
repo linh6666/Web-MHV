@@ -101,12 +101,6 @@ export default function Menu({ project_id }: MenuProps) {
 
   // Style dynamic
   const getButtonStyle = (isActive: boolean) => ({
-    width: 90,
-    height: 30,
-    borderRadius: 40,
-    display: "flex",
-    justifyContent: "center",
-    overflow: "hidden",
     transition: "all 0.3s",
     background: isActive ? "#C2923F" : "#EEEEEE",
     color: isActive ? "#12223B" : "#294b61",
@@ -158,6 +152,7 @@ export default function Menu({ project_id }: MenuProps) {
             <Button
               loading={loading === "on"}
               disabled={!!loading}
+              className={styles.toggleBtn}
               style={getButtonStyle(active === "on")}
               onClick={() =>
                 active !== "on"
@@ -172,6 +167,7 @@ export default function Menu({ project_id }: MenuProps) {
             <Button
               loading={loading === "off"}
               disabled={!!loading}
+              className={styles.toggleBtn}
               style={getButtonStyle(active === "off")}
               onClick={() =>
                 active !== "off"
@@ -187,17 +183,7 @@ export default function Menu({ project_id }: MenuProps) {
           <Button
             onClick={handleBack}
             variant="filled"
-            style={{
-              width: 30,
-              height: 30,
-              padding: 0,
-              borderRadius: 40,
-              background: "#EEEEEE",
-              border: "1.5px solid #294b61",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className={styles.backBtn}
           >
             <IconArrowLeft size={18} color="#294b61" />
           </Button>

@@ -1,12 +1,12 @@
 .box {
   max-width: 1260px;
   width: 100%;
-    margin: 20px auto 0;
+  margin: 20px auto 0;
   display: flex;
-  aspect-ratio: 16/9;
-  /* Tỉ lệ khung hình linh hoạt */
-  max-height: calc(100vh - 220px);
-  /* Trừ Header (80px) + Footer (~140px) */
+  justify-content: center;
+  /* Đưa cả cụm ra giữa */
+  height: calc(100vh - 240px);
+  /* Trừ Header + Footer + Margin mới */
   box-sizing: border-box;
   overflow: hidden;
   /* Tránh scrollbar */
@@ -14,8 +14,8 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .left {
-  flex: 3;
-  /* ✅ không cho ảnh tràn khi zoom */
+  flex: 0 1 auto;
+  /* Không tự động giãn ra, chỉ lấy vừa đủ chỗ của ảnh */
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -49,25 +49,24 @@
 
 /* FIX CHÍNH Ở ĐÂY */
 .imageWrapper {
-  width: 100%;
+  width: auto;
+  /* Co lại theo tỉ lệ ảnh */
   height: 100%;
-  /* Khớp với viewBox của SVG */
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 /* Ảnh nền */
 .img {
-  width: 100%;
-  height: 100%;
-  /* object-fit: contain; */
-  /* Ép ảnh giãn cùng tỉ lệ để luôn khớp với SVG (không móp méo) */
+  height: 100% !important;
+  width: auto !important;
+  /* Quan trọng: Rộng tự động theo cao */
+  max-width: none !important;
+  /* Cho phép nó mở rộng nếu cần */
+  object-fit: contain;
   display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 /* SVG overlay — fill toàn bộ imageWrapper */
@@ -108,7 +107,7 @@
   .box {
     max-width: 100%;
     padding: 12px;
-    padding-top: 60px;
+    padding-top: 80px;
     margin-top: 0;
   }
 
@@ -123,7 +122,7 @@
   .box {
     max-width: 100%;
     padding: 10px;
-    padding-top: 60px;
+    padding-top: 80px;
     margin-top: 0;
   }
 
@@ -137,12 +136,16 @@
   .box {
     flex-direction: column;
     height: auto;
+    aspect-ratio: auto;
   }
 
   .left {
     flex: none;
     width: 100%;
-    height: clamp(260px, 45vw, 380px);
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    /* Tỉ lệ cho ảnh EffectsLighting */
   }
 
   .right {
@@ -155,7 +158,8 @@
 
 @media (max-width: 480px) {
   .left {
-    height: clamp(200px, 55vw, 280px);
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   .right {
