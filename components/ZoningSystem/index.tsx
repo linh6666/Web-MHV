@@ -13,8 +13,9 @@ interface ZoningSystemProps {
 }
 
 export default function ZoningSystem({ project_id }: ZoningSystemProps) {
- const [activeModels, setActiveModels] = useState<string[]>([]);
+  const [activeModels, setActiveModels] = useState<string[]>([]);
   const [selectedModel] = useState<string | null>(null);
+  const [hoverInfo, setHoverInfo] = useState<{ name: string; x: number; y: number } | null>(null);
 
   const filteredPaths = useMemo(() => {
     if (!activeModels || activeModels.length === 0) {
@@ -80,6 +81,22 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
   
     return result;
   }, [activeModels, selectedModel]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const target = (e.target as HTMLElement).closest("[data-name]");
+    const dataName = target?.getAttribute("data-name");
+
+    if (dataName) {
+      setHoverInfo({
+        name: dataName,
+        x: e.clientX,
+        y: e.clientY,
+      });
+    } else {
+      setHoverInfo(null);
+    }
+  };
+
   return (
     <div className={styles.box}>
       <div className={styles.left}>
@@ -95,7 +112,11 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
           }}
         >
           <TransformComponent>
-        <div className={styles.imageWrapper}>
+        <div
+          className={styles.imageWrapper}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setHoverInfo(null)}
+        >
           <img src="/HOME_BG.jpg" alt="Ảnh" className={styles.img} />
             {filteredPaths.map((item) => {
               console.log("🟩 SVG được render lên UI:", item.id);
@@ -104,17 +125,44 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
                 <div
                   key={item.id}
                   className={styles.overlaySvg}
+                  style={{ 
+                    cursor: "pointer", 
+                    pointerEvents: "all",
+                    zIndex: 10
+                  }}
                   dangerouslySetInnerHTML={{ __html: item.svg }}
                 />
               );
             })}
 
-          {/* SVG 1 */}
-    
         </div>
           </TransformComponent>
         </TransformWrapper>
       </div>
+
+      {hoverInfo && (
+        <div
+          style={{
+            position: "fixed",
+            top: hoverInfo.y + 15,
+            left: hoverInfo.x + 15,
+            backgroundColor: "rgba(25, 25, 25, 0.95)",
+            color: "#fff",
+            padding: "8px 14px",
+            borderRadius: "8px",
+            fontSize: "14px",
+            fontWeight: 600,
+            pointerEvents: "none",
+            zIndex: 9999,
+            boxShadow: "0 10px 25px rgba(0,0,0,0.4)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            backdropFilter: "blur(6px)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {hoverInfo.name}
+        </div>
+      )}
 
       <div className={styles.right}>
         <Menu project_id={project_id}
