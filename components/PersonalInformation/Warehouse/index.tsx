@@ -1,121 +1,143 @@
 "use client";
 
-import { Container, Title } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Text, Loader, Center } from "@mantine/core";
+import { IconCurrencyDollar, IconCheck, IconX, IconCreditCard, IconHeart } from "@tabler/icons-react";
 import styles from "./FavoritesList.module.css"; 
+import { getListProject } from "../../../api/apigetlistProject";
+
+interface Project {
+  total_revenue?: number | null;
+  success_count?: number | null;
+  canceled_count?: number | null;
+  paying_count?: number | null;
+  favorite_count?: number | null;
+}
+
+interface Totals {
+  total_revenue: number;
+  success_count: number;
+  canceled_count: number;
+  paying_count: number;
+  favorite_count: number;
+}
 
 export default function Warehouse() {
-  // ✅ Dữ liệu mẫu (mock)
-  const mockData = [
-    {
-      id: 1,
-      zone_name: "Phân Khu 1",
-      building_name: "A_SLS 9.5x20",
-      bedroom: 4,
-      price: 3500000000,
-      direction: "Đông Nam",
-      status: "Đã cọc",
+  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const token = localStorage.getItem("access_token") || "";
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await getListProject({ token, skip: 0, limit: 100 });
+        setProjects(response.data);
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // Tính toán tổng các chỉ số từ danh sách dự án
+  const totals = projects.reduce<Totals>((acc, curr) => {
+    return {
+      total_revenue: (acc.total_revenue || 0) + (curr.total_revenue || 0),
+      success_count: (acc.success_count || 0) + (curr.success_count || 0),
+      canceled_count: (acc.canceled_count || 0) + (curr.canceled_count || 0),
+      paying_count: (acc.paying_count || 0) + (curr.paying_count || 0),
+      favorite_count: (acc.favorite_count || 0) + (curr.favorite_count || 0),
+    };
+  }, {
+    total_revenue: 0,
+    success_count: 0,
+    canceled_count: 0,
+    paying_count: 0,
+    favorite_count: 0,
+  });
+
+  const stats = [
+    { 
+      id: 'revenue',
+      title: "Tổng doanh thu", 
+      value: (totals.total_revenue || 0).toLocaleString('vi-VN') + " đ", 
+      description: "Tổng tiền thu được từ dự án",
+      icon: IconCurrencyDollar,
+      className: styles.card_blue
     },
-    {
-      id: 2,
-      zone_name: "Phân Khu 2",
-      building_name: "B_SL 8x18",
-      bedroom: 3,
-      price: 2900000000,
-      direction: "Tây Bắc",
-      status: "Đã bán",
+    { 
+      id: 'success',
+      title: "Đã chốt xong", 
+      value: (totals.success_count || 0).toString(), 
+      description: "Hợp đồng đã chốt",
+      icon: IconCheck,
+      className: styles.card_teal
     },
-    {
-      id: 3,
-      zone_name: "Phân Khu 2",
-      building_name: "B_SL 8x18",
-      bedroom: 3,
-      price: 2900000000,
-      direction: "Tây Bắc",
-      status: "Đã bán",
+    { 
+      id: 'canceled',
+      title: "Đã hủy", 
+      value: (totals.canceled_count || 0).toString(), 
+      description: "Số lượng đơn đã hủy",
+      icon: IconX,
+      className: styles.card_red
     },
-    {
-      id: 4,
-      zone_name: "Phân Khu 2",
-      building_name: "B_SL 8x18",
-      bedroom: 3,
-      price: 2900000000,
-      direction: "Tây Bắc",
-      status: "Đã bán",
+    { 
+      id: 'paying',
+      title: "Đang thanh toán", 
+      value: (totals.paying_count || 0).toString(), 
+      description: "Đơn đang thanh toán",
+      icon: IconCreditCard,
+      className: styles.card_orange
+    },
+    { 
+      id: 'favorite',
+      title: "Yêu thích", 
+      value: (totals.favorite_count || 0).toString(), 
+      description: "Số lượng yêu thích",
+      icon: IconHeart,
+      className: styles.card_pink
     },
   ];
 
-  interface BuildingItem {
-    id: number;
-    zone_name: string;
-    building_name: string;
-    bedroom: number;
-    price: number;
-    direction: string;
-    status: string;
+  if (loading) {
+    return (
+      <Center style={{ height: '300px' }}>
+        <Loader color="blue" size="md" type="dots" />
+      </Center>
+    );
   }
 
-  const handleGoToDetailPage = (_item: BuildingItem) => {
-    // alert(`Chuyển tới trang chi tiết: ${item.building_name}`);
-  };
-
   return (
-    <Container size="sm" py="xl">
-      <Title order={2} c="#053c74" ta="center" mb="lg">
-        Danh sách đã bán
-      </Title>
+    <div className={styles.root}>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <Text className={styles.mainTitle}>Tổng quan dự án </Text>
+          <Text className={styles.subTitle}>
+            Báo cáo chi tiết hiệu quả kinh doanh dự án.
+          </Text>
+        </header>
 
-      <div className={styles.gridContainer}>
-        {mockData.map((item) => (
-          <div
-            key={item.id}
-            className={styles.buildingCard}
-            onClick={() => handleGoToDetailPage(item)}
-            style={{ cursor: "pointer" }}
-          >
-            <div className={styles.buildingHeader}>
-              <span className={styles.buildingName}>{item.zone_name}</span>
+        <div className={styles.dashboardGrid}>
+          {stats.map((stat) => (
+            <div key={stat.id} className={`${styles.statCard} ${stat.className}`}>
+              <div className={styles.iconBox}>
+                <stat.icon size={18} stroke={2.5} />
+              </div>
+              <Text className={styles.statLabel}>{stat.title}</Text>
+              <Text className={styles.statValue}>{stat.value}</Text>
+              <Text className={styles.statDesc}>{stat.description}</Text>
             </div>
-
-            <div className={styles.buildingDetails}>
-              <p style={{ fontSize: "14px" }}>
-                Tên nhà: {item.building_name ?? "Chưa có"}
-              </p>
-              <p style={{ fontSize: "14px" }}>
-                Phòng ngủ: {item.bedroom ?? "Chưa có"}
-              </p>
-              <p style={{ fontSize: "14px" }}>
-                Giá:{" "}
-                {item.price
-                  ? new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(Number(item.price))
-                  : "Chưa có"}
-              </p>
-              <p style={{ fontSize: "14px" }}>
-                Hướng: {item.direction ?? "Chưa có"}
-              </p>
-            </div>
-
-            <div
-              className={styles.statusBadge}
-              style={{
-                backgroundColor:
-                  item.status === "Đang bán"
-                    ? "#4CAF50"
-                    : item.status === "Đã bán"
-                    ? "#F44336"
-                    : item.status === "Đã cọc"
-                    ? "#FFC107"
-                    : "#000",
-                color: "#fff",
-              }}
-            >
-              {item.status ?? "Không rõ"}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </Container>
+    </div>
   );
 }
