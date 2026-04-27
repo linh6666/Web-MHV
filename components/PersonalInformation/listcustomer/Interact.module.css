@@ -100,7 +100,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  /* padding: 2rem 1rem; */
 }
 
 @media (max-width: 768px) {
@@ -108,4 +108,4 @@
     padding-left: 10px;
     padding-right: 10px;
   }
-}
+}
