@@ -57,7 +57,7 @@ export default function ForgotPasswordModal({
         },
       }}
     >
-      <Text size="sm" mb="sm">
+      <Text size="sm" mb="sm" style={{ color: "#000" }}>
         Vui lòng nhập email để khôi phục mật khẩu:
       </Text>
 
@@ -66,12 +66,13 @@ export default function ForgotPasswordModal({
         {(emailFocused || resetEmail) && (
           <Text
             size="xs"
-            c="dimmed"
             style={{
               position: "absolute",
               top: -10,
               left: 0,
               fontSize: "12px",
+              color: "#000",
+              opacity: 0.6,
             }}
           >
             Nhập email
@@ -91,6 +92,7 @@ export default function ForgotPasswordModal({
               borderBottom: "1px solid #ccc",
               borderRadius: 0,
               padding: "8px 0",
+              color: "#000",
             },
           }}
           mb="md"

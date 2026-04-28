@@ -65,6 +65,7 @@
   border-radius: 0;
   padding-left: 0 !important;
   background-color: transparent !important;
+  color: var(--foreground) !important;
 }
 
 .input:focus-within {
@@ -81,16 +82,18 @@
   z-index: 1;
   pointer-events: none;
   top: 5px;
-  color: var(--mantine-color-placeholder);
+  color: var(--foreground);
+  opacity: 0.6;
   font-weight: 400;
   font-size: 15px;
-  transition: color 100ms ease, transform 100ms ease, font-size 100ms ease;
+  transition: color 100ms ease, transform 100ms ease, font-size 100ms ease, opacity 100ms ease;
 }
 
 .label[data-floating] {
   transform: translateY(-30px);
   font-size: 15px;
-  color: var(--mantine-color-text);
+  opacity: 1;
+  color: var(--foreground);
 }
 
 .navBarSubtitle {
