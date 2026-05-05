@@ -124,25 +124,24 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
   return (
     <div className={styles.container}>
-      {/* Nút quay lại */}
-      <Button
-        onClick={onBack}
-        variant="light"
-        leftSection={<IconArrowLeft />}
-        style={{ marginBottom: "20px" }}
-      >
-        Quay lại
-      </Button>
       {loading && <p>Đang tải dữ liệu...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div className={styles.detailWrapper}>
         {/* Cột trái */}
         <div className={styles.leftColumn}>
+          <Button
+            onClick={onBack}
+            variant="light"
+            leftSection={<IconArrowLeft />}
+            style={{ marginBottom: "15px" }}
+          >
+            Quay lại
+          </Button>
+          <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
+            Chi tiết: {item.zone}
+          </Text>
           <>
-            <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
-              Chi tiết: {item.zone}
-            </Text>
 
             {/* Zone / Layer3 */}
             {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
@@ -269,8 +268,6 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
             <Image
               src={current?.url || "/image/test1.jpg"}
               alt={current?.description_en || "No image"}
-              width={800}
-              height={600}
               className={styles.sliderImage}
             />
 
@@ -303,10 +300,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
                   <Image 
                     src={item.url || "/image/test1.jpg"} 
                     alt={item.description_en || "No image"} 
-                    width={80} 
-                    height={60} 
                     className={styles.thumbnailImage}
-                    style={{ maxWidth: "80px", maxHeight: "60px" }}
                   />
                 </div>
               ))
@@ -315,12 +309,8 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
                 <Image 
                   src="/image/test1.jpg" 
                   alt="Fallback thumbnail"
-                  width={80} 
-                  height={60} 
-                  fit="cover"
                   radius="sm" 
                   className={styles.thumbnailImage}
-                  style={{ maxWidth: "80px", maxHeight: "60px" }}
                 />
               </div>
             )}
