@@ -26,7 +26,7 @@ export default function ResetPassword() {
       return;
     }
 
-    const response = await fetch("https://www.vietmodel.com.vn/api/v1/users/me/password", {
+    const response = await fetch("https://www.mohinhviet.com.vn/api/v1/users/me/password", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
