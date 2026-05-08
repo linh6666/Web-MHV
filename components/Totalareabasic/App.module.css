@@ -55,12 +55,14 @@
 }
 
 .overlaySvg path, 
+.overlaySvg rect,
 .overlaySvg g {
   pointer-events: auto;
   cursor: pointer;
 }
 
-.overlaySvg path:hover {
+.overlaySvg path:hover,
+.overlaySvg rect:hover {
   opacity: 0.8;
 }
 
@@ -74,6 +76,7 @@
 }
 
 .overlaySvg1 path, 
+.overlaySvg1 rect,
 .overlaySvg1 g {
   pointer-events: auto;
 }
@@ -85,6 +88,7 @@
 }
 
 .overlaySvg2 path, 
+.overlaySvg2 rect,
 .overlaySvg2 g {
   pointer-events: auto;
 }
@@ -96,6 +100,7 @@
 }
 
 .overlaySvg4 path, 
+.overlaySvg4 rect,
 .overlaySvg4 g {
   pointer-events: auto;
 }

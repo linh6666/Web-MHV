@@ -98,7 +98,8 @@ const handleBack = () => {
     viewBox="0 0 1154.229 707.119">
   <path 
   id="NOBLE_PALACE_TAY_HO_-_PHÂN_KHU_THE_GOLF_MANSION" 
-  data-name="NOBLE PALACE TAY HO - PHÂN KHU THE GOLF MANSION" 
+  data-name="NOBLE PALACE TAY HO - PHÂN KHU THE GOLF MANSION"
+    onClick={() => handleSvgClick("NOBLE PALACE TAY HO - PHÂN KHU THE GOLF MANSION")}
   d="M-17452.367-22397.033c3.2,0,66.881-12.8,70.082-11.375s2.129,3.295,4.975,22.5,7.471,53,5.691,57.623-89.992,16.717-108.133,21.342-49.443,19.564-67.939-21.342-15.854-38.3-15.854-38.3l83.793-23.85,3.9,12.109,26.053-5.871Z" transform="translate(17787.811 22547.275)" fill="#0082c0" stroke="#fff" strokeWidth="1" opacity="0.6"/>
   <path id="VIETINBANK_TOWER" data-name="VIETINBANK TOWER"
     onClick={() => handleSvgClick("VIETINBANK TOWER")}
