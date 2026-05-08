@@ -13,7 +13,7 @@ function Success(noti: string | ReactNode | undefined) {
     message: noti,
     icon: <IconCheck />,
     color: "green",
-    // autoClose:100000,
+    autoClose:500,
     style: { borderBlockEndColor: "2px solid #e0e0e1" },
     //border-bottom: 1px solid #e0e0e1;
   });
@@ -23,7 +23,7 @@ function SuccessTimeonClose(noti: string, url: string) {
     onClose: () => {
       window.location.href = url;
     },
-    autoClose: 1000,
+    autoClose: 100,
     title: "Thông báo",
     message: noti,
     icon: <IconCheck />,
@@ -35,7 +35,7 @@ function SuccessTimeonOpen(noti: string, url: string) {
     onOpen: () => {
       window.location.href = url;
     },
-    autoClose: 1000,
+    autoClose: 100,
     title: "Thông báo",
     message: noti,
     icon: <IconCheck />,
