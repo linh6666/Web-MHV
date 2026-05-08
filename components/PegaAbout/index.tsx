@@ -11,7 +11,7 @@ import {
   Badge,
 } from "@mantine/core";
 import styles from "./Interact.module.css";
-import { getListProject } from "../../api/apigetlistProjectControl";
+import { getListProject } from "../../api/apigetlistProject";
 import { NotificationExtension } from "../../extension/NotificationExtension";
 
 // ===========================
@@ -133,7 +133,7 @@ export default function DetailInteractive() {
 
                   {/* ===== Nội dung ===== */}
                   <Stack gap={6} p="md" style={{ flexGrow: 1 }}>
-                    <Text fw={600} size="md" lineClamp={1}>
+                    <Text fw={600} size="md" >
                       Tên dự án: {project.name}
                     </Text>
 
@@ -155,11 +155,11 @@ export default function DetailInteractive() {
                       </Text>
                     </Text>
 
-                    {project.rank_name && (
+                    {/* {project.rank_name && (
                       <Badge mt={4} size="sm" variant="light" color="blue">
                         Hạng: {project.rank_name}
                       </Badge>
-                    )}
+                    )} */}
                   </Stack>
                 </Card>
               </a>
