@@ -16,6 +16,7 @@ export interface CreateUserPayload {
   // unit_code:string;
   layer3:string;
   building_type:string;
+  status_unit:string;
  
 //  main_door_direction:string;
 

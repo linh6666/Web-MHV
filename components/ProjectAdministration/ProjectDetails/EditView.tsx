@@ -6,6 +6,7 @@ import {
   Group,
   LoadingOverlay,
   TextInput,
+  Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -46,6 +47,7 @@ const EditView = ({
     
       layer3:"",
       building_type:"",
+      status_unit:"",
    
      
     },
@@ -68,8 +70,7 @@ const EditView = ({
     
         layer3: values.layer3,
         building_type: values.building_type,
-    
-        // main_door_direction: values.main_door_direction,
+        status_unit: values.status_unit,
       },
     };
 
@@ -119,6 +120,7 @@ const fetchDetail = useCallback(async () => {
  
   layer3: item.layer3 ?? "",
   building_type: item.building_type ?? "",
+  status_unit: item.status_unit ?? "",
  
 });
   } catch (error) {
@@ -154,11 +156,15 @@ const fetchDetail = useCallback(async () => {
    <TextInput
         label="Phân khu/tòa "
          {...form.getInputProps("layer3")}
-         {...form.getInputProps("layer3")}
       />
        <TextInput
         label="Loại tòa nhà "
          {...form.getInputProps("building_type")}
+      />
+       <Select
+        label="Trạng thái"
+        data={['ĐANG BÁN', 'ĐÃ BÁN', 'ĐÃ ĐẶT CỌC']}
+        {...form.getInputProps("status_unit")}
       />
     
   
