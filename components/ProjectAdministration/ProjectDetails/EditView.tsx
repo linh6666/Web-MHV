@@ -32,7 +32,6 @@ interface EditViewProps {
 
 
 const EditView = ({
-
   leaf_id,
   project_id,
   onSearch,
@@ -45,8 +44,8 @@ const EditView = ({
     initialValues: {
      
     
-      layer7:"",
-      unit_code:"",
+      layer3:"",
+      building_type:"",
    
      
     },
@@ -67,8 +66,8 @@ const EditView = ({
       updates: {
        
     
-        layer7: values.layer7,
-        unit_code: values.unit_code,
+        layer3: values.layer3,
+        building_type: values.building_type,
     
         // main_door_direction: values.main_door_direction,
       },
@@ -118,8 +117,8 @@ const fetchDetail = useCallback(async () => {
    formRef.current.setValues({
 
  
-  layer7: item.layer7 ?? "",
-  unit_code: item.unit_code ?? "",
+  layer3: item.layer3 ?? "",
+  building_type: item.building_type ?? "",
  
 });
   } catch (error) {
@@ -152,15 +151,16 @@ const fetchDetail = useCallback(async () => {
         overlayProps={{ radius: "sm", blur: 2 }}
       />
 
- 
+   <TextInput
+        label="Phân khu/tòa "
+         {...form.getInputProps("layer3")}
+         {...form.getInputProps("layer3")}
+      />
        <TextInput
-        label="Mã căn hộ "
-         {...form.getInputProps("unit_code")}
+        label="Loại tòa nhà "
+         {...form.getInputProps("building_type")}
       />
-      <TextInput
-        label="Phân khu "
-         {...form.getInputProps("layer7")}
-      />
+    
   
 
       <Group justify="flex-end" mt="lg">

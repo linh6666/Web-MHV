@@ -13,8 +13,9 @@ export interface GetDetailHomeParams {
 export interface CreateUserPayload {
   
   // describe_vi: string;
-  unit_code:string;
-  layer7:string;
+  // unit_code:string;
+  layer3:string;
+  building_type:string;
  
 //  main_door_direction:string;
 
