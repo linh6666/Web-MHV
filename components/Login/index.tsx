@@ -157,6 +157,7 @@ const Login = () => {
                   classNames={{
                     root: style.root,
                     input: style.input,
+                    innerInput: style.input,
                     label: style.label,
                   }}
                   onFocus={() => setClickPassword(true)}
