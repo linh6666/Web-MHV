@@ -71,7 +71,6 @@ export default function DetailInteractive() {
         });
 
         setProjects(res.data || []);
-        NotificationExtension.Success("Tải dữ liệu dự án thành công");
       } catch (error) {
         const axiosError = error as {
           response?: { data?: { detail?: string } };
