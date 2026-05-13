@@ -52,7 +52,7 @@ export default function Footer() {
           </Text>
 
           <Text size="sm" className={classes.infoText}>
-            Trụ sở chính tại Việt Nam: Số 751 Nguyễn Khoái, Phường Thanh Trì, Quận Hoàng Mai, Hà Nội, Việt Nam | Mã bưu chính: 10000
+            Trụ sở chính tại Việt Nam: Số 751 Nguyễn Khoái, Phường Lĩnh Nam, Hà Nội, Việt Nam | Mã bưu chính: 10000
           </Text>
 
           <Text size="sm" className={classes.infoText}>
