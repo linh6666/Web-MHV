@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card, Image, Stack, Text, Button, Loader, Modal, Group } from "@mantine/core";
 import { DonutChart } from '@mantine/charts';
+// import '@mantine/charts/styles.css';
 import { Sector } from 'recharts';
 import styles from './NotFoundTitle.module.css';
 import { getListProject } from "../../api/apigetlistProject";
@@ -59,10 +60,11 @@ function ProjectCard({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const getStatusColor = (name: string) => {
-    switch (name) {
-      case 'Đang bán': return '#40c057';
-      case 'Đã đặt cọc': return '#fab005';
-      case 'Đã bán': return '#f0441c';
+    const status = name.toUpperCase();
+    switch (status) {
+      case 'ĐANG BÁN': return '#40c057';
+      case 'ĐÃ ĐẶT CỌC': return '#fab005';
+      case 'ĐÃ BÁN': return '#f0441c';
       default: return '#dee2e6';
     }
   };
@@ -79,7 +81,7 @@ function ProjectCard({
     const statuses = project.unit_status_summary.statuses;
 
     let defaultIndex = statuses.findIndex(
-      (item) => item.status_name === "Đang bán"
+      (item) => item.status_name.toUpperCase() === "ĐANG BÁN"
     );
 
     if (defaultIndex === -1) defaultIndex = 0;
@@ -100,7 +102,7 @@ function ProjectCard({
     const statuses = project.unit_status_summary.statuses;
 
     let defaultIndex = statuses.findIndex(
-      (item) => item.status_name === "Đang bán"
+      (item) => item.status_name.toUpperCase() === "ĐANG BÁN"
     );
 
     if (defaultIndex === -1) defaultIndex = 0;
@@ -148,42 +150,47 @@ function ProjectCard({
         <Stack align="center" gap={0} style={{ minWidth: 100 }}>
 
           <div className={styles.chartContainer}>
-            <DonutChart
-              size={80}
-              thickness={16}
-              data={chartData}
-              withTooltip={false}
-              chartLabel={
-                hoveredStatus
-                  ? `${hoveredStatus.percent.toFixed(1)}%`
-                  : undefined
-              }
-              pieProps={{
-                startAngle: 90,
-                endAngle: 450,
-                activeIndex: hoveredIndex !== null ? hoveredIndex : undefined,
-                activeShape: (props: Record<string, number & string>) => (
-                  <Sector
-                    {...props}
-                    outerRadius={(props.outerRadius as number) + 4}
-                  />
-                ),
-                onMouseEnter: (_: unknown, index: number) => {
-                  setHoveredIndex(index);
-                  const item = project.unit_status_summary?.statuses?.[index];
-                  if (item) {
-                    setHoveredStatus({
-                      name: item.status_name,
-                      color: getStatusColor(item.status_name),
-                      percent: item.percent,
-                    });
-                  }
-                },
-                onMouseLeave: () => {
-                  resetToDefault();
-                },
-              } as React.ComponentPropsWithoutRef<typeof DonutChart>['pieProps']}
-            />
+            {chartData.length > 0 ? (
+              <DonutChart
+                size={80}
+                thickness={16}
+                data={chartData}
+                withTooltip={false}
+                chartLabel={
+                  hoveredStatus
+                    ? `${hoveredStatus.percent.toFixed(1)}%`
+                    : undefined
+                }
+                pieProps={{
+                  startAngle: 90,
+                  endAngle: 450,
+                  activeIndex: hoveredIndex !== null ? hoveredIndex : undefined,
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  activeShape: (props: any) => (
+                    <Sector
+                      {...props}
+                      outerRadius={(props.outerRadius as number) + 4}
+                    />
+                  ),
+                  onMouseEnter: (_: unknown, index: number) => {
+                    setHoveredIndex(index);
+                    const item = project.unit_status_summary?.statuses?.[index];
+                    if (item) {
+                      setHoveredStatus({
+                        name: item.status_name,
+                        color: getStatusColor(item.status_name),
+                        percent: item.percent,
+                      });
+                    }
+                  },
+                  onMouseLeave: () => {
+                    resetToDefault();
+                  },
+                } as React.ComponentPropsWithoutRef<typeof DonutChart>['pieProps']}
+              />
+            ) : (
+              <Text size="xs" c="dimmed">No data</Text>
+            )}
           </div>
 
           <Text

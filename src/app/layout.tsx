@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "./globals.css";
-
+import '@mantine/charts/styles.css';
 import { MantineProvider, mantineHtmlProps } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals"; // ✅ Thêm import ModalsProvider
 import Header from "../../components/Header";
