@@ -1,0 +1,335 @@
+.container {
+    position: absolute;
+    bottom: 0px;
+    /* Adjust based on parent */
+    right: 20%;
+    margin-right: 15px;
+    left: auto;
+    transform: translateX(-50%);
+    width: 380px;
+    background-color: #FFF8E7;
+    /* Light beige background */
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid #EAD8C0;
+    z-index: 1000;
+    font-family: 'Arial', sans-serif;
+    color: #752E0B;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.searchInputWrapper {
+    flex: 1;
+    position: relative;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 8px 15px 8px 35px;
+    border-radius: 20px;
+    border: 1px solid #E0E0E0;
+    outline: none;
+    font-size: 14px;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.closeBtn {
+    background: #FFE4B5;
+    border: none;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #752E0B;
+    font-weight: bold;
+}
+
+.section {
+    margin-bottom: 15px;
+}
+
+.sectionTitle {
+    display: flex;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #752E0B;
+
+}
+
+.chipGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.loadingWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #762f0b;
+    font-size: 14px;
+    padding: 10px;
+}
+
+.spinner {
+    animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.emptyText {
+    color: var(--mantine-color-dimmed);
+    font-size: 14px;
+    padding: 10px;
+}
+
+.chip {
+    background: #FFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 15px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.chip.active {
+    background: #FFE4B5;
+    border-color: #752E0B;
+    color: #752E0B;
+    font-weight: 600;
+}
+
+.checkboxGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.checkbox {
+    accent-color: #752E0B;
+}
+
+.gridSection {
+    display: flex;
+    justify-content: space-between;
+}
+
+.quantityGroup {
+    flex: 1;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.rowLabel {
+    font-size: 12px;
+    width: 80px;
+    /* Fixed width for labels */
+}
+
+.circleBtnGroup {
+    display: flex;
+    gap: 5px;
+}
+
+.circleBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #E0E0E0;
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    color: #555;
+}
+
+.circleBtn.active {
+    background: #FFE4B5;
+    border-color: #752E0B;
+    color: #752E0B;
+    font-weight: bold;
+}
+
+.compassSection {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.compassGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    transform: rotate(45deg);
+    /* Diamond shape layout attempt */
+    margin-top: 10px;
+}
+
+/* A simpler compass layout to match image roughly */
+.compassWrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.compassBtn {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+    background: #FFF;
+    border: 1px solid #DDD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: rotate(-45deg);
+    /* Counter rotate text if grid is rotated */
+}
+
+/* Hardcoded positions for compass points to form a diamond/cross */
+/* Center */
+.posC {
+    top: 27px;
+    left: 27px;
+    z-index: 2;
+    background: #FFE4B5;
+    font-weight: bold;
+}
+
+/* Corners */
+.posN {
+    top: 0;
+    left: 27px;
+}
+
+.posS {
+    bottom: 0;
+    left: 27px;
+}
+
+.posW {
+    top: 27px;
+    left: 0;
+}
+
+.posE {
+    top: 27px;
+    right: 0;
+}
+
+.posNW {
+    top: 10px;
+    left: 10px;
+}
+
+/* Adjust specifically */
+/* Actually the image has 8 points + center. Let's use a simple grid style or SVG if complex. 
+   The image shows a diamond grid. Let's try a simple rotated grid container. */
+
+.diamondGrid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 75px;
+    height: 75px;
+    transform: rotate(45deg);
+    gap: 1px;
+    /* Tighter gap */
+}
+
+.diamondCell {
+    width: 24px;
+    /* Slightly larger */
+    height: 24px;
+    background: #FFF;
+    /* border: 1px solid #DDD; */
+    /* Use box-shadow for softer edges like image */
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    /* Smaller text */
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.diamondCell span {
+    transform: rotate(-45deg);
+}
+
+.diamondCell.active {
+    background: #FFE4B5;
+    color: #752E0B;
+}
+
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.actionBtn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.btnReset {
+    background: #F0F0F0;
+    color: #555;
+}
+
+.btnSearch {
+    background: #FFE4B5;
+    color: #752E0B;
+}
