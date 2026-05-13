@@ -79,7 +79,7 @@ export default function DetailInteractive() {
 
         // Mapping link theo tên
         const linkMap: Record<string, string> = {
-          "MHV Ciputra": "/tuong-tac/Ciputra",
+          "MHV CIPUTRA": "/tuong-tac/Ciputra",
         };
 
         const dataWithLink: Project[] = data.map((project: Project) => {
