@@ -1,4 +1,5 @@
 .box {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -363,12 +364,16 @@
 }
 
 .menuBtn:active,
-.menuBtnSmall:active,
-.menuBtn:focus,
-.menuBtnSmall:focus {
+.menuBtnSmall:active {
   background: #C2923F;
   color: #12223B;
   border-color: #EEEEEE;
+}
+
+/* Class active chủ động khi menu đang mở */
+.menuBtn.active {
+  background-color: #C2923F;
+  color: #12223B;
 }
 
 .searchParams {

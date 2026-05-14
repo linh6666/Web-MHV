@@ -26,7 +26,7 @@ interface MappingItem {
 interface MenuItem {
   label: string;
   link?: string;
-  type?: "modal";
+  type?: "modal" | "filter";
   mappingId?: string;
 }
 
@@ -103,6 +103,10 @@ export default function Menu({ project_id }: MenuProps) {
         project_id ? `?id=${project_id}` : ""
       }`,
     },
+    {
+      label: "BỘ LỌC SẢN PHẨM",
+      type: "filter",
+    },
   ];
 
   return (
@@ -127,12 +131,19 @@ export default function Menu({ project_id }: MenuProps) {
           {menuItems.map((item, index) => (
             <Button
               key={index}
-              className={styles.menuBtn}
+              className={`${styles.menuBtn} ${
+                item.type === "filter" && showFilter ? styles.active : ""
+              }`}
               variant="outline"
+              leftSection={
+                item.type === "filter" ? <IconSearch size={16} /> : null
+              }
               onClick={() => {
                 if (item.type === "modal") {
                   setSelectedMappingId(item.mappingId || null);
                   setOpenedProjection(true);
+                } else if (item.type === "filter") {
+                  setShowFilter(!showFilter);
                 } else if (item.link) {
                   router.push(item.link);
                 }
@@ -144,22 +155,13 @@ export default function Menu({ project_id }: MenuProps) {
         </Stack>
       </div>
 
-      {/* Bộ lọc sản phẩm: Một nút để đóng/mở menu lọc. */}
-      <div className={styles.searchParams}>
-        <div
-          className={styles.innerBtn}
-          onClick={() => setShowFilter(!showFilter)}
-        >
-          <IconSearch size={16} /> Bộ lọc sản phẩm
-        </div>
-
-        {showFilter && (
-          <FilterMenu
-            project_id={project_id}
-            onClose={() => setShowFilter(false)}
-          />
-        )}
-      </div>
+      {/* Filter Menu display */}
+      {showFilter && (
+        <FilterMenu
+          project_id={project_id}
+          onClose={() => setShowFilter(false)}
+        />
+      )}
 
       {/* Footer */}
       <div className={styles.footer}>
