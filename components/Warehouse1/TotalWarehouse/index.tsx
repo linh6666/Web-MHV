@@ -20,6 +20,7 @@ import WarehouseDetail from "../WarehouseDetail";
 import { IconFilter2, IconSearch, IconX } from "@tabler/icons-react";
 import { Pagination } from "antd";
 import FilterSidebar from "./FilterSidebar";
+import { NotificationExtension } from "../../../extension/NotificationExtension";
 
 interface TotalWarehouseProps {
   projectId: string;
@@ -165,6 +166,21 @@ export default function TotalWarehouse({ projectId, target }: TotalWarehouseProp
       setCurrentPage(1);
     } catch (error) {
       console.error("Failed to fetch warehouse data:", error);
+      
+      let apiMessage = "Lỗi khi tải dữ liệu kho hàng!";
+      if (error && typeof error === "object") {
+        const errObj = error as {
+          response?: { data?: { detail?: string; message?: string } };
+          message?: string;
+        };
+        apiMessage =
+          errObj.response?.data?.detail ||
+          errObj.response?.data?.message ||
+          errObj.message ||
+          apiMessage;
+      }
+      
+      NotificationExtension.Fails(apiMessage);
       setItems([]);
       setFilteredItems([]);
     } finally {
