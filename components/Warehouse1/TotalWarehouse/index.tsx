@@ -1136,7 +1136,9 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                   Hướng ban công: {renderValue(item.balcony_direction)}
                 </Text>
               )}
-
+   <Text style={{ fontSize: "15px" }}>
+  Giá niêm yết: {Number(item.price).toLocaleString("vi-VN")}đ
+</Text>
               {/* Trạng thái căn hộ */}
               <Text style={{ fontSize: "15px" }}>Trạng thái: {item.status_unit}</Text>
             </Card>
