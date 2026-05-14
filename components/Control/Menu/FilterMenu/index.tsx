@@ -180,7 +180,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     
     try {
       const filters = [
-        { label: "layer7", values: ["ct", "ti"] },
+        { label: "layer1", values: ["ct", "ti"] },
       ];
 
       if (activePhanKhu) filters.push({ label: "zone", values: [activePhanKhu] });

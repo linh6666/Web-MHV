@@ -1,17 +1,20 @@
 .container {
     position: absolute;
     bottom: 0;
-    right: 110%; /* Bung ra bên trái sidebar */
+    right: 110%;
+    /* Bung ra bên trái sidebar */
     width: clamp(320px, 30vw, 450px);
-    max-height: calc(100vh - 200px); /* Tăng chiều cao tối đa để lấy thêm không gian */
+    max-height: calc(100vh - 200px);
+    /* Tăng chiều cao tối đa để lấy thêm không gian */
     overflow-y: auto;
     max-width: 85vw;
-    background-color: #FFF8E7;
+    background-color: #294b61;
     border-radius: 20px;
     padding: clamp(15px, 3vh, 30px);
-    padding-bottom: 40px; /* Thêm khoảng trống ở dưới cùng cho nút */
+    padding-bottom: 40px;
+    /* Thêm khoảng trống ở dưới cùng cho nút */
     box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.2);
-    border: 1px solid #EAD8C0;
+    border: 1px solid #fff;
     z-index: 1000;
     font-family: 'Arial', sans-serif;
     color: #752E0B;
@@ -42,10 +45,13 @@
 
 @media (max-height: 850px) {
     .chipGroup {
-        max-height: 50px; /* Thu nhỏ tối đa để hiện nút bấm */
+        max-height: 50px;
+        /* Thu nhỏ tối đa để hiện nút bấm */
     }
+
     .container {
-        max-height: calc(100vh - 150px); /* Ưu tiên chiều cao bảng trên màn hình thấp */
+        max-height: calc(100vh - 150px);
+        /* Ưu tiên chiều cao bảng trên màn hình thấp */
         padding-bottom: 25px;
     }
 }
@@ -80,7 +86,7 @@
 }
 
 .closeBtn {
-    background: #FFE4B5;
+    /* background: #FFE4B5; */
     border: none;
     border-radius: 8px;
     width: 30px;
@@ -89,7 +95,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #752E0B;
+    color: #294b61;
     font-weight: bold;
 }
 
@@ -102,15 +108,17 @@
     font-weight: 700;
     font-size: clamp(10px, 1.3vh, 14px);
     margin-bottom: 10px;
-    color: #752E0B;
+    color: #bb8d38;
 }
 
 .chipGroup {
     display: flex;
     flex-wrap: wrap;
     gap: clamp(8px, 1.5vh, 12px);
-    max-height: 120px; /* Độ cao mặc định cho màn hình lớn */
-    overflow-y: auto; /* Hiện scroll khi quá dài */
+    max-height: 120px;
+    /* Độ cao mặc định cho màn hình lớn */
+    overflow-y: auto;
+    /* Hiện scroll khi quá dài */
     padding-right: 8px;
     scrollbar-width: thin;
     scrollbar-color: #EAD8C0 transparent;
@@ -161,7 +169,7 @@
     padding: 5px 12px;
     font-size: clamp(8px, 1.1vh, 11px);
     cursor: pointer;
-    color: #555;
+    color: #294b61;
     transition: all 0.2s;
 }
 
@@ -365,11 +373,11 @@
 }
 
 .btnReset {
-    background: #F0F0F0;
-    color: #555;
+    /* background: #F0F0F0; */
+    color: #294b61;
 }
 
 .btnSearch {
-    background: #FFE4B5;
-    color: #752E0B;
+    /* background: ; */
+    color: #294b61;
 }
