@@ -1,5 +1,8 @@
 import { IconArrowDownRight, IconArrowUpRight } from '@tabler/icons-react';
 import { Center, Group, Paper, RingProgress, SimpleGrid, Text } from '@mantine/core';
+import { getListProject } from "../../../api/apigetlistProject";
+
+
 
 const icons = {
   up: IconArrowUpRight,
