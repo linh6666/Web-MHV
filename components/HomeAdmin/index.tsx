@@ -6,10 +6,7 @@ import { Divider } from '@mantine/core';
 export default function SalesColumnChart() {
   return (
    <>
-   <StatsRing/>
-    <Divider my="md" />
-
-   
+   <StatsRing/> 
    </>
   );
 }
