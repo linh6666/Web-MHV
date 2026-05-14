@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   IconArrowDownRight,
   IconArrowUpRight,
   IconSmartHome,
   IconChartDonut,
+  IconDownload,
 } from "@tabler/icons-react";
 
 import {
@@ -20,6 +21,9 @@ import {
   Title,
   Box,
   Divider,
+  Button,
+  Modal,
+  Table,
 } from "@mantine/core";
 
 import { PieChart } from "@mantine/charts";
@@ -49,6 +53,12 @@ interface StatusItem {
   percent: number;
 }
 
+interface ProjectInfo {
+  investor?: string;
+  name?: string;
+  address?: string;
+}
+
 const icons = {
   up: IconArrowUpRight,
   down: IconArrowDownRight,
@@ -58,7 +68,41 @@ export function StatsRing() {
   const [statsData, setStatsData] = useState<StatusData[]>([]);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [totalUnits, setTotalUnits] = useState(0);
+  const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [opened, setOpened] = useState(false);
+  const pdfRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPDF = async () => {
+    if (!pdfRef.current) return;
+    setIsDownloading(true);
+    try {
+      // Import động để tránh lỗi SSR trong Next.js
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+
+      const canvas = await html2canvas(pdfRef.current, {
+        scale: 2, // Tăng độ phân giải ảnh
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff", // Nền trắng để không bị đen nền khi tạo pdf
+      });
+
+      const imgWidth = 210; // Kích thước A4 (mm)
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const doc = new jsPDF("p", "mm", "a4");
+
+      doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 10, imgWidth, imgHeight);
+      doc.save("Bao_Cao_Trang_Thai_Du_An.pdf");
+    } catch (error) {
+      console.error("Lỗi khi xuất PDF:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -74,7 +118,13 @@ export function StatsRing() {
           const project = res.data[0];
           const statuses = project.unit_status_summary?.statuses || [];
           const total = project.unit_status_summary?.total_units || 0;
+          
           setTotalUnits(total);
+          setProjectInfo({
+            investor: project.investor,
+            name: project.name,
+            address: project.address,
+          });
 
           // Mapping dữ liệu cho Card
           const mapped: StatusData[] = statuses.map((s: StatusItem) => {
@@ -181,20 +231,30 @@ export function StatsRing() {
   });
 
   return (
-    <Stack gap="xl">
-      {/* HEADER SECTION */}
-      <Group justify="space-between">
-        <Box>
-          <Title order={3} fw={800}>Báo cáo tổng quan</Title>
-          <Text c="dimmed" size="sm">Số liệu thống kê thời gian thực từ hệ thống</Text>
-        </Box>
-        <Paper withBorder radius="md" px="md" py="xs" bg="gray.0">
-          <Group gap="xs">
-            <IconSmartHome size={20} color="gray" />
-            <Text size="sm" fw={600}>Cập nhật: {new Date().toLocaleDateString('vi-VN')}</Text>
+    <Box>
+      <Stack gap="xl">
+        {/* HEADER SECTION */}
+        <Group justify="space-between">
+          <Box>
+            <Title order={3} fw={800}>Báo cáo tổng quan</Title>
+            <Text c="dimmed" size="sm">Số liệu thống kê thời gian thực từ hệ thống</Text>
+          </Box>
+          <Group>
+            <Paper withBorder radius="md" px="md" py="xs" bg="gray.0">
+              <Group gap="xs">
+                <IconSmartHome size={20} color="gray" />
+                <Text size="sm" fw={600}>Cập nhật: {new Date().toLocaleDateString('vi-VN')}</Text>
+              </Group>
+            </Paper>
+            <Button
+              leftSection={<IconDownload size={18} />}
+              color="blue"
+              onClick={() => setOpened(true)}
+            >
+              Xem báo cáo PDF
+            </Button>
           </Group>
-        </Paper>
-      </Group>
+        </Group>
 
       {/* STATS CARDS */}
       <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg">
@@ -257,7 +317,60 @@ export function StatsRing() {
           </Stack>
         </Paper>
       </SimpleGrid>
-    </Stack>
+      </Stack>
+
+      {/* Modal View & Download PDF */}
+      <Modal opened={opened} onClose={() => setOpened(false)} title="Xem trước báo cáo" size="lg">
+        <Box ref={pdfRef} bg="white" p="md">
+          <Title order={4} mb="xl" ta="center">BÁO CÁO TỔNG QUAN TRẠNG THÁI CĂN HỘ</Title>
+          
+          <Stack gap={4} mb="xl">
+            <Text size="sm"><b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}</Text>
+            <Text size="sm"><b>Tên dự án:</b> {projectInfo?.name || "Đang cập nhật"}</Text>
+            <Text size="sm"><b>Địa chỉ:</b> {projectInfo?.address || "Đang cập nhật"}</Text>
+            <Text size="sm"><b>Cập nhật ngày:</b> {new Date().toLocaleDateString('vi-VN')}</Text>
+          </Stack>
+          
+          <Table striped highlightOnHover withTableBorder withColumnBorders>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>STT</Table.Th>
+                <Table.Th>Trạng thái</Table.Th>
+                <Table.Th ta="right">Số lượng (Căn)</Table.Th>
+                <Table.Th ta="right">Tỷ lệ (%)</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {statsData.map((stat, index) => (
+                <Table.Tr key={stat.label}>
+                  <Table.Td>{index + 1}</Table.Td>
+                  <Table.Td fw={600} c="black">{stat.label}</Table.Td>
+                  <Table.Td ta="right">{stat.stats}</Table.Td>
+                  <Table.Td ta="right">{stat.progress}%</Table.Td>
+                </Table.Tr>
+              ))}
+              <Table.Tr fw={800}>
+                <Table.Td colSpan={2} ta="right">Tổng cộng:</Table.Td>
+                <Table.Td ta="right">{totalUnits}</Table.Td>
+                <Table.Td ta="right">100%</Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+        </Box>
+        
+        <Group justify="flex-end" mt="xl">
+          <Button variant="default" onClick={() => setOpened(false)}>Đóng</Button>
+          <Button 
+            leftSection={<IconDownload size={18} />} 
+            onClick={handleDownloadPDF} 
+            loading={isDownloading}
+            color="blue"
+          >
+            Tải file PDF
+          </Button>
+        </Group>
+      </Modal>
+    </Box>
   );
 
 }
