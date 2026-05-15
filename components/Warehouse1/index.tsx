@@ -5,6 +5,7 @@ import styles from "./App.module.css";
 import TotalWarehouse from "./TotalWarehouse";
 import MyOder from "./MyOder";
 import { useRouter, useSearchParams } from "next/navigation";
+import Document from "./Document";
 // import { Group } from "@mantine/core";
 
 interface AppProps {
@@ -67,9 +68,7 @@ export default function Managent({ projectId, target, projectName }: AppProps) {
         
         {/* Các view khác nếu cần thêm nội dung */}
         {activeView === "amenities" && (
-          <div style={{ padding: "40px", textAlign: "center", color: "#294b61" }}>
-            <h3>Nội dung Tài liệu đang được cập nhật...</h3>
-          </div>
+          <Document />
         )}
         {activeView === "houseType" && (
           <div style={{ padding: "40px", textAlign: "center", color: "#294b61" }}>
