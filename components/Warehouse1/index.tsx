@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./App.module.css";
 import TotalWarehouse from "./TotalWarehouse";
 import MyOder from "./MyOder";
+import Node from "./Node";
 import { useRouter, useSearchParams } from "next/navigation";
 import Document from "./Document";
 // import { Group } from "@mantine/core";
@@ -71,9 +72,7 @@ export default function Managent({ projectId, target, projectName }: AppProps) {
           <Document />
         )}
         {activeView === "houseType" && (
-          <div style={{ padding: "40px", textAlign: "center", color: "#294b61" }}>
-            <h3>Nội dung Ghi chú đang được cập nhật...</h3>
-          </div>
+         <Node />
         )}
 
       </div>
