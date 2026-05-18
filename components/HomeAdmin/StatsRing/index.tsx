@@ -27,7 +27,7 @@ import {
 } from "@mantine/core";
 
 import { PieChart } from "@mantine/charts";
-import "@mantine/charts/styles.css";
+// import "@mantine/charts/styles.css";
 
 import { getListProject } from "../../../api/apigetlistProject";
 

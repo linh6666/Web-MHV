@@ -31,6 +31,8 @@ const mainLinks = [
 /* ============ Token interface ============ */
 interface DecodedToken {
   is_superuser?: boolean;
+  is_active?: boolean;
+  system_name?: string;
   exp?: number;
   iat?: number;
   [key: string]: unknown;
@@ -44,6 +46,8 @@ export default function Header() {
   /* ============ Auth state ============ */
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSuperUser, setIsSuperUser] = useState(false);
+  const [systemName, setSystemName] = useState<string | null>(null);
+  const [isActive, setIsActive] = useState(false);
 
   /* ============ Check token ============ */
   useEffect(() => {
@@ -54,6 +58,8 @@ export default function Header() {
     if (!token) {
       setIsLoggedIn(false);
       setIsSuperUser(false);
+      setSystemName(null);
+      setIsActive(false);
       return;
     }
 
@@ -66,36 +72,84 @@ export default function Header() {
         localStorage.removeItem("access_token");
         setIsLoggedIn(false);
         setIsSuperUser(false);
+        setSystemName(null);
+        setIsActive(false);
         return;
       }
 
       setIsLoggedIn(true);
       setIsSuperUser(decoded?.is_superuser === true);
+      setSystemName(decoded?.system_name || null);
+      setIsActive(decoded?.is_active === true);
     } catch {
       setIsLoggedIn(false);
       setIsSuperUser(false);
+      setSystemName(null);
+      setIsActive(false);
     }
   }, []);
 
   /* ============ Filter menu ============ */
   const visibleLinks = mainLinks.filter((link) => {
     if (!isLoggedIn) {
-      // ❌ Chưa đăng nhập → chỉ hiển thị các mục public
+      // ❌ Chưa đăng nhập -> chỉ hiển thị các mục public
       return [
         "GIỚI THIỆU",
         "MÔ HÌNH TƯƠNG TÁC",
       ].includes(link.label);
-    } else if (isSuperUser) {
-      // ✅ Admin → hiển thị tất cả
-      return true;
-    } else {
-      // 👤 User thường
-      return [
-        "GIỚI THIỆU",
-        "MÔ HÌNH TƯƠNG TÁC",
-        "QUẢN LÝ BÁN HÀNG",
-        "THÔNG TIN SẢN PHẨM",
-      ].includes(link.label);
+    }
+
+    if (isSuperUser || systemName === "System Admin" || systemName === "Admin") {
+      // ✅ Admin -> hiển thị tất cả ngoại trừ MÔ HÌNH TƯƠNG TÁC và GIỚI THIỆU
+      return !["MÔ HÌNH TƯƠNG TÁC", "GIỚI THIỆU"].includes(link.label);
+    }
+
+    // Phân quyền dựa trên system_name (Chức vụ)
+    const role = systemName?.toLowerCase();
+
+    switch (role) {
+      case "director":
+      case "sale director":
+      case "sale admin":
+        // Giám đốc kinh doanh và Quản trị bán hàng xem được hầu hết trừ Quản trị hệ thống
+        return [
+          "GIỚI THIỆU",
+          "THÔNG TIN SẢN PHẨM",
+          "QUẢN LÝ BÁN HÀNG",
+          "QUẢN TRỊ DỰ ÁN",
+        ].includes(link.label);
+
+      case "sale manager":
+      case "sale staff":
+      case "salesperson":
+        // Trưởng phòng và nhân viên bán hàng
+        return [
+          "GIỚI THIỆU",
+          "THÔNG TIN SẢN PHẨM",
+          "QUẢN LÝ BÁN HÀNG",
+        ].includes(link.label);
+
+      case "marketing manager":
+        return [
+          "GIỚI THIỆU",
+          "THÔNG TIN SẢN PHẨM",
+        ].includes(link.label);
+
+      case "accountant":
+        return [
+          "GIỚI THIỆU",
+          "MÔ HÌNH TƯƠNG TÁC",
+          "QUẢN LÝ BÁN HÀNG",
+        ].includes(link.label);
+
+      case "null":
+      case "member":
+      default:
+        // Thành viên hoặc các chức vụ khác mặc định (bao gồm cả "Null" từ token)
+        return [
+
+          "THÔNG TIN SẢN PHẨM",
+        ].includes(link.label);
     }
   });
 
@@ -118,7 +172,14 @@ export default function Header() {
   let maxWidth = "1300px";
   if (!isLoggedIn) {
     maxWidth = "1200px";
-  } else if (isSuperUser) {
+  } else if (
+    isSuperUser ||
+    systemName === "System Admin" ||
+    systemName === "Admin" ||
+    systemName === "Director" ||
+    systemName === "Sale Director" ||
+    systemName === "Sale Admin"
+  ) {
     maxWidth = "1450px";
   }
 
