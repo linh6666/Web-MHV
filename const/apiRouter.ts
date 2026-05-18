@@ -172,5 +172,5 @@ export const API_ROUTE = {
   GET_LIST_DETAIL_MAPPING: "/api/v1/midi/detail/{script_id}",
 
   ///customer
-
+GET_LIST_DEVICE:"/api/v1/device_management/summary",
 }
