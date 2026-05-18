@@ -22,11 +22,11 @@ import ProjectTemplates from './ProjectTemplates';
 import UserProjectRole from './UserProjectRole';
 import TemplateAttributesLink from './TemplateAttributesLink';
 import NodeAttribute from './NodeAttribute';
-import HomeAdmin from '../HomeAdmin/index';
+import HomeAdmin from './Homepage';
 import ImportData from './ImportData'
 
 const mockdata = [
-  { label: 'BÁO CÁO TỔNG QUAN', icon: IconGauge, link: 'home' },
+  // { label: 'BÁO CÁO TỔNG QUAN', icon: IconGauge, link: 'home' },
   {
     label: 'CẤU HÌNH HỆ THỐNG',
     icon: IconNotes,
