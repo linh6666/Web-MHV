@@ -181,69 +181,127 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
 
   .logo,
   .Function,
   .title,
   .footer {
-    border: none;
-    /* bỏ viền */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
   }
 
-  /* Logo + Function nằm chung hàng */
   .box {
     display: flex;
     flex-direction: column;
-    /* nếu muốn dọc vẫn giữ, đổi sang row nếu muốn ngang */
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    height: auto;
   }
 
   .logo {
-    height: 100px;
-    /* thu nhỏ logo trên mobile */
+    height: 70px;
+    min-height: 70px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+
+  .imgea {
+    height: 85% !important;
+    width: auto !important;
+    max-width: 90% !important;
+    object-fit: contain;
+  }
+
+  .title {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .title h1 {
+    font-size: 13px !important;
+    font-weight: 700;
   }
 
   .Function {
     width: 100%;
-    /* chiếm full width mobile */
-    height: auto;
-    /* để chiều cao tự động */
-    padding: 5px;
-
+    padding: 12px;
+    max-height: 240px; /* Giới hạn chiều cao trên mobile */
+    overflow-y: auto; /* Thêm cuộn dọc khi quá nhiều nút */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
   }
 
-  /* Footer vẫn căn giữa, nút nhỏ hơn */
+  .Function::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .Function::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+  }
+
+  .Function > div {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 0 !important;
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+
+  .menuBtn {
+    width: 100% !important;
+    max-width: none !important;
+    height: 38px !important;
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    border-radius: 8px !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Footer vẫn căn giữa */
   .footer {
     width: 100%;
     height: auto;
-    gap: 10px;
+    gap: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer :global(.mantine-Group-root) {
+    gap: 12px !important;
+    justify-content: center;
+    width: 100%;
   }
 
   .btn {
-    width: 120px;
-    /* nút nhỏ hơn mobile */
-    height: 35px;
+    width: 100px;
+    height: 32px;
   }
 
   .circleBtn {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
 
   .modeBtn {
     font-size: 12px;
-    padding: 6px 8px;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  .imgea {
-    width: 200px;
-    /* thu nhỏ chiều ngang */
-    height: auto;
-    /* giữ tỉ lệ ảnh */
+    padding: 6px 10px;
   }
 }
 

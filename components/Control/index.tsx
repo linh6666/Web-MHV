@@ -16,30 +16,27 @@ export default function ControlPage({ project_id }: ControlPageProps) {
       <div className={styles.left}>
         <TransformWrapper
           initialScale={1}
-     minScale={1} 
+          minScale={1} 
           maxScale={5}
           wheel={{ step: 0.2 }}
           doubleClick={{ disabled: true }}
         >
           <TransformComponent>
-              <div className={styles.imageWrapper}>
-        <Image
-          src="/HOME.png"
-          alt="Ảnh trang chủ"
-          fit="contain"
-          className={styles.mapImage}
-        />
-        </div>
-        </TransformComponent>
+            <div className={styles.imageWrapper}>
+              <Image
+                src="/HOME.png"
+                alt="Ảnh trang chủ"
+                fit="contain"
+                className={styles.mapImage}
+              />
+            </div>
+          </TransformComponent>
         </TransformWrapper>
       </div>
-    
 
       <div className={styles.right}>
-    
         <Menu project_id={project_id} />
       </div>
     </div>
   );
 }
-
