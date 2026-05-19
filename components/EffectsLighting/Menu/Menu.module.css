@@ -154,47 +154,116 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
+
   .logo,
   .Function,
   .title,
   .footer {
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
   }
-  
+
   .box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    height: auto;
   }
 
   .logo {
-    height: 80px;
-    min-height: unset;
+    height: 70px;
+    min-height: 70px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+
+  .imgea {
+    height: 85% !important;
+    width: auto !important;
+    max-width: 90% !important;
+    object-fit: contain;
+  }
+
+  .title {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .title h1 {
+    font-size: 13px !important;
+    font-weight: 700;
   }
 
   .Function {
     width: 100%;
-    height: auto;
-    padding: 5px;
-    min-height: unset;
+    padding: 12px;
+    max-height: 240px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
+
+  .Function::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .Function::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+  }
+
+  /* .menuStack is directly within Function in EffectsLighting */
+  .menuStack {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    margin-top: 0 !important;
+    width: 100% !important;
+  }
+
+  .menuBtn, .menuBtnLong {
+    width: 100% !important;
+    max-width: none !important;
+    height: 38px !important;
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    border-radius: 8px !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 
   .footer {
     width: 100%;
     height: auto;
     gap: 15px;
-    padding: 15px 0;
+    padding: 15px;
+    display: flex;
+    flex-direction: row !important; /* Đặt lại thành hàng ngang cho mobile */
+    justify-content: center;
+    align-items: center;
   }
-  
-  .imgea {
-    width: 150px;
-    height: auto;
+
+  .footer :global(.mantine-Group-root) {
+    gap: 12px !important;
+    justify-content: center;
+    width: 100%;
   }
 
   .toggleBtn {
-    width: 120px; /* To hơn trên mobile */
+    width: 120px;
     height: 35px;
     font-size: 12px;
   }
