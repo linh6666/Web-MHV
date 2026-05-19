@@ -11,7 +11,7 @@ import {
   Modal,
 } from "@mantine/core";
 import styles from "./Interact.module.css";
-import { getListProject } from "../../api/apigetlistProjectControl";
+import { getListProjectControl } from "../../api/apigetlistProjectControl";
 import { NotificationExtension } from "../../extension/NotificationExtension";
 
 // ===========================
@@ -68,7 +68,7 @@ export default function DetailInteractive() {
 
     async function fetchProjects() {
       try {
-        const { data } = await getListProject({
+        const { data } = await getListProjectControl({
           token,
           skip: 0,
           limit: 20,

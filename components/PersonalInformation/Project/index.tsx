@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { Card, Image, Stack, Text, Loader, Title } from "@mantine/core";
 import styles from "./Interact.module.css";
-import { getListProject } from "../../../api/apigetlistProjectControl";
+import { getListProjectControl } from "../../../api/apigetlistProjectControl";
 
 interface Project {
   id: string;
@@ -33,7 +33,7 @@ export default function DetailInteractive() {
 
     async function fetchProjects() {
       try {
-        const { data } = await getListProject({
+        const { data } = await getListProjectControl({
           token,
           skip: 0,
           limit: 100,

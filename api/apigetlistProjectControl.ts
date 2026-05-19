@@ -5,14 +5,14 @@ interface GetListRolesParams {
   token: string;
   skip?: number;
   limit?: number;
-   lang?: string;
+  lang?: string;
 }
 
-export const getListProject = async ({
+export const getListProjectControl = async ({
   token,
   skip,
   limit,
- lang = 'vi',
+  lang = 'vi',
 }: GetListRolesParams) => {
   const response = await api.get(API_ROUTE.GET_LIST_CONTROL, {
     headers: {
@@ -21,7 +21,7 @@ export const getListProject = async ({
     params: {
       skip,
       limit,
-         lang,
+      lang,
     },
   });
   return {

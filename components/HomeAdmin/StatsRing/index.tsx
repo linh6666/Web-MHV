@@ -36,6 +36,8 @@ import { PieChart } from "@mantine/charts";
 
 import { getListProject } from "../../../api/apigetlistProject";
 import {  getListDevice} from "../../../api/apiGetDevice";
+import { getListProjectControl} from "../../../api/apigetlistProjectControl";
+
 
 // Định nghĩa interface để code sạch và chuyên nghiệp hơn
 interface StatusData {

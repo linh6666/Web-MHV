@@ -115,6 +115,7 @@ export default function Header() {
         return [
           "GIỚI THIỆU",
           "THÔNG TIN SẢN PHẨM",
+          "MÔ HÌNH TƯƠNG TÁC",
           "QUẢN LÝ BÁN HÀNG",
           "QUẢN TRỊ DỰ ÁN",
         ].includes(link.label);
