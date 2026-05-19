@@ -130,34 +130,56 @@
   }
 }
 
+/* Mobile: Sơ đồ ở trên, menu ở dưới */
 @media (max-width: 768px) {
   .box {
     flex-direction: column;
     height: auto;
+    aspect-ratio: auto;
+    padding: 12px;
+    gap: 16px;
+    overflow-y: auto;
+    align-items: center;
   }
 
   .left {
     flex: none;
     width: 100%;
-    height: clamp(260px, 45vw, 380px);
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1020 / 709;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+  }
+
+  .left :global(.react-transform-wrapper),
+  .left :global(.react-transform-component) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
   }
 
   .right {
     flex: none;
     width: 100%;
-    padding: 20px;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .left {
-    height: clamp(200px, 55vw, 280px);
-  }
-
-  .right {
-    font-size: 14px;
-    padding: 15px;
-    margin-top: 10px;
+    max-width: 480px;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    background-color: #294b61;
+    color: #ffffff;
   }
 }
