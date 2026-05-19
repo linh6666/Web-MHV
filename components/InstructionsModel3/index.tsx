@@ -20,7 +20,7 @@ export default function PdfViewer() {
   src="https://drive.google.com/file/d/14SWx-24SM1xbbbGYVP8SD1jnA_AvLnx6/preview"
   width="100%"
   className={styles.pdfFrame}
-  style={{ border: "none", height: "100vh" }}
+  style={{ border: "none" }}
 />
       <Group justify="flex-end">
         <Button
