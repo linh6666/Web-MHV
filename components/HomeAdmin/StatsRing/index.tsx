@@ -9,6 +9,7 @@ import {
   IconDownload,
   IconCpu,
   IconActivity,
+  IconPower,
 } from "@tabler/icons-react";
 
 import {
@@ -28,6 +29,7 @@ import {
   Table,
   ThemeIcon,
   Flex,
+  Tooltip,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -79,6 +81,7 @@ export function StatsRing() {
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null);
   const [daysOn, setDaysOn] = useState<number | null>(null);
   const [totalCommands, setTotalCommands] = useState<number | null>(null);
+  const [projectStatus, setProjectStatus] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [opened, setOpened] = useState(false);
@@ -122,10 +125,11 @@ export function StatsRing() {
       try {
         const token = localStorage.getItem("access_token") ?? "";
 
-        // Gọi song song hai API để tăng tốc độ tải trang
-        const [projectResResult, deviceResResult] = await Promise.allSettled([
+        // Gọi song song các API để tăng tốc độ tải trang
+        const [projectResResult, deviceResResult, controlResResult] = await Promise.allSettled([
           getListProject({ token, skip: 0, limit: 1 }),
           getListDevice({ token, skip: 0, limit: 1 }),
+          getListProjectControl({ token, skip: 0, limit: 1 }),
         ]);
 
         // 1. Xử lý dữ liệu dự án
@@ -213,6 +217,16 @@ export function StatsRing() {
           }
         } else {
           console.error("Lỗi tải API Thiết bị:", deviceResResult.reason);
+        }
+
+        // 3. Xử lý dữ liệu project control
+        if (controlResResult.status === "fulfilled") {
+          const controlRes = controlResResult.value;
+          if (controlRes?.data && controlRes.data.length > 0) {
+            setProjectStatus(controlRes.data[0].status ?? null);
+          }
+        } else {
+          console.error("Lỗi tải API Control:", controlResResult.reason);
         }
       } catch (error) {
         console.error("Lỗi tải API StatsRing:", error);
@@ -317,7 +331,19 @@ export function StatsRing() {
 
       {/* DEVICE ACTIVITY SECTION */}
       <Box>
-        <Title order={6} fw={850} style={{ fontSize: '12px', textTransform: 'uppercase', color: '#4b5563' }}>Hoạt động của mô hình</Title>
+        <Group gap="xs" align="center">
+          <Title order={6} fw={850} style={{ fontSize: '12px', textTransform: 'uppercase', color: '#4b5563' }}>Hoạt động của mô hình</Title>
+          {projectStatus !== null && (
+            <Group gap={6}>
+              <ThemeIcon size={20} radius="xl" variant="light" color={projectStatus === 1 ? "green" : "red"}>
+                <IconPower size={14} />
+              </ThemeIcon>
+              <Text size="xs" fw={700} c={projectStatus === 1 ? "green.6" : "red.6"}>
+                {projectStatus === 1 ? "Đang hoạt động" : "Ngừng hoạt động"}
+              </Text>
+            </Group>
+          )}
+        </Group>
         <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="sm" mt="xs">
           <Paper
             withBorder
@@ -493,12 +519,20 @@ export function StatsRing() {
             <Table.Tbody>
               <Table.Tr>
                 <Table.Td>1</Table.Td>
+                <Table.Td fw={600} c="black">Trạng thái hiện tại</Table.Td>
+                <Table.Td ta="right" c={projectStatus === 1 ? "green.6" : "red.6"} fw={700}>
+                  {projectStatus === 1 ? "Đang hoạt động" : projectStatus === 0 ? "Ngừng hoạt động" : "Không xác định"}
+                </Table.Td>
+                <Table.Td>-</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>2</Table.Td>
                 <Table.Td fw={600} c="black">Số ngày bật mô hình</Table.Td>
                 <Table.Td ta="right">{daysOn !== null ? daysOn.toLocaleString() : "0"}</Table.Td>
                 <Table.Td>ngày</Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td>2</Table.Td>
+                <Table.Td>3</Table.Td>
                 <Table.Td fw={600} c="black">Số lần điều khiển</Table.Td>
                 <Table.Td ta="right">{totalCommands !== null ? totalCommands.toLocaleString() : "0"}</Table.Td>
                 <Table.Td>lượt</Table.Td>
