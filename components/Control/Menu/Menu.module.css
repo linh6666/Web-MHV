@@ -58,7 +58,16 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important; /* Tránh hiện cuộn ngang */
+  scrollbar-width: none !important; /* Ẩn scrollbar trên Firefox */
+  -ms-overflow-style: none !important; /* Ẩn scrollbar trên IE/Edge */
+}
+
+.Function::-webkit-scrollbar {
+  display: none !important; /* Ẩn scrollbar trên Chrome, Safari, Edge */
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .menuStack {
@@ -235,18 +244,16 @@
     width: 100%;
     padding: 12px;
     max-height: 240px; /* Giới hạn chiều cao trên mobile */
-    overflow-y: auto; /* Thêm cuộn dọc khi quá nhiều nút */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    overflow-y: auto !important; /* Thêm cuộn dọc khi quá nhiều nút */
+    overflow-x: hidden !important; /* Tránh hiện cuộn ngang */
+    scrollbar-width: none !important; /* Ẩn scrollbar trên Firefox */
+    -ms-overflow-style: none !important; /* Ẩn scrollbar trên IE */
   }
 
   .Function::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .Function::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
+    display: none !important; /* Ẩn scrollbar trên Chrome, Safari, Edge */
+    width: 0 !important;
+    height: 0 !important;
   }
 
   .Function > div {
