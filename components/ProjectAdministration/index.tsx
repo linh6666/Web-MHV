@@ -20,7 +20,7 @@ import UserProjectRole from './UserProjectRole';
 import Order from './Order'; 
 import  PaymentRequest from './PaymentRequest';
 import  ProjectDetails from './ProjectDetails';
-  import  LockProductRequest from './LockProductRequest';
+import  LockProductRequest from './LockProductRequest';
 import HomeAdmin from '../HomeAdmin/index';  
 
 const mockdata = [
