@@ -139,8 +139,22 @@ export default function SearchResultModal({
           )}
         </ScrollArea>
 
-        <Group justify="flex-end" mt="md" pt="sm" style={{ borderTop: '1px solid #eee' }}>
-          <Button variant="default" onClick={onClose}>Đóng</Button>
+        <Group
+          justify="flex-end"
+          mt="md"
+          pt="sm"
+          style={{ borderTop: "1px solid #eee" }}
+        >
+          <Button
+            variant="filled"
+            onClick={onClose}
+            style={{
+              background: "#294b61",
+              color: "#fff",
+            }}
+          >
+            Đóng
+          </Button>
         </Group>
       </Drawer>
     </>
