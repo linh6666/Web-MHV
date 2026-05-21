@@ -8,6 +8,7 @@ import { IconInfoCircle, } from "@tabler/icons-react";
 interface UnitResult {
   id?: number | string;
   unit_code?: string;
+  leaf_id?: string;
   building_type?: string;
   zone?: string;
   layer4?: string;
