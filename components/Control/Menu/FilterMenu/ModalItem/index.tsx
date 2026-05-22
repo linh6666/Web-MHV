@@ -1,6 +1,6 @@
 "use client";
 
-import { Image, Modal, Text, Loader, Center, ActionIcon, Badge, ScrollArea } from "@mantine/core";
+import { Image, Modal, Text, Loader, Center, ActionIcon, ScrollArea } from "@mantine/core";
 import React, { useEffect, useState, useCallback } from "react";
 import { Getlisthome } from "../../../../../api/apiGetListHome";
 import styles from "./ModalItem.module.css";
@@ -128,7 +128,7 @@ export default function ModalItem({
         opened={opened}
         onClose={onClose}
         // title="Chi tiết căn hộ"
-        size="70%"
+        size="min(1120px, 94vw)"
         radius="md"
         styles={{
           title: {

@@ -1,15 +1,34 @@
 .container {
   display: flex;
   gap: 2vw;
+  width: 100%;
   max-height: 80vh;
   padding: 1vh 0;
+  min-height: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
 }
 
 .leftPanel {
   flex: 0 0 25%;
+  min-width: 240px;
   max-width: 350px;
   overflow-y: auto;
-  padding-right: 15px;
+  /* padding-right: 15px; */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.leftPanel::-webkit-scrollbar {
+  display: none;
+}
+
+.leftPanel :global(.mantine-ScrollArea-scrollbar) {
+  display: none;
 }
 
 /* CHỮ TỰ CO GIÃN THEO CHIỀU RỘNG MÀN HÌNH (VW) */
@@ -25,6 +44,42 @@
   line-height: 1.5;
   color: #666;
   text-align: justify;
+  overflow-wrap: anywhere;
+}
+
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.45;
+}
+
+.infoLabel {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: #294b61;
+}
+
+.infoValue {
+  min-width: 0;
+  color: #333;
+  overflow-wrap: anywhere;
+}
+
+.featureSection {
+  margin-top: 14px;
+}
+
+.featureText {
+  color: #555;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .rightPanel {
@@ -145,49 +200,90 @@
   display: block;
 }
 
-/* RESPONSIVE CHO MOBILE */
+@media (max-width: 1200px) {
+  .container {
+    gap: 18px;
+  }
+
+  .leftPanel {
+    flex-basis: 30%;
+  }
+
+  .imageWrapper {
+    max-height: 50vh;
+  }
+}
+
+/* RESPONSIVE CHO TABLET */
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
     height: auto;
-    max-height: none;
+    max-height: calc(95vh - 64px);
+    gap: 16px;
+    overflow-y: auto;
+    padding: 0;
   }
 
   .leftPanel {
     flex: none;
     width: 100%;
     max-width: none;
+    min-width: 0;
     padding-right: 0;
     order: 2;
+    overflow: visible;
   }
 
   .rightPanel {
     flex: none;
     width: 100%;
     order: 1;
+    overflow: visible;
+  }
+
+  .imageWrapper {
+    max-width: none;
+    max-height: none;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 12px;
+    border-radius: 10px;
+  }
+
+  .thumbList {
+    justify-content: flex-start;
+    gap: 10px;
+    padding-bottom: 10px;
   }
 
   .thumbImage {
-    width: 15vw !important;
-    height: 11vw !important;
+    width: 92px !important;
+    height: 68px !important;
   }
 
   .unitTitle {
     font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .descriptionText {
+    font-size: 14px !important;
+  }
+
+  .sliderBtn {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
   }
 }
 
 .thumbScroll {
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .thumbScroll::-webkit-scrollbar {
-  height: 4px;
-}
-
-.thumbScroll::-webkit-scrollbar-thumb {
-  background: #C2923F44;
-  border-radius: 10px;
+  display: none;
 }
 
 .zoomBtn {
@@ -211,6 +307,65 @@
 }
 
 @media (max-width: 600px) {
+  .container {
+    max-height: calc(95vh - 56px);
+    gap: 12px;
+  }
+
+  .leftPanel {
+    font-size: 13px;
+  }
+
+  .unitTitle {
+    font-size: 16px !important;
+    line-height: 1.35;
+  }
+
+  .infoGrid {
+    gap: 7px;
+  }
+
+  .infoRow {
+    flex-wrap: wrap;
+    gap: 3px 6px;
+  }
+
+  .infoLabel,
+  .infoValue {
+    font-size: 13px;
+  }
+
+  .imageWrapper {
+    aspect-ratio: 5 / 4;
+    border-radius: 8px;
+  }
+
+  .thumbList {
+    gap: 8px;
+  }
+
+  .thumbImage {
+    width: 72px !important;
+    height: 54px !important;
+    min-width: 72px;
+    min-height: 54px;
+  }
+
+  .sliderBtn {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+  }
+
+  .prevBtn {
+    left: 8px;
+  }
+
+  .nextBtn {
+    right: 8px;
+  }
+
   .zoomBtn {
     width: 35px !important;
     height: 35px !important;
@@ -249,6 +404,15 @@
   overflow: hidden;
 }
 
+.zoomImg {
+  width: 85%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  user-select: none;
+  background-color: #000;
+  border-radius: 8px;
+}
+
 .zoomRightPanel {
   width: 25%;
   min-width: 300px;
@@ -265,21 +429,24 @@
   .zoomContainer {
     flex-direction: column;
   }
+
+  .zoomLeftPanel {
+    height: 70vh;
+    flex: none;
+  }
+
   .zoomRightPanel {
     width: 100%;
     min-width: 100%;
     height: 30vh;
     padding: 20px;
   }
-}
 
-.zoomImg {
-  width: 85%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  user-select: none;
-  background-color: #000;
-  border-radius: 8px;
+  .zoomImg {
+    width: 92%;
+    max-height: 68vh;
+    object-fit: contain;
+  }
 }
 
 .zoomNavBtn {
@@ -330,5 +497,27 @@
 
   .zoomNextBtn {
     right: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .zoomLeftPanel {
+    height: 64vh;
+  }
+
+  .zoomRightPanel {
+    height: 36vh;
+    padding: 16px;
+  }
+
+  .zoomImg {
+    width: 96%;
+    max-height: 62vh;
+    border-radius: 6px;
+  }
+
+  .zoomNavBtn {
+    width: 44px !important;
+    height: 54px !important;
   }
 }
