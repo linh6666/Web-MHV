@@ -13,6 +13,7 @@ export interface DataDetail {
   unit_code: string;
   layer6?: string;
   describe?: string;
+  description_vi?: string
   describe_vi?: string;
 }
 
@@ -142,7 +143,7 @@ export default function ModalItem({
               </Text>
 
               <Text className={styles.descriptionText}>
-                <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
+                <b>Mô tả:</b> {currentImage?.description_vi || data?.describe_vi || data?.describe || "Chưa có"}
               </Text>
             </div>
 
