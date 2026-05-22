@@ -230,7 +230,7 @@ export default function ModalItem({
                   {data.price != null && data.price > 0 && (
                     <div className={styles.infoRow}>
                       <span className={styles.infoLabel}>Giá: </span>
-                      <span className={styles.infoValue} style={{ color: '#b8893c', fontWeight: 700 }}>
+                      <span className={styles.infoValue} >
                         {new Intl.NumberFormat('vi-VN').format(data.price)} VNĐ
                       </span>
                     </div>
