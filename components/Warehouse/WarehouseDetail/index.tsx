@@ -29,6 +29,13 @@ export interface WarehouseItem {
   bathroom?: string | number;
   direction?: string;
   price?: number;
+  construction_area_1?: number | string;
+  construction_area_2?: number | string;
+  feature_1?: string;
+  feature_2?: string;
+  num_floor?: number | string;
+  lot_depth?: number | string;
+  lot_width?: number | string;
   leaf_id?: string;
 }
 
@@ -122,6 +129,15 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
   const current = imageData.length > 0 ? imageData[index] : null;
 
+  const hasValue = (value?: string | number) => {
+    if (value == null) return false;
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      return trimmed !== "" && trimmed.toLowerCase() !== "skip";
+    }
+    return true;
+  };
+
   return (
     <div className={styles.container}>
       {loading && <p>Đang tải dữ liệu...</p>}
@@ -143,14 +159,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
           </Text>
           <>
 
-            {/* Zone / Layer3 */}
-            {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
-              <Text style={{ fontSize: "15px" }}>Phân khu: {item.}</Text>
-            ) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
-              <Text style={{ fontSize: "15px" }}>Tòa: {item.layer3}</Text>
-            ) : null} */}
-
-            {/* Building type / Layer2 */}
+            
             {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
               <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
             ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
@@ -167,6 +176,36 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 ) : null}
 
             {/* Phòng ngủ */}
+            {hasValue(item.construction_area_1) && (
+              <Text style={{ fontSize: "15px" }}>
+                DT xây dựng T1: {item.construction_area_1} m²
+              </Text>
+            )}
+
+            {hasValue(item.construction_area_2) && (
+              <Text style={{ fontSize: "15px" }}>
+                DT xây dựng T2: {item.construction_area_2} m²
+              </Text>
+            )}
+
+            {hasValue(item.num_floor) && (
+              <Text style={{ fontSize: "15px" }}>Số tầng: {item.num_floor}</Text>
+            )}
+
+            {(hasValue(item.lot_width) || hasValue(item.lot_depth)) && (
+              <Text style={{ fontSize: "15px" }}>
+                Kích thước: {hasValue(item.lot_width) ? `${item.lot_width}m` : "-"} x {hasValue(item.lot_depth) ? `${item.lot_depth}m` : "-"}
+              </Text>
+            )}
+
+            {hasValue(item.feature_1) && (
+              <Text style={{ fontSize: "15px" }}>Tiện ích 1: {item.feature_1}</Text>
+            )}
+
+            {hasValue(item.feature_2) && (
+              <Text style={{ fontSize: "15px" }}>Tiện ích 2: {item.feature_2}</Text>
+            )}
+
             {item.bedroom != null &&
               item.bedroom !== "" &&
               String(item.bedroom).trim().toLowerCase() !== "skip" && (
