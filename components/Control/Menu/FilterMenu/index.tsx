@@ -184,7 +184,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         { label: "layer1", values: ["ct", "ti"] },
       ];
 
-      if (activePhanKhu) filters.push({ label: "zone", values: [activePhanKhu] });
+      if (activePhanKhu) filters.push({ label: "layer2", values: [activePhanKhu] });
       if (selectedTypes.length > 0) filters.push({ label: "building_type", values: selectedTypes });
       if (selectedStatus.length > 0) filters.push({ label: "status_unit", values: selectedStatus });
       if (selectedBedrooms.length > 0) filters.push({ label: "building_type", values: selectedBedrooms });
