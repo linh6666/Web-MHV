@@ -72,9 +72,8 @@ export default function SearchResultModal({
         ) || data.data[0];
 
         setSelectedItem({
+          ...matched,
           id: Number(matched.id ?? 0),
-          leaf_id: matched.leaf_id,
-          unit_code: matched.unit_code,
         } as DataDetail);
         setModalOpened(true);
       } else {
