@@ -162,88 +162,74 @@ export default function ModalItem({
 
                 {/* Tiêu đề */}
                 <Text fw={700} mb={6} className={styles.unitTitle}>
-                  Chi tiết {data.layer3 || ""}
+                  Chi tiết: {data.layer3 || ""}
                 </Text>
 
                 {/* Badge trạng thái */}
-                {data.status_unit && data.status_unit.toLowerCase() !== "skip" && (
-                  <Badge
-                    size="sm"
-                    variant="filled"
-                    mb={14}
-                    color={(() => {
-                      switch (data.status_unit!.trim().toUpperCase()) {
-                        case "QUAN TÂM": return "#b8893c";
-                        case "ĐANG BÁN": return "#3d6985";
-                        case "ĐÃ ĐẶT CỌC": return "#cc5c34";
-                        case "ĐÃ BÁN": return "#b32f1f";
-                        default: return "gray";
-                      }
-                    })()}
-                  >
-                    {data.status_unit}
-                  </Badge>
-                )}
+              
 
                 {/* === THÔNG TIN CHI TIẾT === */}
                 <div className={styles.infoGrid}>
                   {data.building_type && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Loại công trình</span>
+                      <span className={styles.infoLabel}>Loại công trình: </span>
                       <span className={styles.infoValue}>{data.building_type}</span>
                     </div>
                   )}
-                  {data.zone && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Phân khu</span>
-                      <span className={styles.infoValue}>{data.zone}</span>
-                    </div>
-                  )}
+                 
                   {data.area != null && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Diện tích đất</span>
+                      <span className={styles.infoLabel}>Diện tích đất: </span>
                       <span className={styles.infoValue}>{data.area} m²</span>
                     </div>
                   )}
-                  {data.construction_area_1 != null && data.construction_area_1 > 0 && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>DT xây dựng T1</span>
-                      <span className={styles.infoValue}>{data.construction_area_1} m²</span>
-                    </div>
-                  )}
-                  {data.construction_area_2 != null && data.construction_area_2 > 0 && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>DT xây dựng T2</span>
-                      <span className={styles.infoValue}>{data.construction_area_2} m²</span>
-                    </div>
-                  )}
+                 {((data.construction_area_1 != null && data.construction_area_1 > 0) ||
+  (data.construction_area_2 != null && data.construction_area_2 > 0)) && (
+  <div className={styles.infoRow}>
+    <span className={styles.infoLabel}>DT xây dựng: </span>
+
+    <span className={styles.infoValue}>
+      {[
+        (data.construction_area_1 ?? 0) > 0
+          ? `T1: ${data.construction_area_1} m²`
+          : null,
+
+        (data.construction_area_2 ?? 0) > 0
+          ? `T2: ${data.construction_area_2} m²`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" | ")}
+    </span>
+  </div>
+)}
                   {data.lot_width != null && data.lot_depth != null && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Kích thước</span>
+                      <span className={styles.infoLabel}>Kích thước: </span>
                       <span className={styles.infoValue}>{data.lot_width}m × {data.lot_depth}m</span>
                     </div>
                   )}
                   {data.num_floor != null && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Số tầng</span>
+                      <span className={styles.infoLabel}>Số tầng: </span>
                       <span className={styles.infoValue}>{data.num_floor}</span>
                     </div>
                   )}
                   {(data.main_door_direction || data.direction) && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Hướng</span>
+                      <span className={styles.infoLabel}>Hướng:</span>
                       <span className={styles.infoValue}>{data.main_door_direction || data.direction}</span>
                     </div>
                   )}
                   {data.view && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>View</span>
+                      <span className={styles.infoLabel}>Cảnh quan:</span>
                       <span className={styles.infoValue}>{data.view}</span>
                     </div>
                   )}
                   {data.price != null && data.price > 0 && (
                     <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Giá</span>
+                      <span className={styles.infoLabel}>Giá: </span>
                       <span className={styles.infoValue} style={{ color: '#b8893c', fontWeight: 700 }}>
                         {new Intl.NumberFormat('vi-VN').format(data.price)} VNĐ
                       </span>
@@ -254,9 +240,9 @@ export default function ModalItem({
                 {/* === TIỆN ÍCH === */}
                 {(data.feature_1 || data.feature_2) && (
                   <div className={styles.featureSection}>
-                    <Text fw={600} size="sm" mb={4} style={{ color: '#294b61' }}>Tiện ích</Text>
-                    {data.feature_1 && <Text size="xs" className={styles.featureText}>• {data.feature_1}</Text>}
-                    {data.feature_2 && <Text size="xs" className={styles.featureText}>• {data.feature_2}</Text>}
+                    <Text fw={600} size="sm" mb={4} >Tiện ích</Text>
+                    {data.feature_1 && <Text size="sm" className={styles.featureText}>• {data.feature_1}</Text>}
+                    {data.feature_2 && <Text size="sm" className={styles.featureText}>• {data.feature_2}</Text>}
                   </div>
                 )}
 
