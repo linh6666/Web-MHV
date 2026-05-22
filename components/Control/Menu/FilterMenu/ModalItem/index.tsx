@@ -7,7 +7,7 @@ import styles from "./ModalItem.module.css";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { IconMaximize, IconX, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
-interface DataDetail {
+export interface DataDetail {
   id: number;
   leaf_id?: string;
   unit_code: string;

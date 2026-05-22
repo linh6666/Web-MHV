@@ -350,6 +350,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         opened={resultOpened}
         onClose={() => setResultOpened(false)}
         results={searchResults}
+        projectId={project_id}
       />
     </div>
   );
