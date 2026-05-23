@@ -15,6 +15,7 @@ interface NodeAttributeItem {
   building_type?: string;
   layer4?: string;
   leaf_id?: string;
+  layer2?: string;
   layer3?: string;
   zone?: string;
   status_unit?: string;
@@ -82,10 +83,10 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         }
 
         if (data?.data && Array.isArray(data.data)) {
-          // 📍 Lấy danh sách Phân khu từ layer3
+          // 📍 Lấy danh sách Khu Vực từ layer2
           const allPhases: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
-              String(item.zone || "")
+              String(item.layer2 || "")
                 .split(";")
                 .map((z) => z.trim())
                 .filter(Boolean)
