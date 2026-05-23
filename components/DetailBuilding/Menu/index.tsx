@@ -133,7 +133,7 @@ export default function MenuBuilding({
     fetchData();
   }, [fetchData]);
 
-  const handleSelectUnit = async (unitCode: string) => {
+  const handleSelectUnit = async (layer4Value: string) => {
     if (!project_id || !layer2Value || !layer3Value) return;
     try {
       const response = await createNodeAttribute({
@@ -142,28 +142,14 @@ export default function MenuBuilding({
           { label: "layer1", values: ["ct", "ct;ti"] },
           { label: "layer2", values: [layer2Value] },
           { label: "layer3", values: [layer3Value] },
-          { label: "unit_code", values: [unitCode] },
+          { label: "layer4", values: [layer4Value] },
         ],
       });
       if (response?.data && response.data.length > 0) {
-        setSelectedData(response.data[0] as unknown as DataDetail);
+        const selectedItem = response.data[0] as unknown as DataDetail;
+        setSelectedData(selectedItem);
         setOpened(true);
-        onSelectModel?.(unitCode); // <--- Thêm dòng này để highlight
-      } else {
-         // Fallback check layer4 if unit_code is not found
-         const fallback = await createNodeAttribute({
-            project_id,
-            filters: [
-              { label: "layer1", values: ["ct", "ct;ti"] },
-              { label: "layer2", values: [layer2Value] },
-              { label: "layer3", values: [layer3Value] },
-              { label: "layer4", values: [unitCode] },
-            ],
-          });
-          if (fallback?.data && fallback.data.length > 0) {
-            setSelectedData(fallback.data[0] as unknown as DataDetail);
-            setOpened(true);
-          }
+        onSelectModel?.(selectedItem.unit_code || layer4Value); // <--- Thêm dòng này để highlight
       }
     } catch (error) {
       console.error("❌ Lỗi khi gọi API Layer 4:", error);
@@ -232,7 +218,7 @@ export default function MenuBuilding({
               <Button
                 key={index}
                 className={styles.menuBtn}
-                onClick={() => handleSelectUnit(item.unit_code || item.label)}
+                onClick={() => handleSelectUnit(item.label)}
                 variant="filled"
                 color="orange"
                 style={{ marginBottom: "10px" }}
