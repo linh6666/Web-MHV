@@ -11,9 +11,28 @@ interface DataDetail {
   id: number;
   leaf_id?: string;
   unit_code: string;
+  layer2?: string;
+  layer3?: string;
   layer6?: string;
+  zone?: string;
+  building_type?: string;
+  bedroom?: number | string;
+  bathroom?: number | string;
+  view?: string;
+  status_unit?: string;
+  price?: number | string;
   describe?: string;
   describe_vi?: string;
+  main_door_direction?: string;
+  balcony_direction?: string;
+  direction?: string;
+  construction_area_1?: number | string;
+  construction_area_2?: number | string;
+  feature_1?: string;
+  feature_2?: string;
+  num_floor?: number | string;
+  lot_depth?: number | string;
+  lot_width?: number | string;
 }
 
 interface HomeDetailItem {
@@ -88,6 +107,22 @@ export default function ModalItem({
 
   const currentImage = imageData[index];
 
+  const hasValue = (value?: string | number) => {
+    if (value == null) return false;
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      return trimmed !== "" && trimmed.toLowerCase() !== "skip";
+    }
+    return true;
+  };
+
+  const formatPrice = (value?: string | number) => {
+    if (!hasValue(value)) return "";
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue) || numericValue <= 0) return "";
+    return `${new Intl.NumberFormat("vi-VN").format(numericValue)} VNĐ`;
+  };
+
   // ================= SLIDER =================
   const goNext = () => {
     if (index < imageData.length - 1) {
@@ -138,11 +173,124 @@ export default function ModalItem({
             {/* ================= LEFT ================= */}
             <div className={styles.leftPanel}>
               <Text fw={700} mb={12} className={styles.unitTitle}>
-                Chi tiết: {data.layer6}
+                Chi tiết: {data.layer6 || data.layer3 || data.unit_code}
               </Text>
 
+              <div className={styles.infoGrid}>
+                {/* {hasValue(data.unit_code) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Mã căn:</span>
+                    <span className={styles.infoValue}>{data.unit_code}</span>
+                  </div>
+                )} */}
+                {hasValue(data.zone || data.layer2) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Phân khu:</span>
+                    <span className={styles.infoValue}>{data.zone || data.layer2}</span>
+                  </div>
+                )}
+                {hasValue(data.layer3) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Tòa:</span>
+                    <span className={styles.infoValue}>{data.layer3}</span>
+                  </div>
+                )}
+                {hasValue(data.building_type) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Loại công trình:</span>
+                    <span className={styles.infoValue}>{data.building_type}</span>
+                  </div>
+                )}
+                {hasValue(data.construction_area_1) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>DT xây dựng T1:</span>
+                    <span className={styles.infoValue}>{data.construction_area_1} m²</span>
+                  </div>
+                )}
+                {hasValue(data.construction_area_2) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>DT xây dựng T2:</span>
+                    <span className={styles.infoValue}>{data.construction_area_2} m²</span>
+                  </div>
+                )}
+                {hasValue(data.num_floor) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Số tầng:</span>
+                    <span className={styles.infoValue}>{data.num_floor}</span>
+                  </div>
+                )}
+                {(hasValue(data.lot_width) || hasValue(data.lot_depth)) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Kích thước:</span>
+                    <span className={styles.infoValue}>
+                      {hasValue(data.lot_width) ? `${data.lot_width}m` : "-"} x {hasValue(data.lot_depth) ? `${data.lot_depth}m` : "-"}
+                    </span>
+                  </div>
+                )}
+                {hasValue(data.bedroom) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Phòng ngủ:</span>
+                    <span className={styles.infoValue}>{data.bedroom}</span>
+                  </div>
+                )}
+                {hasValue(data.bathroom) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Phòng tắm:</span>
+                    <span className={styles.infoValue}>{data.bathroom}</span>
+                  </div>
+                )}
+                {hasValue(data.direction) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Hướng:</span>
+                    <span className={styles.infoValue}>{data.direction}</span>
+                  </div>
+                )}
+                {hasValue(data.main_door_direction) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Hướng cửa chính:</span>
+                    <span className={styles.infoValue}>{data.main_door_direction}</span>
+                  </div>
+                )}
+                {hasValue(data.balcony_direction) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Hướng ban công:</span>
+                    <span className={styles.infoValue}>{data.balcony_direction}</span>
+                  </div>
+                )}
+                {hasValue(data.view) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Cảnh quan:</span>
+                    <span className={styles.infoValue}>{data.view}</span>
+                  </div>
+                )}
+                {formatPrice(data.price) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Giá:</span>
+                    <span className={styles.infoValue}>{formatPrice(data.price)}</span>
+                  </div>
+                )}
+                {hasValue(data.status_unit) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Trạng thái:</span>
+                    <span className={styles.infoValue}>{data.status_unit}</span>
+                  </div>
+                )}
+                {hasValue(data.feature_1) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Tiện ích 1:</span>
+                    <span className={styles.infoValue}>{data.feature_1}</span>
+                  </div>
+                )}
+                {hasValue(data.feature_2) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Tiện ích 2:</span>
+                    <span className={styles.infoValue}>{data.feature_2}</span>
+                  </div>
+                )}
+              </div>
+
               <Text className={styles.descriptionText}>
-                <b>Mô tả:</b> {data.describe_vi || data.describe || "Chưa có"}
+                <b>Mô tả:</b> {currentImage?.description_vi || data.describe_vi || data.describe || "Chưa có"}
               </Text>
             </div>
 
