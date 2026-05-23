@@ -109,11 +109,10 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 .filter(Boolean)
           );
 
-          // 📍 Lấy danh sách Phòng ngủ từ bedroom
+          // 📍 Lấy danh sách Loại công trình từ layer3
           const allBedrooms: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
-              String(item.building_type
-                || "")
+              String(item.layer3 || "")
                 .split(";")
                 .map((z) => z.trim())
                 .filter(Boolean)
@@ -187,7 +186,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       if (activePhanKhu) filters.push({ label: "layer2", values: [activePhanKhu] });
       if (selectedTypes.length > 0) filters.push({ label: "building_type", values: selectedTypes });
       if (selectedStatus.length > 0) filters.push({ label: "status_unit", values: selectedStatus });
-      if (selectedBedrooms.length > 0) filters.push({ label: "building_type", values: selectedBedrooms });
+      if (selectedBedrooms.length > 0) filters.push({ label: "layer3", values: selectedBedrooms });
       if (direction) {
         console.log('🧭 Direction:', direction);
 
