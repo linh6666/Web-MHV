@@ -25,6 +25,7 @@ interface NodeAttributeItem {
   main_door_direction?: string;
   bedroom?: string | number;
   bathroom?: string | number;
+  num_floor?: string | number;
 }
 
 interface ApiResponse {
@@ -45,13 +46,15 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [bedroomOptions, setBedroomOptions] = useState<string[]>([]);
   const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([]);
+  const [floorOptions, setFloorOptions] = useState<string[]>([]);
+  const [selectedFloors, setSelectedFloors] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
   // Results states
   const [searchResults, setSearchResults] = useState<NodeAttributeItem[]>([]);
   const [resultOpened, setResultOpened] = useState(false);
 
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,7 +77,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         }
 
         if (data?.data && Array.isArray(data.data)) {
-          
+
           const allPhases: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
               String(item.layer2 || "")
@@ -83,9 +86,9 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 .filter(Boolean)
           );
 
-          
 
-        
+
+
           const allBedrooms: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
               String(item.layer3 || "")
@@ -94,14 +97,30 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 .filter(Boolean)
           );
 
+          const allFloors: string[] = data.data.flatMap(
+            (item: NodeAttributeItem) =>
+              String(item.num_floor || "")
+                .split(";")
+                .map((z) => z.trim())
+                .filter(Boolean)
+          );
+
           const filteredPhases = allPhases.filter((phase) => phase.toLowerCase() !== "skip");
           const filteredBedrooms = allBedrooms.filter((bedroom) => bedroom.toLowerCase() !== "skip");
+          const filteredFloors = allFloors.filter((floor) => floor.toLowerCase() !== "skip");
 
           const uniquePhases = Array.from(new Set(filteredPhases)).sort((a, b) => a.localeCompare(b, "vi"));
           const uniqueBedrooms = Array.from(new Set(filteredBedrooms)).sort((a, b) => a.localeCompare(b, "vi"));
+          const uniqueFloors = Array.from(new Set(filteredFloors)).sort((a, b) => {
+            const numA = parseInt(a);
+            const numB = parseInt(b);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.localeCompare(b, "vi");
+          });
 
           setPhanKhuOptions(uniquePhases);
           setBedroomOptions(uniqueBedrooms);
+          setFloorOptions(uniqueFloors);
         } else {
           console.warn("⚠️ Dữ liệu trả về không đúng định dạng:", data);
           NotificationExtension.Fails("Dữ liệu trả về không hợp lệ từ API!");
@@ -109,7 +128,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       } catch (error: unknown) {
         console.error("❌ Lỗi khi gọi API:", error);
 
-        
+
         let apiMessage = "Gọi API thất bại!";
         if (error && typeof error === "object") {
           const errObj = error as {
@@ -132,7 +151,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     fetchData();
   }, [project_id]);
 
-  
+
   useEffect(() => {
     const activeFilters: string[] = [];
 
@@ -140,16 +159,17 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     if (selectedTypes.length > 0) activeFilters.push(...selectedTypes);
     if (selectedStatus.length > 0) activeFilters.push(...selectedStatus);
     if (selectedBedrooms.length > 0) activeFilters.push(...selectedBedrooms);
+    if (selectedFloors.length > 0) activeFilters.push(...selectedFloors);
     if (direction) activeFilters.push(direction);
 
-   
+
     setSearchValue(activeFilters.join(', '));
-  }, [activePhanKhu, selectedTypes, selectedStatus, selectedBedrooms, direction]);
+  }, [activePhanKhu, selectedTypes, selectedStatus, selectedBedrooms, selectedFloors, direction]);
 
   const handleSearch = async () => {
     if (!project_id) return;
 
-    setResultOpened(true); 
+    setResultOpened(true);
 
     try {
       const filters = [
@@ -160,6 +180,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       if (selectedTypes.length > 0) filters.push({ label: "building_type", values: selectedTypes });
       if (selectedStatus.length > 0) filters.push({ label: "status_unit", values: selectedStatus });
       if (selectedBedrooms.length > 0) filters.push({ label: "layer3", values: selectedBedrooms });
+      if (selectedFloors.length > 0) filters.push({ label: "num_floor", values: selectedFloors });
       if (direction) {
         console.log('🧭 Direction:', direction);
 
@@ -194,6 +215,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     setSelectedStatus([]);
     setSelectedBedrooms([]);
     setDirection('');
+    setSelectedFloors([]);
     setSearchValue('');
     setSearchResults([]);
     setResultOpened(false);
@@ -233,7 +255,10 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 <div
                   key={pk}
                   className={`${styles.chip} ${activePhanKhu === pk ? styles.active : ''}`}
-                  onClick={() => setActivePhanKhu(activePhanKhu === pk ? '' : pk)}
+                  onClick={() => {
+                    setActivePhanKhu(activePhanKhu === pk ? '' : pk);
+                    setSelectedBedrooms([]);
+                  }}
                 >
                   {pk}
                 </div>
@@ -255,13 +280,39 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                   <div
                     key={bedroom}
                     className={`${styles.chip} ${selectedBedrooms.includes(bedroom) ? styles.active : ''}`}
-                    onClick={() => setSelectedBedrooms(prev => prev.includes(bedroom) ? prev.filter(b => b !== bedroom) : [...prev, bedroom])}
+                    onClick={() => {
+                      setSelectedBedrooms(prev => prev.includes(bedroom) ? [] : [bedroom]);
+                      setActivePhanKhu('');
+                    }}
                   >
                     {bedroom}
                   </div>
                 ))
               ) : (
                 <MantineText size="xs" c="dimmed">Không có dữ liệu phòng ngủ</MantineText>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.quantityGroup}>
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>Số Tầng</div>
+            <div className={styles.chipGroup}>
+              {loading ? (
+                <MantineText size="xs" c="dimmed">Đang tải số tầng...</MantineText>
+              ) : floorOptions.length > 0 ? (
+                floorOptions.map(floor => (
+                  <div
+                    key={floor}
+                    className={`${styles.chip} ${selectedFloors.includes(floor) ? styles.active : ''}`}
+                    onClick={() => setSelectedFloors(prev => prev.includes(floor) ? [] : [floor])}
+                  >
+                    {floor}
+                  </div>
+                ))
+              ) : (
+                <MantineText size="xs" c="dimmed">Không có dữ liệu số tầng</MantineText>
               )}
             </div>
           </div>

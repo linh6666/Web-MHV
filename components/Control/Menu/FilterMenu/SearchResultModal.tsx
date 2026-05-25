@@ -15,6 +15,7 @@ interface UnitResult {
   leaf_id?: string;
   building_type?: string;
   zone?: string;
+  layer2?:string;
   layer4?: string;
   layer3?: string;
   status_unit?: string;
@@ -137,12 +138,12 @@ export default function SearchResultModal({
                     }}
                   >
                     <Table.Td>
-                      <Text style={{ fontSize: 12 }} color="#294b61">
-                        {item.zone}
+                      <Text style={{ fontSize: 10 }} color="#294b61">
+                        {item.layer2}
                       </Text>
                     </Table.Td>
                     <Table.Td>
-                      <Text style={{ fontSize: 12 }} color="#294b61">{item.building_type
+                      <Text style={{ fontSize: 10 }} color="#294b61">{item.layer3
                       }</Text>
                     </Table.Td>
 
