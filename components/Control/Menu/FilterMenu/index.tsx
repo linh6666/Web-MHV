@@ -32,6 +32,8 @@ interface ApiResponse {
   message?: string;
 }
 
+const FIXED_STATUS_OPTIONS = ['ĐÃ BÁN', 'ĐÃ ĐẶT CỌC', 'ĐANG BÁN', 'QUAN TÂM'];
+
 export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   // State for filters
   const [activePhanKhu, setActivePhanKhu] = useState<string>('');
@@ -40,7 +42,6 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   const [direction, setDirection] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [phanKhuOptions, setPhanKhuOptions] = useState<string[]>([]);
-  const [statusOptions, setStatusOptions] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [bedroomOptions, setBedroomOptions] = useState<string[]>([]);
   const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([]);
@@ -50,17 +51,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   const [searchResults, setSearchResults] = useState<NodeAttributeItem[]>([]);
   const [resultOpened, setResultOpened] = useState(false);
 
-  // Direction mapping: compass labels -> API values
-  // const directionMap: { [key: string]: string } = {
-  //   'B': 'Bắc',
-  //   'N': 'Nam',
-  //   'Đ': 'Đông',
-  //   'T': 'Tây',
-  //   'ĐB': 'Đông Bắc',
-  //   'TB': 'Tây Bắc',
-  //   'ĐN': 'Đông Nam',
-  //   'TN': 'Tây Nam'
-  // };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,7 +74,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         }
 
         if (data?.data && Array.isArray(data.data)) {
-          // 📍 Lấy danh sách Khu Vực từ layer2
+          
           const allPhases: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
               String(item.layer2 || "")
@@ -92,25 +83,9 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 .filter(Boolean)
           );
 
-          // 📍 Lấy danh sách Loại công trình từ building_type
-          // const allTypes: string[] = data.data.flatMap(
-          //   (item: NodeAttributeItem) =>
-          //     String(item.building_type || "")
-          //       .split(";")
-          //       .map((z) => z.trim())
-          //       .filter(Boolean)
-          // );
+          
 
-          // 📍 Lấy danh sách Trạng thái từ status_unit
-          const allStatus: string[] = data.data.flatMap(
-            (item: NodeAttributeItem) =>
-              String(item.status_unit || "")
-                .split(";")
-                .map((z) => z.trim())
-                .filter(Boolean)
-          );
-
-          // 📍 Lấy danh sách Loại công trình từ layer3
+        
           const allBedrooms: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
               String(item.layer3 || "")
@@ -120,15 +95,12 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
           );
 
           const filteredPhases = allPhases.filter((phase) => phase.toLowerCase() !== "skip");
-          const filteredStatus = allStatus.filter((status) => status.toLowerCase() !== "skip");
           const filteredBedrooms = allBedrooms.filter((bedroom) => bedroom.toLowerCase() !== "skip");
 
           const uniquePhases = Array.from(new Set(filteredPhases)).sort((a, b) => a.localeCompare(b, "vi"));
-          const uniqueStatus = Array.from(new Set(filteredStatus)).sort((a, b) => a.localeCompare(b, "vi"));
           const uniqueBedrooms = Array.from(new Set(filteredBedrooms)).sort((a, b) => a.localeCompare(b, "vi"));
 
           setPhanKhuOptions(uniquePhases);
-          setStatusOptions(uniqueStatus);
           setBedroomOptions(uniqueBedrooms);
         } else {
           console.warn("⚠️ Dữ liệu trả về không đúng định dạng:", data);
@@ -137,7 +109,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       } catch (error: unknown) {
         console.error("❌ Lỗi khi gọi API:", error);
 
-        // ✅ Nếu backend trả về lỗi có message hoặc detail
+        
         let apiMessage = "Gọi API thất bại!";
         if (error && typeof error === "object") {
           const errObj = error as {
@@ -160,7 +132,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     fetchData();
   }, [project_id]);
 
-  // 🔄 Tự động cập nhật ô tìm kiếm khi các bộ lọc thay đổi
+  
   useEffect(() => {
     const activeFilters: string[] = [];
 
@@ -170,14 +142,14 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     if (selectedBedrooms.length > 0) activeFilters.push(...selectedBedrooms);
     if (direction) activeFilters.push(direction);
 
-    // Chuyển mảng thành chuỗi cách nhau bằng dấu phẩy
+   
     setSearchValue(activeFilters.join(', '));
   }, [activePhanKhu, selectedTypes, selectedStatus, selectedBedrooms, direction]);
 
   const handleSearch = async () => {
     if (!project_id) return;
 
-    setResultOpened(true); // Open modal to show loading or results
+    setResultOpened(true); 
 
     try {
       const filters = [
@@ -300,21 +272,15 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
           <div className={styles.section}>
             <div className={styles.sectionTitle}>Trạng Thái</div>
             <div className={styles.chipGroup}>
-              {loading ? (
-                <MantineText size="xs" c="dimmed">Đang tải trạng thái...</MantineText>
-              ) : statusOptions.length > 0 ? (
-                statusOptions.map(status => (
-                  <div
-                    key={status}
-                    className={`${styles.chip} ${selectedStatus.includes(status) ? styles.active : ''}`}
-                    onClick={() => setSelectedStatus(prev => prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status])}
-                  >
-                    {status}
-                  </div>
-                ))
-              ) : (
-                <MantineText size="xs" c="dimmed">Không có dữ liệu trạng thái</MantineText>
-              )}
+              {FIXED_STATUS_OPTIONS.map(status => (
+                <div
+                  key={status}
+                  className={`${styles.chip} ${selectedStatus.includes(status) ? styles.active : ''}`}
+                  onClick={() => setSelectedStatus(prev => prev.includes(status) ? [] : [status])}
+                >
+                  {status}
+                </div>
+              ))}
             </div>
           </div>
         </div>
