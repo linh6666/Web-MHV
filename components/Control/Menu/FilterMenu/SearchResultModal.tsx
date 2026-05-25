@@ -158,7 +158,8 @@ export default function SearchResultModal({
                     <Table.Td>
                       <Badge
                         size="xs"
-                        variant="outline"
+                        variant="filled"
+                        style={{ color: 'white' }}
                         color={(() => {
                           const val = item.status_unit;
 
