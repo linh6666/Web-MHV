@@ -14,6 +14,7 @@ interface UnitResult {
   unit_code?: string;
   leaf_id?: string;
   building_type?: string;
+  num_floor?: string | number;
   zone?: string;
   layer2?:string;
   layer4?: string;
@@ -120,6 +121,7 @@ export default function SearchResultModal({
                 <Table.Tr>
                   <Table.Th style={{ color: "#294b61" }}>Phân khu</Table.Th>
                   <Table.Th style={{ color: "#294b61" }}>Loại công trình </Table.Th>
+                    <Table.Th style={{ color: "#294b61" }}>Số tầng</Table.Th>
 
 
                   <Table.Th style={{ color: "#294b61" }}>Trạng Thái</Table.Th>
@@ -144,6 +146,10 @@ export default function SearchResultModal({
                     </Table.Td>
                     <Table.Td>
                       <Text style={{ fontSize: 10 }} color="#294b61">{item.layer3
+                      }</Text>
+                    </Table.Td>
+                        <Table.Td>
+                      <Text style={{ fontSize: 10 }} color="#294b61">{item.num_floor
                       }</Text>
                     </Table.Td>
 
@@ -187,15 +193,7 @@ export default function SearchResultModal({
                       </Badge>
                     </Table.Td>
 
-                    {/* <Table.Td>
-                      <Text size="xs">
-                        {(() => {
-                           const val = item.direction || item.main_door_direction;
-                           if (!val || val.toLowerCase() === 'skip') return 'không có';
-                           return val;
-                        })()}
-                      </Text>
-                    </Table.Td> */}
+                
 
                   </Table.Tr>
                 ))}
