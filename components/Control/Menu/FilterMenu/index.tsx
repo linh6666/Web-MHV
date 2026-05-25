@@ -218,88 +218,90 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         </button>
       </div>
 
-      {/* Phân khu */}
-      <div className={styles.section}>
-        <div className={styles.sectionTitle}>Khu Vực</div>
-        <div className={styles.chipGroup}>
-          {loading ? (
-            <div className={styles.loadingWrapper}>
-              <IconLoader2 size={18} className={styles.spinner} />
-              <span>Đang tải...</span>
-            </div>
-          ) : phanKhuOptions.length > 0 ? (
-            phanKhuOptions.map(pk => (
-              <div
-                key={pk}
-                className={`${styles.chip} ${activePhanKhu === pk ? styles.active : ''}`}
-                onClick={() => setActivePhanKhu(activePhanKhu === pk ? '' : pk)}
-              >
-                {pk}
-              </div>
-            ))
-          ) : (
-            <div className={styles.emptyText}>Không có dữ liệu phân khu</div>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.quantityGroup}>
+      <div className={styles.filterScroll}>
+        {/* Phân khu */}
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Loại công trình</div>
+          <div className={styles.sectionTitle}>Khu Vực</div>
           <div className={styles.chipGroup}>
             {loading ? (
-              <MantineText size="xs" c="dimmed">Đang tải loại công trình...</MantineText>
-            ) : bedroomOptions.length > 0 ? (
-              bedroomOptions.map(bedroom => (
+              <div className={styles.loadingWrapper}>
+                <IconLoader2 size={18} className={styles.spinner} />
+                <span>Đang tải...</span>
+              </div>
+            ) : phanKhuOptions.length > 0 ? (
+              phanKhuOptions.map(pk => (
                 <div
-                  key={bedroom}
-                  className={`${styles.chip} ${selectedBedrooms.includes(bedroom) ? styles.active : ''}`}
-                  onClick={() => setSelectedBedrooms(prev => prev.includes(bedroom) ? prev.filter(b => b !== bedroom) : [...prev, bedroom])}
+                  key={pk}
+                  className={`${styles.chip} ${activePhanKhu === pk ? styles.active : ''}`}
+                  onClick={() => setActivePhanKhu(activePhanKhu === pk ? '' : pk)}
                 >
-                  {bedroom}
+                  {pk}
                 </div>
               ))
             ) : (
-              <MantineText size="xs" c="dimmed">Không có dữ liệu phòng ngủ</MantineText>
+              <div className={styles.emptyText}>Không có dữ liệu phân khu</div>
             )}
           </div>
         </div>
-      </div>
 
-      <div className={styles.gridSection}>
-        {/* Numbers Sections */}
         <div className={styles.quantityGroup}>
           <div className={styles.section}>
-            <div className={styles.sectionTitle}>Trạng Thái</div>
+            <div className={styles.sectionTitle}>Loại công trình</div>
             <div className={styles.chipGroup}>
-              {FIXED_STATUS_OPTIONS.map(status => (
-                <div
-                  key={status}
-                  className={`${styles.chip} ${selectedStatus.includes(status) ? styles.active : ''}`}
-                  onClick={() => setSelectedStatus(prev => prev.includes(status) ? [] : [status])}
-                >
-                  {status}
-                </div>
-              ))}
+              {loading ? (
+                <MantineText size="xs" c="dimmed">Đang tải loại công trình...</MantineText>
+              ) : bedroomOptions.length > 0 ? (
+                bedroomOptions.map(bedroom => (
+                  <div
+                    key={bedroom}
+                    className={`${styles.chip} ${selectedBedrooms.includes(bedroom) ? styles.active : ''}`}
+                    onClick={() => setSelectedBedrooms(prev => prev.includes(bedroom) ? prev.filter(b => b !== bedroom) : [...prev, bedroom])}
+                  >
+                    {bedroom}
+                  </div>
+                ))
+              ) : (
+                <MantineText size="xs" c="dimmed">Không có dữ liệu phòng ngủ</MantineText>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Compass */}
-        <div className={styles.compassSection}>
-          <div className={styles.sectionTitle}>Hướng</div>
-          <div className={styles.diamondGrid}>
-            {['B', 'ĐB', 'Đ', 'TB', '', 'ĐN', 'T', 'TN', 'N'].map((dir, idx) => (
-              // Middle cell is empty or decorative
-              dir === '' ? <div key={idx} className={styles.diamondCell} style={{ border: 'none', background: 'transparent' }} /> :
-                <div
-                  key={dir}
-                  className={`${styles.diamondCell} ${direction === dir ? styles.active : ''}`}
-                  onClick={() => setDirection(direction === dir ? '' : dir)}
-                >
-                  <span>{dir}</span>
-                </div>
-            ))}
+        <div className={styles.gridSection}>
+          {/* Numbers Sections */}
+          <div className={styles.quantityGroup}>
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>Trạng Thái</div>
+              <div className={styles.chipGroup}>
+                {FIXED_STATUS_OPTIONS.map(status => (
+                  <div
+                    key={status}
+                    className={`${styles.chip} ${selectedStatus.includes(status) ? styles.active : ''}`}
+                    onClick={() => setSelectedStatus(prev => prev.includes(status) ? [] : [status])}
+                  >
+                    {status}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Compass */}
+          <div className={styles.compassSection}>
+            <div className={styles.sectionTitle}>Hướng</div>
+            <div className={styles.diamondGrid}>
+              {['B', 'ĐB', 'Đ', 'TB', '', 'ĐN', 'T', 'TN', 'N'].map((dir, idx) => (
+                // Middle cell is empty or decorative
+                dir === '' ? <div key={idx} className={styles.diamondCell} style={{ border: 'none', background: 'transparent' }} /> :
+                  <div
+                    key={dir}
+                    className={`${styles.diamondCell} ${direction === dir ? styles.active : ''}`}
+                    onClick={() => setDirection(direction === dir ? '' : dir)}
+                  >
+                    <span>{dir}</span>
+                  </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

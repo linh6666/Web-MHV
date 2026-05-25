@@ -65,6 +65,19 @@
     margin-bottom: 20px;
 }
 
+.filterScroll {
+    max-height: min(420px, calc(100vh - 330px));
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.filterScroll::-webkit-scrollbar {
+    display: none;
+}
+
 .searchInputWrapper {
     flex: 1;
     position: relative;
