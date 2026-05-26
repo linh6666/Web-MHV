@@ -1090,12 +1090,12 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
             >
               {/* Mã căn hộ */}
               <Text fw={700} mb={8} style={{ fontSize: "13px" }} ta="center">
-                {item.zone}
+                {item.layer2}
               </Text>
 
               {/* Phân khu hoặc Tòa */}
              <Text style={{ fontSize: "15px" }}>
-  {item.unit_name && `Tên căn: ${item.unit_name}`}
+  {item.layer3 && `Tên căn: ${item.layer3}`}
 </Text>
 
               {/* Loại công trình hoặc Vị trí */}

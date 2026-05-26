@@ -148,7 +148,7 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
         <div className={styles.leftColumn}>
           <>
             <Text fw={700} mb={12} style={{ fontSize: "1.2rem" }}>
-              Chi tiết: {item.zone}
+              Chi tiết: {item.layer2}
             </Text>
           
             
@@ -158,13 +158,13 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
             {item.building_type && item.building_type.trim().toLowerCase() !== "skip" && (
               <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
             )}
-             {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" && (
-              <Text style={{ fontSize: "15px" }}>Căn hộ: {item.unit_name}</Text>
+             {item.layer3 && item.layer3.trim().toLowerCase() !== "skip" && (
+              <Text style={{ fontSize: "15px" }}>Căn hộ: {item.layer3}</Text>
             )}
             
-            {item.layer2 && item.layer2.trim().toLowerCase() !== "skip" && (
+            {/* {item.layer2 && item.layer2.trim().toLowerCase() !== "skip" && (
               <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
-            )}
+            )} */}
 
             {/* Phòng ngủ */}
             {hasValue(item.construction_area_1) && (
