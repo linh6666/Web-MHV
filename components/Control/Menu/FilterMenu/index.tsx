@@ -48,6 +48,8 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([]);
   const [floorOptions, setFloorOptions] = useState<string[]>([]);
   const [selectedFloors, setSelectedFloors] = useState<string[]>([]);
+  const [tenCanOptions, setTenCanOptions] = useState<string[]>([]);
+  const [selectedTenCan, setSelectedTenCan] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
 
   // Results states
@@ -89,13 +91,21 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
 
 
 
-          const allBedrooms: string[] = data.data.flatMap(
-            (item: NodeAttributeItem) =>
-              String(item.layer3 || "")
-                .split(";")
-                .map((z) => z.trim())
-                .filter(Boolean)
-          );
+            const allBedrooms: string[] = data.data.flatMap(
+                (item: NodeAttributeItem) =>
+                    String(item.building_type || "")
+                      .split(";")
+                      .map((z) => z.trim())
+                      .filter(Boolean)
+            );
+
+            const allTenCan: string[] = data.data.flatMap(
+                (item: NodeAttributeItem) =>
+                    String(item.layer3 || "")
+                      .split(";")
+                      .map((z) => z.trim())
+                      .filter(Boolean)
+            );
 
           const allFloors: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
@@ -105,22 +115,25 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 .filter(Boolean)
           );
 
-          const filteredPhases = allPhases.filter((phase) => phase.toLowerCase() !== "skip");
-          const filteredBedrooms = allBedrooms.filter((bedroom) => bedroom.toLowerCase() !== "skip");
-          const filteredFloors = allFloors.filter((floor) => floor.toLowerCase() !== "skip");
+            const filteredPhases = allPhases.filter((phase) => phase.toLowerCase() !== "skip");
+            const filteredBedrooms = allBedrooms.filter((bedroom) => bedroom.toLowerCase() !== "skip");
+            const filteredTenCan = allTenCan.filter((ten) => ten.toLowerCase() !== "skip");
+            const filteredFloors = allFloors.filter((floor) => floor.toLowerCase() !== "skip");
 
-          const uniquePhases = Array.from(new Set(filteredPhases)).sort((a, b) => a.localeCompare(b, "vi"));
-          const uniqueBedrooms = Array.from(new Set(filteredBedrooms)).sort((a, b) => a.localeCompare(b, "vi"));
-          const uniqueFloors = Array.from(new Set(filteredFloors)).sort((a, b) => {
-            const numA = parseInt(a);
-            const numB = parseInt(b);
-            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-            return a.localeCompare(b, "vi");
-          });
+            const uniquePhases = Array.from(new Set(filteredPhases)).sort((a, b) => a.localeCompare(b, "vi"));
+            const uniqueBedrooms = Array.from(new Set(filteredBedrooms)).sort((a, b) => a.localeCompare(b, "vi"));
+            const uniqueTenCan = Array.from(new Set(filteredTenCan)).sort((a, b) => a.localeCompare(b, "vi"));
+            const uniqueFloors = Array.from(new Set(filteredFloors)).sort((a, b) => {
+              const numA = parseInt(a);
+              const numB = parseInt(b);
+              if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+              return a.localeCompare(b, "vi");
+            });
 
-          setPhanKhuOptions(uniquePhases);
-          setBedroomOptions(uniqueBedrooms);
-          setFloorOptions(uniqueFloors);
+            setPhanKhuOptions(uniquePhases);
+            setBedroomOptions(uniqueBedrooms);
+            setTenCanOptions(uniqueTenCan);
+            setFloorOptions(uniqueFloors);
         } else {
           console.warn("⚠️ Dữ liệu trả về không đúng định dạng:", data);
           NotificationExtension.Fails("Dữ liệu trả về không hợp lệ từ API!");
@@ -160,11 +173,11 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     if (selectedStatus.length > 0) activeFilters.push(...selectedStatus);
     if (selectedBedrooms.length > 0) activeFilters.push(...selectedBedrooms);
     if (selectedFloors.length > 0) activeFilters.push(...selectedFloors);
+    if (selectedTenCan.length > 0) activeFilters.push(...selectedTenCan);
     if (direction) activeFilters.push(direction);
 
-
     setSearchValue(activeFilters.join(', '));
-  }, [activePhanKhu, selectedTypes, selectedStatus, selectedBedrooms, selectedFloors, direction]);
+  }, [activePhanKhu, selectedTypes, selectedStatus, selectedBedrooms, selectedFloors, selectedTenCan, direction]);
 
   const handleSearch = async () => {
     if (!project_id) return;
@@ -179,7 +192,8 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       if (activePhanKhu) filters.push({ label: "layer2", values: [activePhanKhu] });
       if (selectedTypes.length > 0) filters.push({ label: "building_type", values: selectedTypes });
       if (selectedStatus.length > 0) filters.push({ label: "status_unit", values: selectedStatus });
-      if (selectedBedrooms.length > 0) filters.push({ label: "layer3", values: selectedBedrooms });
+      if (selectedBedrooms.length > 0) filters.push({ label: "building_type", values: selectedBedrooms });
+      if (selectedTenCan.length > 0) filters.push({ label: "layer3", values: selectedTenCan });
       if (selectedFloors.length > 0) filters.push({ label: "num_floor", values: selectedFloors });
       if (direction) {
         console.log('🧭 Direction:', direction);
@@ -210,15 +224,16 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   };
 
   const handleReset = () => {
-    setActivePhanKhu('');
-    setSelectedTypes([]);
-    setSelectedStatus([]);
-    setSelectedBedrooms([]);
-    setDirection('');
-    setSelectedFloors([]);
-    setSearchValue('');
-    setSearchResults([]);
-    setResultOpened(false);
+      setActivePhanKhu('');
+      setSelectedTypes([]);
+      setSelectedStatus([]);
+      setSelectedBedrooms([]);
+      setSelectedTenCan([]);
+      setDirection('');
+      setSelectedFloors([]);
+      setSearchValue('');
+      setSearchResults([]);
+      setResultOpened(false);
   };
 
   return (
@@ -274,25 +289,50 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
             <div className={styles.sectionTitle}>Loại công trình</div>
             <div className={styles.chipGroup}>
               {loading ? (
-                <MantineText size="xs" c="dimmed">Đang tải loại công trình...</MantineText>
-              ) : bedroomOptions.length > 0 ? (
-                bedroomOptions.map(bedroom => (
-                  <div
-                    key={bedroom}
-                    className={`${styles.chip} ${selectedBedrooms.includes(bedroom) ? styles.active : ''}`}
-                    onClick={() => {
-                      setSelectedBedrooms(prev => prev.includes(bedroom) ? [] : [bedroom]);
-                      setActivePhanKhu('');
-                    }}
-                  >
-                    {bedroom}
-                  </div>
-                ))
-              ) : (
-                <MantineText size="xs" c="dimmed">Không có dữ liệu phòng ngủ</MantineText>
-              )}
-            </div>
+              <MantineText size="xs" c="dimmed">Đang tải loại công trình...</MantineText>
+            ) : bedroomOptions.length > 0 ? (
+              bedroomOptions.map(bedroom => (
+                <div
+                  key={bedroom}
+                  className={`${styles.chip} ${selectedBedrooms.includes(bedroom) ? styles.active : ''}`}
+                  onClick={() => {
+                    setSelectedBedrooms(prev => prev.includes(bedroom) ? [] : [bedroom]);
+                    setActivePhanKhu('');
+                  }}
+                >
+                  {bedroom}
+                </div>
+              ))
+            ) : (
+              <MantineText size="xs" c="dimmed">Không có dữ liệu phòng ngủ</MantineText>
+            )}
           </div>
+        </div>
+
+        {/* Tên căn */}
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>Tên căn</div>
+          <div className={styles.chipGroup}>
+            {loading ? (
+              <MantineText size="xs" c="dimmed">Đang tải tên căn...</MantineText>
+            ) : tenCanOptions.length > 0 ? (
+              tenCanOptions.map(name => (
+                <div
+                  key={name}
+                  className={`${styles.chip} ${selectedTenCan.includes(name) ? styles.active : ''}`}
+                  onClick={() => {
+                    setSelectedTenCan(prev => prev.includes(name) ? [] : [name]);
+                    setActivePhanKhu('');
+                  }}
+                >
+                  {name}
+                </div>
+              ))
+            ) : (
+              <MantineText size="xs" c="dimmed">Không có dữ liệu tên căn</MantineText>
+            )}
+          </div>
+        </div>
         </div>
 
         <div className={styles.quantityGroup}>
