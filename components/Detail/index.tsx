@@ -15,7 +15,7 @@ import {
   ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
 import { pathsData, SvgItem } from "./Data";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import InfoModal from "./Infomodal/index";
 
 interface ZoningSystemProps {
@@ -59,9 +59,9 @@ export default function ZoningSystem({
   // URL PARAMS
   // =============================
   const router = useRouter();
-  const { query } = router;
-  const urlPhase = query.layer3 as string || "";
-  const urlLayer2 = query.layer2 as string || "";
+  const searchParams = useSearchParams();
+  const urlPhase = (searchParams.get('layer3') as string) ?? "";
+  const urlLayer2 = (searchParams.get('layer2') as string) ?? "";
 
   const [currentLayer2] = useState(layer2 || urlLayer2 || "");
   const [currentPhase] = useState(layer3 || urlPhase || "");
@@ -69,7 +69,7 @@ export default function ZoningSystem({
   // =============================
   // LAYER 7 CHANGE
   // =============================
-   const handleLayer2Change = (newLayer2: string) => {
+  const handleLayer2Change = (newLayer2: string) => {
     setCurrentLayer2Prop(newLayer2);
   };
 
@@ -115,8 +115,8 @@ export default function ZoningSystem({
             return cleanElId === cleanCode;
           });
 
-          const cleanSelected = selectedModel 
-            ? selectedModel.trim().toUpperCase() 
+          const cleanSelected = selectedModel
+            ? selectedModel.trim().toUpperCase()
             : null;
 
           if (isHighlighted || (cleanSelected && cleanElId === cleanSelected)) {
