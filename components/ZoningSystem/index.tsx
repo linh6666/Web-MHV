@@ -6,6 +6,7 @@ import styles from "./ZoningSystem.module.css";
 import Menu from "./Menu/index";
 import { pathsData,SvgItem } from "./Data";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useRouter } from "next/navigation";
 
 
 interface ZoningSystemProps {
@@ -78,24 +79,49 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         svg: svgRoot.outerHTML,
       };
     });
-  
+
     return result;
   }, [activeModels, selectedModel]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const target = (e.target as HTMLElement).closest("[data-name]");
-    const dataName = target?.getAttribute("data-name");
+    const router = useRouter();
 
-    if (dataName) {
-      setHoverInfo({
-        name: dataName,
-        x: e.clientX,
-        y: e.clientY,
-      });
-    } else {
-      setHoverInfo(null);
+  // Click handler cho các shape SVG (rect, path, circle)
+  const handleShapeClick = (e: React.MouseEvent) => {
+    // Tìm phần tử SVG có data-name gần nhất
+    const target = (e.target as HTMLElement).closest('[data-name]');
+    if (!target) return;
+    const dataName = target.getAttribute('data-name');
+    if (!dataName) return;
+
+    // Cập nhật bộ lọc (tương tự handleSvgClick)
+    const cleaned = dataName.trim().toUpperCase();
+    setActiveModels((prev) => {
+      const exists = prev.some((m) => (m || '').trim().toUpperCase() === cleaned);
+      return exists
+        ? prev.filter((m) => (m || '').trim().toUpperCase() !== cleaned) // toggle off
+        : [...prev, dataName]; // toggle on
+    });
+
+    // Điều hướng sang page chi tiết, truyền data-name dưới dạng layer2
+    if (project_id) {
+      router.push(
+        `/tuong-tac/Ciputra/Mau-cong-trinh?id=${project_id}&layer2=${encodeURIComponent(dataName)}`
+      );
     }
   };
+  const handleMouseMove = (e: React.MouseEvent) => {
+  const target = (e.target as HTMLElement).closest("[data-name]");
+  const dataName = target?.getAttribute("data-name");
+  if (dataName) {
+    setHoverInfo({
+      name: dataName,
+      x: e.clientX,
+      y: e.clientY,
+    });
+  } else {
+    setHoverInfo(null);
+  }
+};
 
   return (
     <div className={styles.box}>
@@ -115,6 +141,7 @@ export default function ZoningSystem({ project_id }: ZoningSystemProps) {
         <div
           className={styles.imageWrapper}
           onMouseMove={handleMouseMove}
+          onClick={handleShapeClick}
           onMouseLeave={() => setHoverInfo(null)}
         >
           <img src="/HOME_BG.jpg" alt="Ảnh" className={styles.img} />
