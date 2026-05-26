@@ -1053,20 +1053,29 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
                     onClick={() => setSelectedItem(item)}
                   >
                     <Text fw={700} mb={8} style={{ fontSize: "13px" }} ta="center">
-                      {item.zone}
+                      {item.layer2}
                     </Text>
                     {/* {item.zone && item.zone.trim().toLowerCase() !== "skip" ? (
                       <Text style={{ fontSize: "15px" }}>Phân khu: {item.zone}</Text>
                     ) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
                       <Text style={{ fontSize: "15px" }}>Tòa: {item.layer3}</Text>
                     ) : null} */}
+                     {item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
+  <Text style={{ fontSize: "15px" }}>
+    Tên căn: {item.layer3}
+  </Text>
+) : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
+  <Text style={{ fontSize: "15px" }}>
+    Tòa: {item.layer3}
+  </Text>
+) : null}
 
                     {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
                       <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
                     ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
                       <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
                     ) : null}
-                     {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" ? (
+                     {/* {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" ? (
   <Text style={{ fontSize: "15px" }}>
     Tên căn: {item.unit_name}
   </Text>
@@ -1074,7 +1083,7 @@ const sortedBathrooms = [...uniqueBathrooms].sort((a, b) => {
   <Text style={{ fontSize: "15px" }}>
     Tòa: {item.layer3}
   </Text>
-) : null}
+) : null} */}
 
                     {item.bedroom != null &&
                       item.bedroom !== "" &&
