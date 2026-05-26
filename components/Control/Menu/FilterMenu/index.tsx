@@ -258,7 +258,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       <div className={styles.filterScroll}>
         {/* Phân khu */}
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Phân khu</div>
+          <div className={styles.sectionTitle}>Dự án</div>
           <div className={styles.chipGroup}>
             {loading ? (
               <div className={styles.loadingWrapper}>
@@ -311,7 +311,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
 
         {/* Tên căn */}
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Tên căn</div>
+          <div className={styles.sectionTitle}>Tên công trình</div>
           <div className={styles.chipGroup}>
             {loading ? (
               <MantineText size="xs" c="dimmed">Đang tải tên căn...</MantineText>
