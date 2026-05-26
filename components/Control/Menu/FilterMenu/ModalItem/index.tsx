@@ -35,6 +35,9 @@ export interface DataDetail {
   direction?: string;
   layer2?: string;
   layer3?: string;
+  bedroom?: string | number;
+  bathroom?: string | number;
+  balcony_direction?: string;
 }
 
 interface HomeDetailItem {
@@ -162,94 +165,86 @@ export default function ModalItem({
 
                 {/* Tiêu đề */}
                 <Text fw={700} mb={6} className={styles.unitTitle}>
-                  Chi tiết: {data.layer3 || ""}
+                  CHI TIẾT: {data.layer2 || ""}
                 </Text>
 
                 {/* Badge trạng thái */}
               
 
-                {/* === THÔNG TIN CHI TIẾT === */}
                 <div className={styles.infoGrid}>
-                  {data.building_type && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Loại công trình: </span>
-                      <span className={styles.infoValue}>{data.building_type}</span>
-                    </div>
-                  )}
-                 
-                  {data.area != null && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Diện tích đất: </span>
-                      <span className={styles.infoValue}>{data.area} m²</span>
-                    </div>
-                  )}
-                 {((data.construction_area_1 != null && data.construction_area_1 > 0) ||
-  (data.construction_area_2 != null && data.construction_area_2 > 0)) && (
-  <div className={styles.infoRow}>
-    <span className={styles.infoLabel}>DT xây dựng: </span>
-
-    <span className={styles.infoValue}>
-      {[
-        (data.construction_area_1 ?? 0) > 0
-          ? `T1: ${data.construction_area_1} m²`
-          : null,
-
-        (data.construction_area_2 ?? 0) > 0
-          ? `T2: ${data.construction_area_2} m²`
-          : null,
-      ]
-        .filter(Boolean)
-        .join(" | ")}
-    </span>
-  </div>
-)}
-                  {data.lot_width != null && data.lot_depth != null && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Kích thước: </span>
-                      <span className={styles.infoValue}>{data.lot_width}m × {data.lot_depth}m</span>
-                    </div>
-                  )}
-                  {data.num_floor != null && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Số tầng: </span>
-                      <span className={styles.infoValue}>{data.num_floor}</span>
-                    </div>
-                  )}
-                  {(data.main_door_direction || data.direction) && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Hướng:</span>
-                      <span className={styles.infoValue}>{data.main_door_direction || data.direction}</span>
-                    </div>
-                  )}
-                  {data.view && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Cảnh quan:</span>
-                      <span className={styles.infoValue}>{data.view}</span>
-                    </div>
-                  )}
-                  {data.price != null && data.price > 0 && (
-                    <div className={styles.infoRow}>
-                      <span className={styles.infoLabel}>Giá: </span>
-                      <span className={styles.infoValue} >
-                        {new Intl.NumberFormat('vi-VN').format(data.price)} VNĐ
-                      </span>
-                    </div>
-                  )}
-                </div>
+  {data.building_type && data.building_type.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Loại công trình: {data.layer3}</Text>
+  )}
+  {/* {data.unit_name && data.unit_name.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Căn hộ: {data.unit_name}</Text>
+  )} */}
+  {/* {data.layer2 && data.layer2.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Vị trí: {data.layer2}</Text>
+  )} */}
+  {data.construction_area_1 != null && data.construction_area_1 > 0 && (
+    <Text style={{ fontSize: "15px" }}>DT xây dựng T1: {data.construction_area_1} m²</Text>
+  )}
+  {data.construction_area_2 != null && data.construction_area_2 > 0 && (
+    <Text style={{ fontSize: "15px" }}>DT xây dựng T2: {data.construction_area_2} m²</Text>
+  )}
+  {data.num_floor != null && (
+    <Text style={{ fontSize: "15px" }}>Số tầng: {data.num_floor}</Text>
+  )}
+  {(data.lot_width != null || data.lot_depth != null) && (
+    <Text style={{ fontSize: "15px" }}>
+      Kích thước: {data.lot_width ? `${data.lot_width}m` : "-"} x {data.lot_depth ? `${data.lot_depth}m` : "-"}
+    </Text>
+  )}
+  {data.feature_1 && data.feature_1.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Tiện ích 1: {data.feature_1}</Text>
+  )}
+  {data.feature_2 && data.feature_2.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Tiện ích 2: {data.feature_2}</Text>
+  )}
+  {data.bedroom != null && data.bedroom !== "" && String(data.bedroom).trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Phòng ngủ: {data.bedroom}</Text>
+  )}
+  {data.bathroom != null && data.bathroom !== "" && String(data.bathroom).trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Phòng tắm: {data.bathroom}</Text>
+  )}
+  {data.direction && data.direction.trim() !== "" && data.direction.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Hướng: {data.direction}</Text>
+  )}
+  {data.main_door_direction && data.main_door_direction.trim() !== "" && data.main_door_direction.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Hướng cửa chính: {data.main_door_direction}</Text>
+  )}
+  {data.balcony_direction && data.balcony_direction.trim() !== "" && data.balcony_direction.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Hướng ban công: {data.balcony_direction}</Text>
+  )}
+  {data.view && data.view.trim() !== "" && data.view.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Cảnh quan: {data.view}</Text>
+  )}
+  {data.status_unit && data.status_unit.trim() !== "" && data.status_unit.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Trạng thái: {data.status_unit}</Text>
+  )}
+  {data.price != null && data.price !== 0 && (
+    <Text style={{ fontSize: "15px" }}>Giá: {data.price.toLocaleString()}đ</Text>
+  )}
+  {(data.describe_vi || data.describe) && (
+    <Text style={{ marginTop: "10px" }}>
+      <b>Mô tả:</b> {data.describe_vi || data.describe}
+    </Text>
+  )}
+</div>
 
                 {/* === TIỆN ÍCH === */}
-                {(data.feature_1 || data.feature_2) && (
+                {/* {(data.feature_1 || data.feature_2) && (
                   <div className={styles.featureSection}>
                     <Text fw={600} size="sm" mb={4} >Tiện ích</Text>
                     {data.feature_1 && <Text size="sm" className={styles.featureText}>• {data.feature_1}</Text>}
                     {data.feature_2 && <Text size="sm" className={styles.featureText}>• {data.feature_2}</Text>}
                   </div>
-                )}
+                )} */}
 
                 {/* === MÔ TẢ === */}
-                <Text className={styles.descriptionText} mt={14}>
+                {/* <Text className={styles.descriptionText} mt={14}>
                   <b>Mô tả:</b> {currentImage?.description_vi || data?.describe_vi || data?.describe || "Chưa có"}
-                </Text>
+                </Text> */}
 
               </ScrollArea>
             </div>

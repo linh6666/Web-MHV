@@ -15,7 +15,7 @@ import {
   ReactZoomPanPinchRef,
 } from "react-zoom-pan-pinch";
 import { pathsData, SvgItem } from "./Data";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import InfoModal from "./Infomodal/index";
 
 interface ZoningSystemProps {
@@ -59,9 +59,9 @@ export default function ZoningSystem({
   // URL PARAMS
   // =============================
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const urlPhase = searchParams.get("layer3");
-  const urlLayer2 = searchParams.get("layer2");
+  const { query } = router;
+  const urlPhase = query.layer3 as string || "";
+  const urlLayer2 = query.layer2 as string || "";
 
   const [currentLayer2] = useState(layer2 || urlLayer2 || "");
   const [currentPhase] = useState(layer3 || urlPhase || "");
