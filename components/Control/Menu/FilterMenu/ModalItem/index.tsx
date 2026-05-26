@@ -172,8 +172,11 @@ export default function ModalItem({
               
 
                 <div className={styles.infoGrid}>
+                   {data.layer3 && data.layer3.trim().toLowerCase() !== "skip" && (
+    <Text style={{ fontSize: "15px" }}>Tên căn: {data.layer3}</Text>
+  )}
   {data.building_type && data.building_type.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Loại công trình: {data.layer3}</Text>
+    <Text style={{ fontSize: "15px" }}>Loại công trình: {data.building_type}</Text>
   )}
   {/* {data.unit_name && data.unit_name.trim().toLowerCase() !== "skip" && (
     <Text style={{ fontSize: "15px" }}>Căn hộ: {data.unit_name}</Text>

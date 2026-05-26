@@ -120,7 +120,9 @@ export default function SearchResultModal({
               <Table.Thead style={{ backgroundColor: '#f8f9fa' }}>
                 <Table.Tr>
                   <Table.Th style={{ color: "#294b61" }}>Phân khu</Table.Th>
+                  
                   <Table.Th style={{ color: "#294b61" }}>Loại công trình </Table.Th>
+                   <Table.Th style={{ color: "#294b61" }}>Tên căn </Table.Th>
                     <Table.Th style={{ color: "#294b61" }}>Số tầng</Table.Th>
 
 
@@ -144,7 +146,12 @@ export default function SearchResultModal({
                         {item.layer2}
                       </Text>
                     </Table.Td>
+                   
                     <Table.Td>
+                      <Text style={{ fontSize: 10 }} color="#294b61">{item.building_type
+                      }</Text>
+                    </Table.Td>
+                     <Table.Td>
                       <Text style={{ fontSize: 10 }} color="#294b61">{item.layer3
                       }</Text>
                     </Table.Td>
