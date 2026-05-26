@@ -161,20 +161,20 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
 
             
             {item.building_type && item.building_type.trim().toLowerCase() !== "skip" ? (
-              <Text style={{ fontSize: "15px" }}>Loại công trình: {item.layer3}</Text>
+              <Text style={{ fontSize: "15px" }}>Loại công trình: {item.building_type}</Text>
             ) : item.layer2 && item.layer2.trim().toLowerCase() !== "skip" ? (
               <Text style={{ fontSize: "15px" }}>Vị trí: {item.layer2}</Text>
             ) : null}
-            {/* {item.unit_name && item.unit_name.trim().toLowerCase() !== "skip" ? (
+            {item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
   <Text style={{ fontSize: "15px" }}>
-    Tên căn: {item.unit_name}
+    Tên căn: {item.layer3}
   </Text>
 ) 
 : item.layer3 && item.layer3.trim().toLowerCase() !== "skip" ? (
   <Text style={{ fontSize: "15px" }}>
     Tòa: {item.layer3}
   </Text>
-) : null} */}
+) : null}
 
             {/* Phòng ngủ */}
             {hasValue(item.construction_area_1) && (
