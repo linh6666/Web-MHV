@@ -173,7 +173,7 @@ export default function ModalItem({
             {/* ================= LEFT ================= */}
             <div className={styles.leftPanel}>
               <Text fw={700} mb={12} className={styles.unitTitle}>
-                Chi tiết: {data.layer6 || data.layer3 || data.unit_code}
+                CHI TIẾT: {data.layer2 }
               </Text>
 
               <div className={styles.infoGrid}>
@@ -183,10 +183,10 @@ export default function ModalItem({
                     <span className={styles.infoValue}>{data.unit_code}</span>
                   </div>
                 )} */}
-                {hasValue(data.zone || data.layer2) && (
+                {/* {hasValue(data.zone || data.layer3) && (
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Phân khu:</span>
-                    <span className={styles.infoValue}>{data.zone || data.layer2}</span>
+                    <span className={styles.infoValue}>{data.zone || data.layer3}</span>
                   </div>
                 )}
                 {hasValue(data.layer3) && (
@@ -194,11 +194,11 @@ export default function ModalItem({
                     <span className={styles.infoLabel}>Tòa:</span>
                     <span className={styles.infoValue}>{data.layer3}</span>
                   </div>
-                )}
+                )} */}
                 {hasValue(data.building_type) && (
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Loại công trình:</span>
-                    <span className={styles.infoValue}>{data.building_type}</span>
+                    <span className={styles.infoValue}>{data.layer3}</span>
                   </div>
                 )}
                 {hasValue(data.construction_area_1) && (
