@@ -195,10 +195,16 @@ export default function ModalItem({
                     <span className={styles.infoValue}>{data.layer3}</span>
                   </div>
                 )} */}
+                {hasValue(data.layer3) && (
+                  <div className={styles.infoRow}>
+                    <span className={styles.infoLabel}>Tên căn:</span>
+                    <span className={styles.infoValue}>{data.layer3}</span>
+                  </div>
+                )}
                 {hasValue(data.building_type) && (
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Loại công trình:</span>
-                    <span className={styles.infoValue}>{data.layer3}</span>
+                    <span className={styles.infoValue}>{data.building_type}</span>
                   </div>
                 )}
                 {hasValue(data.construction_area_1) && (
