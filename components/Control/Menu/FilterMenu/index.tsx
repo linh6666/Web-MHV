@@ -258,7 +258,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       <div className={styles.filterScroll}>
         {/* Phân khu */}
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Khu Vực</div>
+          <div className={styles.sectionTitle}>Phân khu</div>
           <div className={styles.chipGroup}>
             {loading ? (
               <div className={styles.loadingWrapper}>
