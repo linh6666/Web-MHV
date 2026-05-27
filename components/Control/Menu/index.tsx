@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Sun from "./Sun";
 import { IconArrowLeft, IconSearch } from "@tabler/icons-react";
 import FilterMenu from "./FilterMenu";
-// import ProjectionModal from "./ProjectionModal";
+import ProjectionModal from "./ProjectionModal";
 import { getListMapping } from "../../../api/apigetlimapping";
 
 interface MenuProps {
@@ -194,12 +194,12 @@ export default function Menu({ project_id }: MenuProps) {
       </div>
 
       {/* Modal Projection */}
-      {/* <ProjectionModal
+      <ProjectionModal
         opened={openedProjection}
         onClose={() => setOpenedProjection(false)}
           project_id={project_id}
         mappingId={selectedMappingId}
-      /> */}
+      />
     </div>
   );
 }
