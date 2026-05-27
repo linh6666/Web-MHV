@@ -50,6 +50,8 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   const [tenCanOptions, setTenCanOptions] = useState<string[]>([]);
   const [selectedTenCan, setSelectedTenCan] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [customSearchQuery, setCustomSearchQuery] = useState<string>('');
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
   // Results states
   const [searchResults, setSearchResults] = useState<NodeAttributeItem[]>([]);
@@ -171,10 +173,11 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     if (direction) activeFilters.push(direction);
 
     setSearchValue(activeFilters.join(', '));
+    setCustomSearchQuery('');
   }, [activePhanKhu, selectedStatus, selectedBedrooms, selectedFloors, selectedTenCan, direction]);
 
   // Helper to compute filtered data based on current selections, optionally excluding a specific field
-  const getFilteredData = (excludeField?: string) => {
+  const getFilteredData = (excludeField?: string, customQueryOverride?: string) => {
     const filters: { label: string; values: string[] }[] = [];
     if (activePhanKhu && excludeField !== 'layer2') filters.push({ label: 'layer2', values: [activePhanKhu] });
     if (selectedStatus.length && excludeField !== 'status_unit') filters.push({ label: 'status_unit', values: selectedStatus });
@@ -183,14 +186,92 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     if (selectedFloors.length && excludeField !== 'num_floor') filters.push({ label: 'num_floor', values: selectedFloors });
     if (direction && excludeField !== 'feature_2') filters.push({ label: 'feature_2', values: [direction] });
 
+    const queryToUse = customQueryOverride !== undefined ? customQueryOverride : customSearchQuery;
+
     return originalData.filter(item => {
-      return filters.every(f => {
+      const matchChips = filters.every(f => {
         const fieldVal = item[f.label as keyof NodeAttributeItem];
         if (fieldVal === undefined || fieldVal === null || fieldVal === '') return false;
         const values = String(fieldVal).split(';').map((v: string) => v.trim()).filter(Boolean);
         return f.values.some(v => values.includes(v));
       });
+
+      if (!matchChips) return false;
+
+      if (queryToUse.trim()) {
+        let q = queryToUse.toLowerCase().trim();
+        let floorRequired = false;
+        let floorNum = "";
+
+        // Regex support "tầng X" or "X tầng"
+        const floorRegex1 = /tầng\s*(\d+)/i;
+        const floorRegex2 = /(\d+)\s*tầng/i;
+
+        const m1 = q.match(floorRegex1);
+        const m2 = q.match(floorRegex2);
+
+        if (m1) {
+          floorRequired = true;
+          floorNum = m1[1];
+          q = q.replace(floorRegex1, "").trim();
+        } else if (m2) {
+          floorRequired = true;
+          floorNum = m2[1];
+          q = q.replace(floorRegex2, "").trim();
+        }
+
+        if (floorRequired) {
+          // Compare exactly with num_floor
+          const itemFloor = item.num_floor != null ? String(item.num_floor).trim() : "";
+          if (itemFloor !== floorNum) {
+            return false;
+          }
+          if (!q) {
+            return true;
+          }
+        }
+
+        const matchesQuery =
+          (item.unit_code && item.unit_code.toLowerCase().includes(q)) ||
+          (item.layer2 && item.layer2.toLowerCase().includes(q)) ||
+          (item.layer3 && item.layer3.toLowerCase().includes(q)) ||
+          (item.building_type && item.building_type.toLowerCase().includes(q)) ||
+          (item.feature_2 && item.feature_2.toLowerCase().includes(q));
+
+        return !!matchesQuery;
+      }
+
+      return true;
     });
+  };
+
+  // Get unique unit codes or names matching custom search query as suggestions
+  const getSuggestions = () => {
+    if (!customSearchQuery.trim()) return [];
+    const q = customSearchQuery.toLowerCase().trim();
+    const matches: string[] = [];
+
+    originalData.forEach(item => {
+      if (item.unit_code && item.unit_code.toLowerCase().includes(q)) {
+        matches.push(item.unit_code);
+      }
+      if (item.layer3 && item.layer3.toLowerCase().includes(q)) {
+        matches.push(item.layer3);
+      }
+    });
+
+    return Array.from(new Set(matches)).slice(0, 8);
+  };
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    setSearchValue(suggestion);
+    setCustomSearchQuery(suggestion);
+    setShowSuggestions(false);
+
+    if (!project_id) return;
+    const filteredResults = getFilteredData(undefined, suggestion);
+    setSearchResults(filteredResults);
+    setResultOpened(true);
   };
 
   // Check if a filter option is available based on other selected filters
@@ -228,6 +309,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     setSelectedTenCan([]);
     setDirection('');
     setSearchValue('');
+    setCustomSearchQuery('');
     setResultOpened(false);
     setSearchResults([]);
   };
@@ -243,8 +325,37 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
             placeholder="Tìm kiếm..."
             className={styles.searchInput}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+              setCustomSearchQuery(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+                setShowSuggestions(false);
+              }
+            }}
           />
+          {showSuggestions && customSearchQuery.trim() && (
+            <div className={styles.suggestionsDropdown}>
+              {getSuggestions().length > 0 ? (
+                getSuggestions().map((suggestion) => (
+                  <div
+                    key={suggestion}
+                    className={styles.suggestionItem}
+                    onClick={() => handleSelectSuggestion(suggestion)}
+                  >
+                    {suggestion}
+                  </div>
+                ))
+              ) : (
+                <div className={styles.noSuggestions}>Không tìm thấy gợi ý</div>
+              )}
+            </div>
+          )}
         </div>
         <button className={styles.closeBtn} onClick={onClose}>
           <IconX size={18} />
