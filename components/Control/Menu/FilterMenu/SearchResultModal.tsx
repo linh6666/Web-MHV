@@ -52,7 +52,7 @@ export default function SearchResultModal({
 
     try {
       const filters: { label: string; values: string[] }[] = [
-        { label: "layer1", values: ["ct", "ti"] },
+        { label: "layer1", values: ["ct", ] },
       ];
 
       if (item.zone) filters.push({ label: "layer2", values: [item.zone] });

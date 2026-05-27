@@ -67,7 +67,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         const body = {
           project_id,
           filters: [
-            { label: "layer1", values: ["ct", "ti"] },
+            { label: "layer1", values: ["ct"] },
           ],
         };
 
@@ -186,7 +186,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
 
     try {
       const filters = [
-        { label: "layer1", values: ["ct", "ti"] },
+        { label: "layer1", values: ["ct"] },
       ];
 
       if (activePhanKhu) filters.push({ label: "layer2", values: [activePhanKhu] });
