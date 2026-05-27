@@ -368,6 +368,23 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                   <div
                     key={status}
                     className={`${styles.chip} ${selectedStatus.includes(status) ? styles.active : ''}`}
+                    style={{
+                      backgroundColor: (() => {
+                        switch (status) {
+                          case "QUAN TÂM":
+                            return "#b8893c";
+                          case "ĐANG BÁN":
+                            return "#3d6985";
+                          case "ĐÃ ĐẶT CỌC":
+                            return "#cc5c34";
+                          case "ĐÃ BÁN":
+                            return "#b32f1f";
+                          default:
+                            return "gray";
+                        }
+                      })(),
+                      color: "white",
+                    }}
                     onClick={() => setSelectedStatus(prev => prev.includes(status) ? [] : [status])}
                   >
                     {status}
