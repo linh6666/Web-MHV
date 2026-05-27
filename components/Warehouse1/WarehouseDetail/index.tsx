@@ -59,6 +59,32 @@ export interface WarehouseItemdeltall {
   bathroom?: string;
   price?: number;
 }
+const formatDirection = (dir?: string) => {
+  if (!dir) return "";
+  const cleanDir = dir.trim().toUpperCase();
+  if (cleanDir === "SKIP") return "";
+
+  switch (cleanDir) {
+    case "B":
+      return "Bắc";
+    case "ĐB":
+      return "Đông Bắc";
+    case "Đ":
+      return "Đông";
+    case "TB":
+      return "Tây Bắc";
+    case "ĐN":
+      return "Đông Nam";
+    case "T":
+      return "Tây";
+    case "TN":
+      return "Tây Nam";
+    case "N":
+      return "Nam";
+    default:
+      return dir;
+  }
+};
 
 export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDetailProps) {
   const [data, setData] = useState<WarehouseItemdeltall[]>([]);
@@ -190,11 +216,11 @@ export default function WarehouseDetail({ item, onBack, projectId }: WarehouseDe
             )}
 
             {hasValue(item.feature_1) && (
-              <Text style={{ fontSize: "15px" }}>Tiện ích 1: {item.feature_1}</Text>
+              <Text style={{ fontSize: "15px" }}>Tiện ích: {item.feature_1}</Text>
             )}
 
             {hasValue(item.feature_2) && (
-              <Text style={{ fontSize: "15px" }}>Tiện ích 2: {item.feature_2}</Text>
+              <Text style={{ fontSize: "15px" }}>Hướng: {formatDirection(item.feature_2)}</Text>
             )}
 
             {item.bedroom != null &&
