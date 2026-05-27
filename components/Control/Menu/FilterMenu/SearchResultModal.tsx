@@ -22,7 +22,7 @@ interface UnitResult {
   status_unit?: string;
   bedroom?: string | number;
   direction?: string;
-  main_door_direction?: string;
+  feature_2?: string;
 }
 
 interface SearchResultModalProps {

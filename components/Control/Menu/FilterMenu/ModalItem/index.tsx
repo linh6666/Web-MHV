@@ -31,7 +31,7 @@ export interface DataDetail {
   view?: string;
   feature_1?: string;
   feature_2?: string;
-  main_door_direction?: string;
+
   direction?: string;
   layer2?: string;
   layer3?: string;
@@ -213,8 +213,8 @@ export default function ModalItem({
   {data.direction && data.direction.trim() !== "" && data.direction.trim().toLowerCase() !== "skip" && (
     <Text style={{ fontSize: "15px" }}>Hướng: {data.direction}</Text>
   )}
-  {data.main_door_direction && data.main_door_direction.trim() !== "" && data.main_door_direction.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Hướng cửa chính: {data.main_door_direction}</Text>
+  {data.feature_2 && data.feature_2.trim() !== "" && data.feature_2.trim().toLowerCase() !== "skip" && (
+    <Text size="15px">Hướng: {data.feature_2}</Text>
   )}
   {data.balcony_direction && data.balcony_direction.trim() !== "" && data.balcony_direction.trim().toLowerCase() !== "skip" && (
     <Text style={{ fontSize: "15px" }}>Hướng ban công: {data.balcony_direction}</Text>
