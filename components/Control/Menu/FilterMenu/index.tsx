@@ -38,11 +38,10 @@ const FIXED_STATUS_OPTIONS = ['ĐÃ BÁN', 'ĐÃ ĐẶT CỌC', 'ĐANG BÁN', 'Q
 export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   // State for filters
   const [activePhanKhu, setActivePhanKhu] = useState<string>('');
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-
   const [direction, setDirection] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [phanKhuOptions, setPhanKhuOptions] = useState<string[]>([]);
+  const [resultOpened, setResultOpened] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [bedroomOptions, setBedroomOptions] = useState<string[]>([]);
   const [selectedBedrooms, setSelectedBedrooms] = useState<string[]>([]);
@@ -54,10 +53,9 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
 
   // Results states
   const [searchResults, setSearchResults] = useState<NodeAttributeItem[]>([]);
-  const [resultOpened, setResultOpened] = useState(false);
+  const [originalData, setOriginalData] = useState<NodeAttributeItem[]>([]);
 
-
-
+  // Fetch data from API on mount
   useEffect(() => {
     const fetchData = async () => {
       if (!project_id) return;
@@ -79,6 +77,7 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         }
 
         if (data?.data && Array.isArray(data.data)) {
+          setOriginalData(data.data);
 
           const allPhases: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
@@ -87,9 +86,6 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 .map((z) => z.trim())
                 .filter(Boolean)
           );
-
-
-
 
           const allBedrooms: string[] = data.data.flatMap(
             (item: NodeAttributeItem) =>
@@ -141,7 +137,6 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
       } catch (error: unknown) {
         console.error("❌ Lỗi khi gọi API:", error);
 
-
         let apiMessage = "Gọi API thất bại!";
         if (error && typeof error === "object") {
           const errObj = error as {
@@ -164,12 +159,11 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     fetchData();
   }, [project_id]);
 
-
+  // Update search value display when filters change
   useEffect(() => {
     const activeFilters: string[] = [];
 
     if (activePhanKhu) activeFilters.push(activePhanKhu);
-    if (selectedTypes.length > 0) activeFilters.push(...selectedTypes);
     if (selectedStatus.length > 0) activeFilters.push(...selectedStatus);
     if (selectedBedrooms.length > 0) activeFilters.push(...selectedBedrooms);
     if (selectedFloors.length > 0) activeFilters.push(...selectedFloors);
@@ -177,63 +171,65 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     if (direction) activeFilters.push(direction);
 
     setSearchValue(activeFilters.join(', '));
-  }, [activePhanKhu, selectedTypes, selectedStatus, selectedBedrooms, selectedFloors, selectedTenCan, direction]);
+  }, [activePhanKhu, selectedStatus, selectedBedrooms, selectedFloors, selectedTenCan, direction]);
 
-  const handleSearch = async () => {
-    if (!project_id) return;
+  // Helper to compute filtered data based on current selections, optionally excluding a specific field
+  const getFilteredData = (excludeField?: string) => {
+    const filters: { label: string; values: string[] }[] = [];
+    if (activePhanKhu && excludeField !== 'layer2') filters.push({ label: 'layer2', values: [activePhanKhu] });
+    if (selectedStatus.length && excludeField !== 'status_unit') filters.push({ label: 'status_unit', values: selectedStatus });
+    if (selectedBedrooms.length && excludeField !== 'building_type') filters.push({ label: 'building_type', values: selectedBedrooms });
+    if (selectedTenCan.length && excludeField !== 'layer3') filters.push({ label: 'layer3', values: selectedTenCan });
+    if (selectedFloors.length && excludeField !== 'num_floor') filters.push({ label: 'num_floor', values: selectedFloors });
+    if (direction && excludeField !== 'feature_2') filters.push({ label: 'feature_2', values: [direction] });
 
-    setResultOpened(true);
-
-    try {
-      const filters = [
-        { label: "layer1", values: ["ct"] },
-      ];
-
-      if (activePhanKhu) filters.push({ label: "layer2", values: [activePhanKhu] });
-      if (selectedTypes.length > 0) filters.push({ label: "building_type", values: selectedTypes });
-      if (selectedStatus.length > 0) filters.push({ label: "status_unit", values: selectedStatus });
-      if (selectedBedrooms.length > 0) filters.push({ label: "building_type", values: selectedBedrooms });
-      if (selectedTenCan.length > 0) filters.push({ label: "layer3", values: selectedTenCan });
-      if (selectedFloors.length > 0) filters.push({ label: "num_floor", values: selectedFloors });
-      if (direction) {
-        console.log('🧭 Direction:', direction);
-
-        filters.push({
-          label: "feature_2",
-          values: [direction],
-        });
-      }
-
-      const body = {
-        project_id,
-        filters: filters
-      };
-
-      const data = await createNodeAttribute(body);
-
-      if (data?.data && Array.isArray(data.data)) {
-        setSearchResults(data.data);
-      } else {
-        setSearchResults([]);
-      }
-    } catch (error) {
-      console.error("❌ Search error:", error);
-      NotificationExtension.Fails("Tìm kiếm thất bại!");
-      setSearchResults([]);
-    }
+    return originalData.filter(item => {
+      return filters.every(f => {
+        const fieldVal = item[f.label as keyof NodeAttributeItem];
+        if (fieldVal === undefined || fieldVal === null || fieldVal === '') return false;
+        const values = String(fieldVal).split(';').map((v: string) => v.trim()).filter(Boolean);
+        return f.values.some(v => values.includes(v));
+      });
+    });
   };
 
+  // Check if a filter option is available based on other selected filters
+  const isOptionAvailable = (field: string, value: string) => {
+    // If there is no data yet, treat everything as available
+    if (!originalData.length) return true;
+    // If no filters have been selected yet, show all options as available (bright)
+    const anyFilterSelected = selectedStatus.length > 0 || selectedBedrooms.length > 0 || selectedFloors.length > 0 || activePhanKhu !== '' || direction !== '' || selectedTenCan.length > 0;
+    if (!anyFilterSelected) return true;
+
+    const filtered = getFilteredData(field);
+    return filtered.some(item => {
+      const fieldVal = item[field as keyof NodeAttributeItem];
+      if (fieldVal === undefined || fieldVal === null || fieldVal === '') return false;
+      const values = String(fieldVal).split(';').map((v: string) => v.trim()).filter(Boolean);
+      return values.includes(value);
+    });
+  };
+
+  // Search: compute filtered results from originalData
+  const handleSearch = () => {
+    if (!project_id) return;
+
+    const filteredResults = getFilteredData();
+    setSearchResults(filteredResults);
+    setResultOpened(true);
+  };
+
+  // Reset all filters to initial state
   const handleReset = () => {
     setActivePhanKhu('');
-    setSelectedTypes([]);
     setSelectedStatus([]);
     setSelectedBedrooms([]);
+    setSelectedFloors([]);
     setSelectedTenCan([]);
     setDirection('');
-    setSelectedFloors([]);
     setSearchValue('');
-    setSearchResults([]);
     setResultOpened(false);
+    setSearchResults([]);
   };
 
   return (
@@ -270,10 +266,16 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                 <div
                   key={pk}
                   className={`${styles.chip} ${activePhanKhu === pk ? styles.active : ''}`}
-                  onClick={() => {
-                    setActivePhanKhu(activePhanKhu === pk ? '' : pk);
-                    setSelectedBedrooms([]);
+                  style={{
+                    opacity: isOptionAvailable('layer2', pk) ? 1 : 0.5,
+                    cursor: isOptionAvailable('layer2', pk) ? 'pointer' : 'not-allowed',
                   }}
+                  onClick={() => {
+                     const isSelected = activePhanKhu === pk;
+                     if (!isOptionAvailable('layer2', pk) && !isSelected) return;
+                     setActivePhanKhu(isSelected ? '' : pk);
+                     setSelectedBedrooms([]);
+                   }}
                 >
                   {pk}
                 </div>
@@ -295,10 +297,16 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                   <div
                     key={bedroom}
                     className={`${styles.chip} ${selectedBedrooms.includes(bedroom) ? styles.active : ''}`}
-                    onClick={() => {
-                      setSelectedBedrooms(prev => prev.includes(bedroom) ? [] : [bedroom]);
-                      setActivePhanKhu('');
+                    style={{
+                      opacity: isOptionAvailable('building_type', bedroom) ? 1 : 0.5,
+                      cursor: isOptionAvailable('building_type', bedroom) ? 'pointer' : 'not-allowed',
                     }}
+                    onClick={() => {
+                       const isSelected = selectedBedrooms.includes(bedroom);
+                       if (!isOptionAvailable('building_type', bedroom) && !isSelected) return;
+                       setSelectedBedrooms(isSelected ? [] : [bedroom]);
+                       setActivePhanKhu('');
+                     }}
                   >
                     {bedroom}
                   </div>
@@ -320,10 +328,16 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                   <div
                     key={name}
                     className={`${styles.chip} ${selectedTenCan.includes(name) ? styles.active : ''}`}
-                    onClick={() => {
-                      setSelectedTenCan(prev => prev.includes(name) ? [] : [name]);
-                      setActivePhanKhu('');
+                    style={{
+                      opacity: isOptionAvailable('layer3', name) ? 1 : 0.5,
+                      cursor: isOptionAvailable('layer3', name) ? 'pointer' : 'not-allowed',
                     }}
+                    onClick={() => {
+                       const isSelected = selectedTenCan.includes(name);
+                       if (!isOptionAvailable('layer3', name) && !isSelected) return;
+                       setSelectedTenCan(isSelected ? [] : [name]);
+                       setActivePhanKhu('');
+                     }}
                   >
                     {name}
                   </div>
@@ -346,7 +360,15 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                   <div
                     key={floor}
                     className={`${styles.chip} ${selectedFloors.includes(floor) ? styles.active : ''}`}
-                    onClick={() => setSelectedFloors(prev => prev.includes(floor) ? [] : [floor])}
+                    style={{
+                      opacity: isOptionAvailable('num_floor', String(floor)) ? 1 : 0.5,
+                      cursor: isOptionAvailable('num_floor', String(floor)) ? 'pointer' : 'not-allowed',
+                    }}
+                    onClick={() => {
+                      const isSelected = selectedFloors.includes(floor);
+                      if (!isOptionAvailable('num_floor', String(floor)) && !isSelected) return;
+                      setSelectedFloors(isSelected ? [] : [floor]);
+                    }}
                   >
                     {floor}
                   </div>
@@ -384,8 +406,14 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                         }
                       })(),
                       color: "white",
+                      opacity: isOptionAvailable('status_unit', status) ? 1 : 0.5,
+                      cursor: isOptionAvailable('status_unit', status) ? 'pointer' : 'not-allowed',
                     }}
-                    onClick={() => setSelectedStatus(prev => prev.includes(status) ? [] : [status])}
+                    onClick={() => {
+                      const isSelected = selectedStatus.includes(status);
+                      if (!isOptionAvailable('status_unit', status) && !isSelected) return;
+                      setSelectedStatus(isSelected ? [] : [status]);
+                    }}
                   >
                     {status}
                   </div>
@@ -400,21 +428,30 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
             <div className={styles.diamondGrid}>
               {['B', 'ĐB', 'Đ', 'TB', '', 'ĐN', 'T', 'TN', 'N'].map((dir, idx) => (
                 // Middle cell is empty or decorative
-                dir === '' ? <div key={idx} className={styles.diamondCell} style={{ border: 'none', background: 'transparent' }} /> :
+                dir === '' ? (
+                  <div key={idx} className={styles.diamondCell} style={{ border: 'none', background: 'transparent' }} />
+                ) : (
                   <div
                     key={dir}
                     className={`${styles.diamondCell} ${direction === dir ? styles.active : ''}`}
-                    onClick={() => setDirection(direction === dir ? '' : dir)}
+                    style={{
+                      opacity: isOptionAvailable('feature_2', dir) ? 1 : 0.5,
+                      cursor: isOptionAvailable('feature_2', dir) ? 'pointer' : 'not-allowed',
+                    }}
+                    onClick={() => {
+                       const isSelected = direction === dir;
+                       if (!isOptionAvailable('feature_2', dir) && !isSelected) return;
+                       setDirection(isSelected ? '' : dir);
+                     }}
                   >
                     <span>{dir}</span>
                   </div>
+                )
               ))}
             </div>
           </div>
         </div>
       </div>
-
-
 
       {/* Footer */}
       <div className={styles.footer}>
