@@ -53,7 +53,32 @@ interface ModalItemProps {
   data: DataDetail | null;
   projectId: string | null;
 }
+const formatDirection = (dir?: string) => {
+  if (!dir) return "";
+  const cleanDir = dir.trim().toUpperCase();
+  if (cleanDir === "SKIP") return "";
 
+  switch (cleanDir) {
+    case "B":
+      return "Bắc";
+    case "ĐB":
+      return "Đông Bắc";
+    case "Đ":
+      return "Đông";
+    case "TB":
+      return "Tây Bắc";
+    case "ĐN":
+      return "Đông Nam";
+    case "T":
+      return "Tây";
+    case "TN":
+      return "Tây Nam";
+    case "N":
+      return "Nam";
+    default:
+      return dir;
+  }
+};
 export default function ModalItem({
   opened,
   onClose,
@@ -245,12 +270,12 @@ export default function ModalItem({
                     <span className={styles.infoValue}>{data.bathroom}</span>
                   </div>
                 )}
-                {hasValue(data.direction) && (
+                {/* {hasValue(data.direction) && (
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Hướng:</span>
                     <span className={styles.infoValue}>{data.direction}</span>
                   </div>
-                )}
+                )} */}
                 {hasValue(data.main_door_direction) && (
                   <div className={styles.infoRow}>
                     <span className={styles.infoLabel}>Hướng cửa chính:</span>
@@ -283,14 +308,14 @@ export default function ModalItem({
                 )}
                 {hasValue(data.feature_1) && (
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Tiện ích 1:</span>
+                    <span className={styles.infoLabel}>Tiện ích:</span>
                     <span className={styles.infoValue}>{data.feature_1}</span>
                   </div>
                 )}
                 {hasValue(data.feature_2) && (
                   <div className={styles.infoRow}>
-                    <span className={styles.infoLabel}>Tiện ích 2:</span>
-                    <span className={styles.infoValue}>{data.feature_2}</span>
+                    <span className={styles.infoLabel}>Hướng:</span>
+                    <span className={styles.infoValue}>{formatDirection(data.feature_2)}</span>
                   </div>
                 )}
               </div>
