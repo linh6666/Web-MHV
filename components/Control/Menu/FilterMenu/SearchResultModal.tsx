@@ -29,7 +29,7 @@ const formatDirection = (dir?: string) => {
   if (!dir) return "";
   const cleanDir = dir.trim().toUpperCase();
   if (cleanDir === "SKIP") return "";
-  
+
   switch (cleanDir) {
     case "B":
       return "Bắc";
@@ -199,7 +199,21 @@ export default function SearchResultModal({
                       <Badge
                         size="xs"
                         variant="filled"
-                        style={{ color: 'white' }}
+                        styles={{
+                          label: {
+                            whiteSpace: 'normal',
+                            overflow: 'visible',
+                            textOverflow: 'unset',
+                          }
+                        }}
+                        style={{
+                          color: 'white',
+                          whiteSpace: 'normal',
+                          height: 'auto',
+                          textAlign: 'center',
+                          padding: '4px 8px',
+                          display: 'inline-flex',
+                        }}
                         color={(() => {
                           const val = item.status_unit;
 
