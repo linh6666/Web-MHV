@@ -16,7 +16,7 @@ interface UnitResult {
   building_type?: string;
   num_floor?: string | number;
   zone?: string;
-  layer2?:string;
+  layer2?: string;
   layer4?: string;
   layer3?: string;
   status_unit?: string;
@@ -24,6 +24,33 @@ interface UnitResult {
   direction?: string;
   feature_2?: string;
 }
+
+const formatDirection = (dir?: string) => {
+  if (!dir) return "";
+  const cleanDir = dir.trim().toUpperCase();
+  if (cleanDir === "SKIP") return "";
+  
+  switch (cleanDir) {
+    case "B":
+      return "Bắc";
+    case "ĐB":
+      return "Đông Bắc";
+    case "Đ":
+      return "Đông";
+    case "TB":
+      return "Tây Bắc";
+    case "ĐN":
+      return "Đông Nam";
+    case "T":
+      return "Tây";
+    case "TN":
+      return "Tây Nam";
+    case "N":
+      return "Nam";
+    default:
+      return dir;
+  }
+};
 
 interface SearchResultModalProps {
   opened: boolean;
@@ -52,7 +79,7 @@ export default function SearchResultModal({
 
     try {
       const filters: { label: string; values: string[] }[] = [
-        { label: "layer1", values: ["ct", ] },
+        { label: "layer1", values: ["ct",] },
       ];
 
       if (item.zone) filters.push({ label: "layer2", values: [item.zone] });
@@ -120,10 +147,11 @@ export default function SearchResultModal({
               <Table.Thead style={{ backgroundColor: '#f8f9fa' }}>
                 <Table.Tr>
                   <Table.Th style={{ color: "#294b61" }}>Phân khu</Table.Th>
-                  
+
                   <Table.Th style={{ color: "#294b61" }}>Loại công trình </Table.Th>
-                   <Table.Th style={{ color: "#294b61" }}>Tên căn </Table.Th>
-                    <Table.Th style={{ color: "#294b61" }}>Số tầng</Table.Th>
+                  <Table.Th style={{ color: "#294b61" }}>Tên căn </Table.Th>
+                  <Table.Th style={{ color: "#294b61" }}>Số tầng</Table.Th>
+                  <Table.Th style={{ color: "#294b61" }}>Hướng</Table.Th>
 
 
                   <Table.Th style={{ color: "#294b61" }}>Trạng Thái</Table.Th>
@@ -146,18 +174,23 @@ export default function SearchResultModal({
                         {item.layer2}
                       </Text>
                     </Table.Td>
-                   
+
                     <Table.Td>
                       <Text style={{ fontSize: 10 }} color="#294b61">{item.building_type
                       }</Text>
                     </Table.Td>
-                     <Table.Td>
+                    <Table.Td>
                       <Text style={{ fontSize: 10 }} color="#294b61">{item.layer3
                       }</Text>
                     </Table.Td>
-                        <Table.Td>
+                    <Table.Td>
                       <Text style={{ fontSize: 10 }} color="#294b61">{item.num_floor
                       }</Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Text style={{ fontSize: 10 }} color="#294b61">
+                        {formatDirection(item.feature_2)}
+                      </Text>
                     </Table.Td>
 
 
@@ -201,7 +234,7 @@ export default function SearchResultModal({
                       </Badge>
                     </Table.Td>
 
-                
+
 
                   </Table.Tr>
                 ))}
