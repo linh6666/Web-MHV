@@ -7,6 +7,33 @@ import styles from "./ModalItem.module.css";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { IconMaximize, IconX, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
+const formatDirection = (dir?: string) => {
+  if (!dir) return "";
+  const cleanDir = dir.trim().toUpperCase();
+  if (cleanDir === "SKIP") return "";
+
+  switch (cleanDir) {
+    case "B":
+      return "Bắc";
+    case "ĐB":
+      return "Đông Bắc";
+    case "Đ":
+      return "Đông";
+    case "TB":
+      return "Tây Bắc";
+    case "ĐN":
+      return "Đông Nam";
+    case "T":
+      return "Tây";
+    case "TN":
+      return "Tây Nam";
+    case "N":
+      return "Nam";
+    default:
+      return dir;
+  }
+};
+
 export interface DataDetail {
   id: number;
   leaf_id?: string;
@@ -169,71 +196,71 @@ export default function ModalItem({
                 </Text>
 
                 {/* Badge trạng thái */}
-              
+
 
                 <div className={styles.infoGrid}>
-                   {data.layer3 && data.layer3.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Tên căn: {data.layer3}</Text>
-  )}
-  {data.building_type && data.building_type.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Loại công trình: {data.building_type}</Text>
-  )}
-  {/* {data.unit_name && data.unit_name.trim().toLowerCase() !== "skip" && (
+                  {data.layer3 && data.layer3.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Tên căn: {data.layer3}</Text>
+                  )}
+                  {data.building_type && data.building_type.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Loại công trình: {data.building_type}</Text>
+                  )}
+                  {/* {data.unit_name && data.unit_name.trim().toLowerCase() !== "skip" && (
     <Text style={{ fontSize: "15px" }}>Căn hộ: {data.unit_name}</Text>
   )} */}
-  {/* {data.layer2 && data.layer2.trim().toLowerCase() !== "skip" && (
+                  {/* {data.layer2 && data.layer2.trim().toLowerCase() !== "skip" && (
     <Text style={{ fontSize: "15px" }}>Vị trí: {data.layer2}</Text>
   )} */}
-  {data.construction_area_1 != null && data.construction_area_1 > 0 && (
-    <Text style={{ fontSize: "15px" }}>DT xây dựng T1: {data.construction_area_1} m²</Text>
-  )}
-  {data.construction_area_2 != null && data.construction_area_2 > 0 && (
-    <Text style={{ fontSize: "15px" }}>DT xây dựng T2: {data.construction_area_2} m²</Text>
-  )}
-  {data.num_floor != null && (
-    <Text style={{ fontSize: "15px" }}>Số tầng: {data.num_floor}</Text>
-  )}
-  {(data.lot_width != null || data.lot_depth != null) && (
-    <Text style={{ fontSize: "15px" }}>
-      Kích thước: {data.lot_width ? `${data.lot_width}m` : "-"} x {data.lot_depth ? `${data.lot_depth}m` : "-"}
-    </Text>
-  )}
-  {data.feature_1 && data.feature_1.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Tiện ích 1: {data.feature_1}</Text>
-  )}
-  {data.feature_2 && data.feature_2.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Tiện ích 2: {data.feature_2}</Text>
-  )}
-  {data.bedroom != null && data.bedroom !== "" && String(data.bedroom).trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Phòng ngủ: {data.bedroom}</Text>
-  )}
-  {data.bathroom != null && data.bathroom !== "" && String(data.bathroom).trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Phòng tắm: {data.bathroom}</Text>
-  )}
-  {data.direction && data.direction.trim() !== "" && data.direction.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Hướng: {data.direction}</Text>
-  )}
-  {data.feature_2 && data.feature_2.trim() !== "" && data.feature_2.trim().toLowerCase() !== "skip" && (
-    <Text size="15px">Hướng: {data.feature_2}</Text>
-  )}
-  {data.balcony_direction && data.balcony_direction.trim() !== "" && data.balcony_direction.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Hướng ban công: {data.balcony_direction}</Text>
-  )}
-  {data.view && data.view.trim() !== "" && data.view.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Cảnh quan: {data.view}</Text>
-  )}
-  {data.status_unit && data.status_unit.trim() !== "" && data.status_unit.trim().toLowerCase() !== "skip" && (
-    <Text style={{ fontSize: "15px" }}>Trạng thái: {data.status_unit}</Text>
-  )}
-  {data.price != null && data.price !== 0 && (
-    <Text style={{ fontSize: "15px" }}>Giá: {data.price.toLocaleString()}đ</Text>
-  )}
-  {(data.describe_vi || data.describe) && (
-    <Text style={{ marginTop: "10px" }}>
-      <b>Mô tả:</b> {data.describe_vi || data.describe}
-    </Text>
-  )}
-</div>
+                  {data.construction_area_1 != null && data.construction_area_1 > 0 && (
+                    <Text style={{ fontSize: "15px" }}>DT xây dựng T1: {data.construction_area_1} m²</Text>
+                  )}
+                  {data.construction_area_2 != null && data.construction_area_2 > 0 && (
+                    <Text style={{ fontSize: "15px" }}>DT xây dựng T2: {data.construction_area_2} m²</Text>
+                  )}
+                  {data.num_floor != null && (
+                    <Text style={{ fontSize: "15px" }}>Số tầng: {data.num_floor}</Text>
+                  )}
+                  {(data.lot_width != null || data.lot_depth != null) && (
+                    <Text style={{ fontSize: "15px" }}>
+                      Kích thước: {data.lot_width ? `${data.lot_width}m` : "-"} x {data.lot_depth ? `${data.lot_depth}m` : "-"}
+                    </Text>
+                  )}
+                  {data.feature_1 && data.feature_1.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Tiện ích: {data.feature_1}</Text>
+                  )}
+                  {data.feature_2 && data.feature_2.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Hướng: {formatDirection(data.feature_2)}</Text>
+                  )}
+                  {data.bedroom != null && data.bedroom !== "" && String(data.bedroom).trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Phòng ngủ: {data.bedroom}</Text>
+                  )}
+                  {data.bathroom != null && data.bathroom !== "" && String(data.bathroom).trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Phòng tắm: {data.bathroom}</Text>
+                  )}
+                  {/* {data.direction && data.direction.trim() !== "" && data.direction.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Hướng: {data.direction}</Text>
+                  )} */}
+                  {/* {data.feature_2 && data.feature_2.trim() !== "" && data.feature_2.trim().toLowerCase() !== "skip" && (
+                    <Text size="15px">Hướng: {formatDirection(data.feature_2)}</Text>
+                  )} */}
+                  {data.balcony_direction && data.balcony_direction.trim() !== "" && data.balcony_direction.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Hướng ban công: {data.balcony_direction}</Text>
+                  )}
+                  {data.view && data.view.trim() !== "" && data.view.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Cảnh quan: {data.view}</Text>
+                  )}
+                  {data.status_unit && data.status_unit.trim() !== "" && data.status_unit.trim().toLowerCase() !== "skip" && (
+                    <Text style={{ fontSize: "15px" }}>Trạng thái: {data.status_unit}</Text>
+                  )}
+                  {data.price != null && data.price !== 0 && (
+                    <Text style={{ fontSize: "15px" }}>Giá: {data.price.toLocaleString()}đ</Text>
+                  )}
+                  {(data.describe_vi || data.describe) && (
+                    <Text style={{ marginTop: "10px" }}>
+                      <b>Mô tả:</b> {data.describe_vi || data.describe}
+                    </Text>
+                  )}
+                </div>
 
                 {/* === TIỆN ÍCH === */}
                 {/* {(data.feature_1 || data.feature_2) && (
