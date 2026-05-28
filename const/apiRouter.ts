@@ -173,4 +173,7 @@ export const API_ROUTE = {
 
   ///customer
 GET_LIST_DEVICE:"/api/v1/device_management/summary",
+
+GET_LIST_DEVICE_DETAIL:"/api/v1/device_management/analysis/{project_id}",
+
 }
