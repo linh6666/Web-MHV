@@ -35,6 +35,33 @@ interface ApiResponse {
 
 const FIXED_STATUS_OPTIONS = ['ĐÃ BÁN', 'ĐÃ ĐẶT CỌC', 'ĐANG BÁN', 'QUAN TÂM'];
 
+const getDirectionLabel = (dir?: string) => {
+  if (!dir) return "";
+  const cleanDir = dir.trim().toUpperCase();
+  if (cleanDir === "SKIP") return "";
+
+  switch (cleanDir) {
+    case "B":
+      return "bắc";
+    case "ĐB":
+      return "đông bắc";
+    case "Đ":
+      return "đông";
+    case "TB":
+      return "tây bắc";
+    case "ĐN":
+      return "đông nam";
+    case "T":
+      return "tây";
+    case "TN":
+      return "tây nam";
+    case "N":
+      return "nam";
+    default:
+      return dir.toLowerCase();
+  }
+};
+
 export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
   // State for filters
   const [activePhanKhu, setActivePhanKhu] = useState<string>('');
@@ -232,11 +259,16 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
         }
 
         const matchesQuery =
+          (item.status_unit && item.status_unit.toLowerCase().includes(q)) ||
           (item.unit_code && item.unit_code.toLowerCase().includes(q)) ||
           (item.layer2 && item.layer2.toLowerCase().includes(q)) ||
           (item.layer3 && item.layer3.toLowerCase().includes(q)) ||
           (item.building_type && item.building_type.toLowerCase().includes(q)) ||
-          (item.feature_2 && item.feature_2.toLowerCase().includes(q));
+          (item.feature_2 && (
+            item.feature_2.toLowerCase().includes(q) ||
+            getDirectionLabel(item.feature_2).includes(q)
+          )) ||
+          (item.num_floor && String(item.num_floor).toLowerCase().includes(q));
 
         return !!matchesQuery;
       }
@@ -252,11 +284,26 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
     const matches: string[] = [];
 
     originalData.forEach(item => {
+      if (item.status_unit && item.status_unit.toLowerCase().includes(q)) {
+        matches.push(item.status_unit);
+      }
       if (item.unit_code && item.unit_code.toLowerCase().includes(q)) {
         matches.push(item.unit_code);
       }
       if (item.layer3 && item.layer3.toLowerCase().includes(q)) {
         matches.push(item.layer3);
+      }
+      if (item.num_floor && String(item.num_floor).toLowerCase().includes(q)) {
+        matches.push(String(item.num_floor));
+      }
+      if (item.feature_2 && (
+        item.feature_2.toLowerCase().includes(q) ||
+        getDirectionLabel(item.feature_2).includes(q)
+      )) {
+        const fullDirName = getDirectionLabel(item.feature_2);
+        // Capitalize the first letter of each word for nicer suggestion display
+        const capitalizedDirName = fullDirName.replace(/\b\w/g, c => c.toUpperCase());
+        matches.push(capitalizedDirName);
       }
     });
 
@@ -326,9 +373,65 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
             className={styles.searchInput}
             value={searchValue}
             onChange={(e) => {
-              setSearchValue(e.target.value);
-              setCustomSearchQuery(e.target.value);
+              const val = e.target.value;
+              setSearchValue(val);
+              setCustomSearchQuery(val);
               setShowSuggestions(true);
+
+              // Sync back to chips
+              if (!val.trim()) {
+                // If completely cleared, reset all chips
+                setActivePhanKhu('');
+                setSelectedStatus([]);
+                setSelectedBedrooms([]);
+                setSelectedFloors([]);
+                setSelectedTenCan([]);
+                setDirection('');
+              } else {
+                // Split by commas to find which chips are still present
+                const parts = val.split(',').map(s => s.trim().toLowerCase());
+
+                if (activePhanKhu && !parts.includes(activePhanKhu.toLowerCase())) {
+                  setActivePhanKhu('');
+                }
+                
+                const nextStatus = selectedStatus.filter(status => 
+                  parts.includes(status.toLowerCase())
+                );
+                if (nextStatus.length !== selectedStatus.length) {
+                  setSelectedStatus(nextStatus);
+                }
+
+                const nextBedrooms = selectedBedrooms.filter(bedroom => 
+                  parts.includes(bedroom.toLowerCase())
+                );
+                if (nextBedrooms.length !== selectedBedrooms.length) {
+                  setSelectedBedrooms(nextBedrooms);
+                }
+
+                const nextFloors = selectedFloors.filter(floor => 
+                  parts.includes(String(floor).toLowerCase())
+                );
+                if (nextFloors.length !== selectedFloors.length) {
+                  setSelectedFloors(nextFloors);
+                }
+
+                const nextTenCan = selectedTenCan.filter(ten => 
+                  parts.includes(ten.toLowerCase())
+                );
+                if (nextTenCan.length !== selectedTenCan.length) {
+                  setSelectedTenCan(nextTenCan);
+                }
+
+                if (direction) {
+                  const dirLower = direction.toLowerCase();
+                  const dirLabelLower = getDirectionLabel(direction).toLowerCase();
+                  const isPresent = parts.includes(dirLower) || parts.includes(dirLabelLower);
+                  if (!isPresent) {
+                    setDirection('');
+                  }
+                }
+              }
             }}
             onFocus={() => setShowSuggestions(true)}
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
