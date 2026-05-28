@@ -183,7 +183,7 @@ export default function ProjectionModal({
   }}
       title={
         <Text fw={700} >
-           PROJECTION MAPPING MÔ HÌNH DỰ ÁN T&T CÀ MAU
+           PROJECTION MAPPING MÔ HÌNH DỰ ÁN CIPUTRA
         </Text>
       }
     >
@@ -206,15 +206,15 @@ export default function ProjectionModal({
               loadingStart ? (
                 <Loader size={16} />
               ) : isPlaying ? (
-                <IconRefresh size={18} fill="#762f0b" />
+                <IconRefresh size={18} fill="#ffff" />
               ) : (
-                <IconPlayerPlay size={18} fill="#762f0b" />
+                <IconPlayerPlay size={18} fill="#ffff" />
               )
             }
             style={{
-              backgroundColor: "#fffaee",
-              color: "#762f0b",
-              border: "1px solid #762f0b",
+              backgroundColor: "#294b61",
+              color: "#ffff",
+              border: "1px solid #ffff",
             }}
           >
             {isPlaying ? "CHẠY LẠI TRÌNH CHIẾU" : "BẮT ĐẦU TRÌNH CHIẾU"}
@@ -229,13 +229,13 @@ export default function ProjectionModal({
               loadingEnd ? (
                 <Loader size={16} />
               ) : (
-                <IconPlayerStop size={18} fill="#762f0b" />
+                <IconPlayerStop size={18} fill="#ffff" />
               )
             }
             style={{
-              backgroundColor: "#fffaee",
-              color: "#762f0b",
-              border: "1px solid #762f0b",
+              backgroundColor: "#294b61",
+              color: "#ffff",
+              border: "1px solid #ffff",
             }}
           >
             KẾT THÚC TRÌNH CHIẾU
