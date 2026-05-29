@@ -29,10 +29,12 @@ import {
   Table,
   ThemeIcon,
   Flex,
+  Badge,
+  ScrollArea,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
-import { PieChart } from "@mantine/charts";
+import { PieChart, BarChart } from "@mantine/charts";
 // import "@mantine/charts/styles.css";
 
 import { getListProject } from "../../../api/apigetlistProject";
@@ -95,6 +97,29 @@ interface AnalysisData {
 const icons = {
   up: IconArrowUpRight,
   down: IconArrowDownRight,
+};
+
+const formatDuration = (seconds: number) => {
+  if (seconds === 0) return "0s";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  
+  const parts = [];
+  if (h > 0) parts.push(`${h}h`);
+  if (m > 0) parts.push(`${m}m`);
+  if (s > 0) parts.push(`${s}s`);
+  return parts.join(" ");
+};
+
+const formatTimeOnly = (isoString: string | null) => {
+  if (!isoString) return "—";
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  } catch {
+    return isoString;
+  }
 };
 
 export function StatsRing() {
@@ -368,7 +393,7 @@ export function StatsRing() {
 
       {/* DEVICE ACTIVITY SECTION */}
       <Box>
-        <Group gap="xs" align="center">
+        <Group gap="xs" align="center" mb="xs">
           <Title order={6} fw={850} style={{ fontSize: '12px', textTransform: 'uppercase', color: '#4b5563' }}>Hoạt động của mô hình</Title>
           {projectStatus !== null && (
             <Group gap={6}>
@@ -381,7 +406,9 @@ export function StatsRing() {
             </Group>
           )}
         </Group>
-        <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="sm" mt="xs">
+
+        <SimpleGrid cols={{ base: 1, xs: 2, sm: 4 }} spacing="sm">
+          {/* Card 1: Số ngày bật */}
           <Paper
             withBorder
             radius="md"
@@ -400,7 +427,7 @@ export function StatsRing() {
                   Số ngày bật mô hình
                 </Text>
                 <Text fw={800} size="18px" mt={2} c="blue.9" style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-                  {daysOn !== null ? daysOn.toLocaleString() : "0"}
+                  {analysisData ? analysisData.summary.days_on.toLocaleString() : (daysOn !== null ? daysOn.toLocaleString() : "0")}
                   <Text component="span" style={{ fontSize: "10px" }} fw={700} c="blue.7"> ngày</Text>
                 </Text>
               </Box>
@@ -410,6 +437,7 @@ export function StatsRing() {
             </Group>
           </Paper>
 
+          {/* Card 2: Số lần điều khiển */}
           <Paper
             withBorder
             radius="md"
@@ -428,7 +456,7 @@ export function StatsRing() {
                   Số lần điều khiển
                 </Text>
                 <Text fw={800} size="18px" mt={2} c="purple.9" style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                  {totalCommands !== null ? totalCommands.toLocaleString() : "0"}
+                  {analysisData ? analysisData.summary.total_commands.toLocaleString() : (totalCommands !== null ? totalCommands.toLocaleString() : "0")}
                   <Text component="span" style={{ fontSize: "10px" }} fw={700} c="purple.7"> lượt</Text>
                 </Text>
               </Box>
@@ -437,8 +465,130 @@ export function StatsRing() {
               </ThemeIcon>
             </Group>
           </Paper>
+
+          {/* Card 3: Thời gian bật TB / Ngày */}
+          <Paper
+            withBorder
+            radius="md"
+            p="sm"
+            style={{
+              background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)",
+              borderColor: "#bbf7d0",
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              cursor: 'default',
+            }}
+            shadow="xs"
+          >
+            <Group justify="space-between" wrap="nowrap">
+              <Box>
+                <Text c="green.7" style={{ fontSize: "10px" }} tt="uppercase" fw={800}>
+                  Thời gian bật TB/Ngày
+                </Text>
+                <Text fw={800} size="18px" mt={2} c="green.9" style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
+                  {analysisData ? analysisData.summary.avg_daily_on : "0:00:00"}
+                  {analysisData && analysisData.summary.avg_daily_on_seconds > 0 && (
+                    <Text component="span" style={{ fontSize: "10px" }} fw={700} c="green.7"> ({Math.round(analysisData.summary.avg_daily_on_seconds)}s)</Text>
+                  )}
+                </Text>
+              </Box>
+              <ThemeIcon size={32} radius="md" variant="gradient" gradient={{ from: 'green', to: 'teal' }}>
+                <IconSmartHome size={16} />
+              </ThemeIcon>
+            </Group>
+          </Paper>
+
+          {/* Card 4: Khung giờ bật/tắt TB */}
+          <Paper
+            withBorder
+            radius="md"
+            p="sm"
+            style={{
+              background: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
+              borderColor: "#fed7aa",
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              cursor: 'default',
+            }}
+            shadow="xs"
+          >
+            <Group justify="space-between" wrap="nowrap">
+              <Box>
+                <Text c="orange.7" style={{ fontSize: "10px" }} tt="uppercase" fw={800}>
+                  Khung giờ hoạt động TB
+                </Text>
+                <Text fw={850} size="11px" mt={2} c="orange.9" style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                  <span>Bật: {analysisData?.summary.avg_time_on ? analysisData.summary.avg_time_on : "—"}</span>
+                  <span>Tắt: {analysisData?.summary.avg_time_off ? analysisData.summary.avg_time_off : "—"}</span>
+                </Text>
+              </Box>
+              <ThemeIcon size={32} radius="md" variant="gradient" gradient={{ from: 'orange', to: 'red' }}>
+                <IconPower size={16} />
+              </ThemeIcon>
+            </Group>
+          </Paper>
         </SimpleGrid>
       </Box>
+
+      {/* ANALYSIS CHART & HISTORY SECTION */}
+      {analysisData && analysisData.daily_details && analysisData.daily_details.length > 0 && (
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
+          {/* Daily Command Chart */}
+          <Paper withBorder radius="md" p="md" shadow="xs">
+            <Group mb="md" justify="space-between">
+              <Group gap="xs">
+                <IconChartDonut size={20} color="violet" />
+                <Title order={5} fw={700}>Tần suất lệnh điều khiển</Title>
+              </Group>
+              <Text size="xs" c="dimmed">Hoạt động 9 ngày gần nhất</Text>
+            </Group>
+
+            <Box h={220} mt="lg">
+              <BarChart
+                h={200}
+                data={[...analysisData.daily_details].reverse().map(item => ({
+                  date: new Date(item.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
+                  "Số lệnh": item.total_cmd,
+                }))}
+                dataKey="date"
+                series={[{ name: "Số lệnh", color: "violet" }]}
+                tickLine="y"
+                gridAxis="xy"
+                withLegend={false}
+              />
+            </Box>
+          </Paper>
+
+          {/* Daily Details History Log */}
+          <Paper withBorder radius="md" p="md" shadow="xs">
+            <Title order={5} fw={700} mb="md">Nhật ký hoạt động chi tiết</Title>
+            <ScrollArea h={220} offsetScrollbars>
+              <Stack gap="xs" pr="xs">
+                {analysisData.daily_details.map((day, idx) => (
+                  <Box key={day.date} p="xs" style={{ borderRadius: '8px', border: '1px solid #f1f3f5', backgroundColor: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                    <Group justify="space-between" wrap="nowrap">
+                      <Box>
+                        <Text size="xs" fw={700}>{new Date(day.date).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                        <Group gap="md" mt={4}>
+                          <Text size="10px" c="dimmed">
+                            Thời gian bật: <span style={{ fontWeight: 600, color: '#495057' }}>{day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s"}</span>
+                          </Text>
+                          {day.time_on && (
+                            <Text size="10px" c="dimmed">
+                              Khung giờ: <span style={{ fontWeight: 600, color: '#495057' }}>{formatTimeOnly(day.time_on)} - {formatTimeOnly(day.time_off)}</span>
+                            </Text>
+                          )}
+                        </Group>
+                      </Box>
+                      <Badge color={day.total_cmd > 0 ? "violet" : "gray"} variant="light" size="sm">
+                        {day.total_cmd.toLocaleString()} lệnh
+                      </Badge>
+                    </Group>
+                  </Box>
+                ))}
+              </Stack>
+            </ScrollArea>
+          </Paper>
+        </SimpleGrid>
+      )}
 
       {/* CHART SECTION */}
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
