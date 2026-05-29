@@ -29,7 +29,6 @@ import {
   Table,
   ThemeIcon,
   Flex,
-  Tooltip,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -39,6 +38,7 @@ import { PieChart } from "@mantine/charts";
 import { getListProject } from "../../../api/apigetlistProject";
 import {  getListDevice} from "../../../api/apiGetDevice";
 import { getListProjectControl} from "../../../api/apigetlistProjectControl";
+import { getListanalysis} from "../../../api/apiGetanalysis";
 
 
 // Định nghĩa interface để code sạch và chuyên nghiệp hơn
@@ -69,6 +69,29 @@ interface ProjectInfo {
   address?: string;
 }
 
+interface AnalysisSummary {
+  avg_daily_on_seconds: number;
+  avg_daily_on: string;
+  avg_time_on: string | null;
+  avg_time_off: string | null;
+  days_on: number;
+  total_commands: number;
+}
+
+interface DailyDetail {
+  date: string;
+  total_time_on: number;
+  time_on: string | null;
+  time_off: string | null;
+  total_cmd: number;
+}
+
+interface AnalysisData {
+  project_id: string;
+  summary: AnalysisSummary;
+  daily_details: DailyDetail[];
+}
+
 const icons = {
   up: IconArrowUpRight,
   down: IconArrowDownRight,
@@ -82,6 +105,7 @@ export function StatsRing() {
   const [daysOn, setDaysOn] = useState<number | null>(null);
   const [totalCommands, setTotalCommands] = useState<number | null>(null);
   const [projectStatus, setProjectStatus] = useState<number | null>(null);
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [opened, setOpened] = useState(false);
@@ -106,7 +130,6 @@ export function StatsRing() {
       });
 
       const imgWidth = 210; // Kích thước A4 (mm)
-      const pageHeight = 297;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       const doc = new jsPDF("p", "mm", "a4");
@@ -146,6 +169,17 @@ export function StatsRing() {
               name: project.name,
               address: project.address,
             });
+
+            // Gọi API phân tích sử dụng project.id
+            if (project.id) {
+              try {
+                const analysisRes = await getListanalysis(project.id);
+                setAnalysisData(analysisRes);
+                console.log("✅ Loaded analysis data:", analysisRes);
+              } catch (error) {
+                console.error("❌ Lỗi khi tải API getListanalysis:", error);
+              }
+            }
 
             // Mapping dữ liệu cho Card
             const mapped: StatusData[] = statuses.map((s: StatusItem) => {
@@ -299,7 +333,10 @@ export function StatsRing() {
         >
           <Box>
             <Title order={4} fw={800}>Báo cáo tổng quan</Title>
-            <Text c="dimmed" size="xs">Số liệu thống kê thời gian thực từ hệ thống</Text>
+            <Text c="dimmed" size="xs">
+              Số liệu thống kê thời gian thực từ hệ thống
+              {analysisData && ` - Phân tích: ${analysisData.summary.total_commands.toLocaleString()} lệnh`}
+            </Text>
           </Box>
           <Flex
             gap="xs"
