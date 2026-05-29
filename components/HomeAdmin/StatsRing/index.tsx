@@ -360,7 +360,7 @@ export function StatsRing() {
             <Title order={4} fw={800}>Báo cáo tổng quan</Title>
             <Text c="dimmed" size="xs">
               Số liệu thống kê thời gian thực từ hệ thống
-              {analysisData && ` - Phân tích: ${analysisData.summary.total_commands.toLocaleString()} lệnh`}
+              {/* {analysisData && ` - Phân tích: ${analysisData.summary.total_commands.toLocaleString()} lệnh`} */}
             </Text>
           </Box>
           <Flex
