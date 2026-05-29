@@ -488,7 +488,6 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                      const isSelected = activePhanKhu === pk;
                      if (!isOptionAvailable('layer2', pk) && !isSelected) return;
                      setActivePhanKhu(isSelected ? '' : pk);
-                     setSelectedBedrooms([]);
                    }}
                 >
                   {pk}
@@ -519,7 +518,6 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                        const isSelected = selectedBedrooms.includes(bedroom);
                        if (!isOptionAvailable('building_type', bedroom) && !isSelected) return;
                        setSelectedBedrooms(isSelected ? [] : [bedroom]);
-                       setActivePhanKhu('');
                      }}
                   >
                     {bedroom}
@@ -550,7 +548,6 @@ export default function FilterMenu({ onClose, project_id }: FilterMenuProps) {
                        const isSelected = selectedTenCan.includes(name);
                        if (!isOptionAvailable('layer3', name) && !isSelected) return;
                        setSelectedTenCan(isSelected ? [] : [name]);
-                       setActivePhanKhu('');
                      }}
                   >
                     {name}

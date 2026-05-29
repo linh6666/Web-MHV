@@ -149,7 +149,7 @@ export default function SearchResultModal({
                   <Table.Th style={{ color: "#294b61" }}>Phân khu</Table.Th>
 
                   <Table.Th style={{ color: "#294b61" }}>Loại công trình </Table.Th>
-                  <Table.Th style={{ color: "#294b61" }}>Tên căn </Table.Th>
+                  <Table.Th style={{ color: "#294b61" }}>Tên công trình </Table.Th>
                   <Table.Th style={{ color: "#294b61" }}>Số tầng</Table.Th>
                   <Table.Th style={{ color: "#294b61" }}>Hướng</Table.Th>
 
