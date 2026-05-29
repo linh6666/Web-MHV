@@ -201,14 +201,14 @@ export default function SearchResultModal({
                         variant="filled"
                         styles={{
                           label: {
-                            whiteSpace: 'normal',
+                            whiteSpace: 'nowrap',
                             overflow: 'visible',
                             textOverflow: 'unset',
                           }
                         }}
                         style={{
                           color: 'white',
-                          whiteSpace: 'normal',
+                          whiteSpace: 'nowrap',
                           height: 'auto',
                           textAlign: 'center',
                           padding: '4px 8px',
