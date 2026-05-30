@@ -346,6 +346,13 @@ export function StatsRing() {
     );
   });
 
+  const reportDaysOn = analysisData ? analysisData.summary.days_on : daysOn;
+  const reportTotalCommands = analysisData ? analysisData.summary.total_commands : totalCommands;
+  const reportAvgDailyOn = analysisData ? analysisData.summary.avg_daily_on : "0:00:00";
+  const reportAvgDailyOnSeconds = analysisData ? analysisData.summary.avg_daily_on_seconds : 0;
+  const reportAvgTimeOn = analysisData?.summary.avg_time_on || "—";
+  const reportAvgTimeOff = analysisData?.summary.avg_time_off || "—";
+
   return (
     <Box className="stats-ring-root">
       <Stack gap="md" className="stats-ring-layout">
@@ -656,8 +663,9 @@ export function StatsRing() {
 
       {/* Modal View & Download PDF */}
       <Modal opened={opened} onClose={() => setOpened(false)} title="Xem trước báo cáo" size="lg">
-        <Box ref={pdfRef} bg="white" p="md">
-          <Title order={4} mb="xl" ta="center">BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH</Title>
+        <Box className="stats-ring-report-scroll">
+        <Box ref={pdfRef} bg="white" p="md" className="stats-ring-report">
+          <Title order={4} mb="xl" ta="center" className="stats-ring-report-title">BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH</Title>
           
           <Stack gap={4} mb="xl">
             <Text size="sm"><b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}</Text>
@@ -717,20 +725,80 @@ export function StatsRing() {
               <Table.Tr>
                 <Table.Td>2</Table.Td>
                 <Table.Td fw={600} c="black">Số ngày bật mô hình</Table.Td>
-                <Table.Td ta="right">{daysOn !== null ? daysOn.toLocaleString() : "0"}</Table.Td>
+                <Table.Td ta="right">{reportDaysOn !== null ? reportDaysOn.toLocaleString() : "0"}</Table.Td>
                 <Table.Td>ngày</Table.Td>
               </Table.Tr>
               <Table.Tr>
                 <Table.Td>3</Table.Td>
                 <Table.Td fw={600} c="black">Số lần điều khiển</Table.Td>
-                <Table.Td ta="right">{totalCommands !== null ? totalCommands.toLocaleString() : "0"}</Table.Td>
+                <Table.Td ta="right">{reportTotalCommands !== null ? reportTotalCommands.toLocaleString() : "0"}</Table.Td>
                 <Table.Td>lượt</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>4</Table.Td>
+                <Table.Td fw={600} c="black">Thời gian bật trung bình/ngày</Table.Td>
+                <Table.Td ta="right">
+                  {reportAvgDailyOn}
+                  {reportAvgDailyOnSeconds > 0 ? ` (${Math.round(reportAvgDailyOnSeconds)}s)` : ""}
+                </Table.Td>
+                <Table.Td>thời gian</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>5</Table.Td>
+                <Table.Td fw={600} c="black">Giờ bật trung bình</Table.Td>
+                <Table.Td ta="right">{reportAvgTimeOn}</Table.Td>
+                <Table.Td>giờ</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>6</Table.Td>
+                <Table.Td fw={600} c="black">Giờ tắt trung bình</Table.Td>
+                <Table.Td ta="right">{reportAvgTimeOff}</Table.Td>
+                <Table.Td>giờ</Table.Td>
               </Table.Tr>
             </Table.Tbody>
           </Table>
+
+          {analysisData && analysisData.daily_details.length > 0 && (
+            <>
+              <Divider my="md" label="NHẬT KÝ HOẠT ĐỘNG CHI TIẾT" labelPosition="center" />
+
+              <Table striped highlightOnHover withTableBorder withColumnBorders>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>STT</Table.Th>
+                    <Table.Th>Ngày</Table.Th>
+                    <Table.Th ta="right">Thời gian bật</Table.Th>
+                    <Table.Th>Khung giờ bật/tắt</Table.Th>
+                    <Table.Th ta="right">Số lệnh</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {analysisData.daily_details.map((day, index) => (
+                    <Table.Tr key={day.date}>
+                      <Table.Td>{index + 1}</Table.Td>
+                      <Table.Td>
+                        {new Date(day.date).toLocaleDateString('vi-VN', {
+                          weekday: 'long',
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </Table.Td>
+                      <Table.Td ta="right">{day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s"}</Table.Td>
+                      <Table.Td>
+                        {day.time_on ? `${formatTimeOnly(day.time_on)} - ${formatTimeOnly(day.time_off)}` : "—"}
+                      </Table.Td>
+                      <Table.Td ta="right">{day.total_cmd.toLocaleString()}</Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </>
+          )}
+        </Box>
         </Box>
         
-        <Group justify="flex-end" mt="xl">
+        <Group justify="flex-end" mt="md" className="stats-ring-modal-actions">
           <Button variant="default" onClick={() => setOpened(false)}>Đóng</Button>
           <Button 
             leftSection={<IconDownload size={18} />} 
@@ -769,6 +837,50 @@ export function StatsRing() {
 
         .stats-ring-scroll-content::-webkit-scrollbar {
           display: none;
+        }
+
+        .stats-ring-report {
+          font-size: 12px;
+        }
+
+        .stats-ring-report-scroll {
+          max-height: calc(80vh - 120px);
+          overflow-y: auto;
+          padding-right: 6px;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .stats-ring-report-scroll::-webkit-scrollbar {
+          display: none;
+        }
+
+        .stats-ring-modal-actions {
+          position: sticky;
+          bottom: 0;
+          z-index: 2;
+          margin-left: calc(var(--mantine-spacing-md) * -1);
+          margin-right: calc(var(--mantine-spacing-md) * -1);
+          margin-bottom: calc(var(--mantine-spacing-md) * -1);
+          padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+          border-top: 1px solid #e9ecef;
+          background: #ffffff;
+        }
+
+        .stats-ring-report-title {
+          font-size: 15px;
+          line-height: 1.35;
+        }
+
+        .stats-ring-report .mantine-Text-root,
+        .stats-ring-report .mantine-Table-th,
+        .stats-ring-report .mantine-Table-td {
+          font-size: 11px;
+          line-height: 1.35;
+        }
+
+        .stats-ring-report .mantine-Divider-label {
+          font-size: 10px;
         }
       `}</style>
     </Box>
