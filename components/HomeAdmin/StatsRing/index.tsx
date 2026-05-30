@@ -347,8 +347,8 @@ export function StatsRing() {
   });
 
   return (
-    <Box>
-      <Stack gap="md">
+    <Box className="stats-ring-root">
+      <Stack gap="md" className="stats-ring-layout">
         {/* HEADER SECTION */}
         <Flex
           direction={{ base: "column", sm: "row" }}
@@ -386,26 +386,27 @@ export function StatsRing() {
           </Flex>
         </Flex>
 
-      {/* STATS CARDS */}
-      <SimpleGrid cols={{ base: 1, xs: 2, sm: 3 }} spacing="sm">
-        {stats}
-      </SimpleGrid>
+      <Box className="stats-ring-scroll-content">
+        {/* STATS CARDS */}
+        <SimpleGrid cols={{ base: 1, xs: 2, sm: 3 }} spacing="sm">
+          {stats}
+        </SimpleGrid>
 
-      {/* DEVICE ACTIVITY SECTION */}
-      <Box>
-        <Group gap="xs" align="center" mb="xs">
-          <Title order={6} fw={850} style={{ fontSize: '12px', textTransform: 'uppercase', color: '#4b5563' }}>Hoạt động của mô hình</Title>
-          {projectStatus !== null && (
-            <Group gap={6}>
-              <ThemeIcon size={20} radius="xl" variant="light" color={projectStatus === 1 ? "green" : "red"}>
-                <IconPower size={14} />
-              </ThemeIcon>
-              <Text size="xs" fw={700} c={projectStatus === 1 ? "green.6" : "red.6"}>
-                {projectStatus === 1 ? "Đang hoạt động" : "Ngừng hoạt động"}
-              </Text>
-            </Group>
-          )}
-        </Group>
+        {/* DEVICE ACTIVITY SECTION */}
+        <Box>
+          <Group gap="xs" align="center" mb="xs">
+            <Title order={6} fw={850} style={{ fontSize: '12px', textTransform: 'uppercase', color: '#4b5563' }}>Hoạt động của mô hình</Title>
+            {projectStatus !== null && (
+              <Group gap={6}>
+                <ThemeIcon size={20} radius="xl" variant="light" color={projectStatus === 1 ? "green" : "red"}>
+                  <IconPower size={14} />
+                </ThemeIcon>
+                <Text size="xs" fw={700} c={projectStatus === 1 ? "green.6" : "red.6"}>
+                  {projectStatus === 1 ? "Đang hoạt động" : "Ngừng hoạt động"}
+                </Text>
+              </Group>
+            )}
+          </Group>
 
         <SimpleGrid cols={{ base: 1, xs: 2, sm: 4 }} spacing="sm">
           {/* Card 1: Số ngày bật */}
@@ -650,6 +651,7 @@ export function StatsRing() {
           </Stack>
         </Paper>
       </SimpleGrid>
+      </Box>
       </Stack>
 
       {/* Modal View & Download PDF */}
@@ -740,6 +742,35 @@ export function StatsRing() {
           </Button>
         </Group>
       </Modal>
+      <style jsx global>{`
+        .stats-ring-scroll-content {
+          display: flex;
+          flex-direction: column;
+          gap: var(--mantine-spacing-md);
+          max-height: 65vh;
+          overflow-y: auto;
+          padding-right: 8px;
+          padding-bottom: 24px;
+          box-sizing: border-box;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .stats-ring-root,
+        .stats-ring-layout {
+          min-height: 0;
+        }
+
+        @media (max-width: 768px) {
+          .stats-ring-scroll-content {
+            max-height: 55vh;
+          }
+        }
+
+        .stats-ring-scroll-content::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </Box>
   );
 
