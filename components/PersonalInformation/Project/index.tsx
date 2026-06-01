@@ -125,7 +125,7 @@ function ProjectCard({
       ? project.overview_image.url.replace("http://", "https://")
       : "/placeholder.png"
   }
-  height={160}
+  className={styles.cardImage}
   alt={project.name}
   style={{
     borderTopLeftRadius: "var(--mantine-radius-md)",
