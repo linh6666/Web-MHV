@@ -47,6 +47,7 @@ export function StatsReportModal({
   analysisData,
 }: StatsReportModalProps) {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isReportScrolled, setIsReportScrolled] = useState(false);
   const pdfRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPDF = async () => {
@@ -242,26 +243,35 @@ export function StatsReportModal({
 
   return (
     <Modal opened={opened} onClose={onClose} title="Xem trước báo cáo" size="xl">
-      <Box className="stats-ring-report-scroll">
+      <Box
+        className="stats-ring-report-scroll"
+        onScroll={(event) => setIsReportScrolled(event.currentTarget.scrollTop > 0)}
+      >
         <Box ref={pdfRef} bg="white" p="md" className="stats-ring-report">
-          <Title order={4} mb="xl" ta="center" className="stats-ring-report-title">
-            BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH
-          </Title>
+          <Box
+            className={`stats-ring-report-header${
+              isReportScrolled ? " stats-ring-report-header-scrolled" : ""
+            }`}
+          >
+            <Title order={4} ta="center" className="stats-ring-report-title">
+              BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH
+            </Title>
 
-          <Stack gap={4} mb="xl">
-            <Text size="sm">
-              <b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}
-            </Text>
-            <Text size="sm">
-              <b>Tên dự án:</b> {projectInfo?.name || "Đang cập nhật"}
-            </Text>
-            <Text size="sm">
-              <b>Địa chỉ:</b> {projectInfo?.address || "Đang cập nhật"}
-            </Text>
-            <Text size="sm">
-              <b>Cập nhật ngày:</b> {new Date().toLocaleDateString("vi-VN")}
-            </Text>
-          </Stack>
+            <Stack gap={4} mt="md">
+              <Text size="sm">
+                <b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}
+              </Text>
+              <Text size="sm">
+                <b>Tên dự án:</b> {projectInfo?.name || "Đang cập nhật"}
+              </Text>
+              <Text size="sm">
+                <b>Địa chỉ:</b> {projectInfo?.address || "Đang cập nhật"}
+              </Text>
+              <Text size="sm">
+                <b>Cập nhật ngày:</b> {new Date().toLocaleDateString("vi-VN")}
+              </Text>
+            </Stack>
+          </Box>
 
           <Divider my="md" label="THÔNG TIN TRẠNG THÁI CĂN HỘ" labelPosition="center" />
 
@@ -438,6 +448,23 @@ export function StatsReportModal({
       <style jsx global>{`
         .stats-ring-report {
           font-size: 13px;
+        }
+
+        .stats-ring-report-header {
+          position: sticky;
+          top: 0;
+          z-index: 2;
+          margin: calc(var(--mantine-spacing-md) * -1)
+            calc(var(--mantine-spacing-md) * -1) var(--mantine-spacing-xl);
+          padding: var(--mantine-spacing-md);
+          border-bottom: 1px solid #e9ecef;
+          background: #ffffff;
+          box-shadow: none;
+          transition: box-shadow 160ms ease;
+        }
+
+        .stats-ring-report-header-scrolled {
+          box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
         }
 
         .stats-ring-report-scroll {
