@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef } from "react";
-import { IconDownload, IconPower } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import {
   Title,
 } from "@mantine/core";
 
-// Import các types và helper function được export từ index.tsx
+// Import cÃ¡c types vÃ  helper function Ä‘Æ°á»£c export tá»« index.tsx
 import {
   StatusData,
   ProjectInfo,
@@ -53,26 +53,181 @@ export function StatsReportModal({
     if (!pdfRef.current) return;
     setIsDownloading(true);
     try {
-      // Import động để tránh lỗi SSR trong Next.js
-      const html2canvas = (await import("html2canvas")).default;
+      // 1. Táº£i font chá»¯ Roboto (Regular & Bold) há»— trá»£ Ä‘áº§y Ä‘á»§ Tiáº¿ng Viá»‡t
+      //    DÃ¹ng CDN pdfmake trÃªn Cloudflare - bá»™ font Ä‘Ãºng chuáº©n unicode cmap cho jsPDF
+      const regularUrl = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/fonts/Roboto/Roboto-Regular.ttf";
+      const boldUrl = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/fonts/Roboto/Roboto-Medium.ttf";
+
+      const [regRes, boldRes] = await Promise.all([
+        fetch(regularUrl),
+        fetch(boldUrl),
+      ]);
+
+      if (!regRes.ok || !boldRes.ok) {
+        throw new Error(`Lá»—i táº£i font: regular=${regRes.status}, bold=${boldRes.status}`);
+      }
+
+      const [regBuffer, boldBuffer] = await Promise.all([
+        regRes.arrayBuffer(),
+        boldRes.arrayBuffer(),
+      ]);
+
+      // Chuyá»ƒn Ä‘á»•i array buffer cá»§a font sang base64 Ä‘á»ƒ nhÃºng vÃ o jsPDF
+      const toBase64 = (buffer: ArrayBuffer) => {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const chunkSize = 8192; // TrÃ¡nh stack overflow khi dÃ¹ng spread trÃªn máº£ng lá»›n
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+        }
+        return btoa(binary);
+      };
+
+      const base64Regular = toBase64(regBuffer);
+      const base64Bold = toBase64(boldBuffer);
+      
+      // Import Ä‘á»™ng Ä‘á»ƒ trÃ¡nh lá»—i SSR trong Next.js
       const jsPDF = (await import("jspdf")).default;
-
-      const canvas = await html2canvas(pdfRef.current, {
-        scale: 2, // Tăng độ phân giải ảnh
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#ffffff", // Nền trắng để không bị đen nền khi tạo pdf
-      });
-
-      const imgWidth = 210; // Kích thước A4 (mm)
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       const doc = new jsPDF("p", "mm", "a4");
 
-      doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 10, imgWidth, imgHeight);
+      doc.addFileToVFS("Roboto-Regular.ttf", base64Regular);
+      doc.addFileToVFS("Roboto-Medium.ttf", base64Bold);
+      doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+      doc.addFont("Roboto-Medium.ttf", "Roboto", "bold");
+      doc.setFont("Roboto", "normal");
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 14;
+      const bottomMargin = 14;
+      let y = 16;
+
+      const addPageIfNeeded = (height: number) => {
+        if (y + height > pageHeight - bottomMargin) {
+          doc.addPage();
+          doc.setFont("Roboto", "normal");
+          y = 16;
+        }
+      };
+
+      const writeText = (text: string, x: number, options?: { size?: number; bold?: boolean; align?: "left" | "center" | "right"; maxWidth?: number; lineHeight?: number }) => {
+        const size = options?.size ?? 10;
+        const lineHeight = options?.lineHeight ?? size * 0.42;
+        doc.setFont("Roboto", options?.bold ? "bold" : "normal");
+        doc.setFontSize(size);
+        const lines = options?.maxWidth ? doc.splitTextToSize(text, options.maxWidth) : [text];
+        addPageIfNeeded(lines.length * lineHeight);
+        doc.text(lines, x, y, { align: options?.align ?? "left" });
+        y += lines.length * lineHeight;
+      };
+
+      const sectionTitle = (title: string) => {
+        addPageIfNeeded(12);
+        y += 4;
+        doc.setDrawColor(180, 180, 180);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 5;
+        writeText(title, pageWidth / 2, { size: 10, bold: true, align: "center" });
+        y += 2;
+      };
+
+      const drawTable = (headers: string[], rows: Array<Array<string | number>>, widths: number[], aligns: Array<"left" | "center" | "right"> = []) => {
+        const rowPaddingY = 3;
+        const cellPaddingX = 2;
+        const lineHeight = 4.5;
+        const drawRow = (cells: Array<string | number>, isHeader = false) => {
+          doc.setFont("Roboto", isHeader ? "bold" : "normal");
+          doc.setFontSize(9);
+          const cellLines = cells.map((cell, index) => doc.splitTextToSize(String(cell), widths[index] - cellPaddingX * 2));
+          const rowHeight = Math.max(...cellLines.map((line) => line.length)) * lineHeight + rowPaddingY * 2;
+          addPageIfNeeded(rowHeight);
+          let x = margin;
+          const startY = y;
+          if (isHeader) {
+            doc.setFillColor(244, 246, 248);
+            doc.rect(margin, startY, widths.reduce((sum, width) => sum + width, 0), rowHeight, "F");
+          }
+          cells.forEach((_, index) => {
+            doc.setDrawColor(205, 205, 205);
+            doc.rect(x, startY, widths[index], rowHeight);
+            const align = aligns[index] ?? "left";
+            const textX = align === "right" ? x + widths[index] - cellPaddingX : align === "center" ? x + widths[index] / 2 : x + cellPaddingX;
+            doc.text(cellLines[index], textX, startY + rowPaddingY + 3, { align });
+            x += widths[index];
+          });
+          y += rowHeight;
+        };
+        drawRow(headers, true);
+        rows.forEach((row) => drawRow(row));
+        y += 2;
+      };
+
+      const reportDaysOnValue = analysisData ? analysisData.summary.days_on : daysOn;
+      const reportTotalCommandsValue = analysisData ? analysisData.summary.total_commands : totalCommands;
+      const reportAvgDailyOnValue = analysisData ? analysisData.summary.avg_daily_on : "0:00:00";
+      const reportAvgDailyOnSecondsValue = analysisData ? analysisData.summary.avg_daily_on_seconds : 0;
+      const reportAvgTimeOnValue = analysisData?.summary.avg_time_on || "—";
+      const reportAvgTimeOffValue = analysisData?.summary.avg_time_off || "—";
+
+      writeText("BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH", pageWidth / 2, { size: 13, bold: true, align: "center", maxWidth: pageWidth - margin * 2, lineHeight: 6 });
+      y += 5;
+      writeText(`Chủ đầu tư: ${projectInfo?.investor || "Đang cập nhật"}`, margin);
+      writeText(`Tên dự án: ${projectInfo?.name || "Đang cập nhật"}`, margin);
+      writeText(`Địa chỉ: ${projectInfo?.address || "Đang cập nhật"}`, margin, { maxWidth: pageWidth - margin * 2 });
+      writeText(`Cập nhật ngày: ${new Date().toLocaleDateString("vi-VN")}`, margin);
+
+      sectionTitle("THÔNG TIN TRẠNG THÁI CĂN HỘ");
+      drawTable(
+        ["STT", "Trạng thái", "Số lượng (Căn)", "Tỷ lệ (%)"],
+        [...statsData.map((stat, index) => [index + 1, stat.label, stat.stats, `${stat.progress}%`]), ["", "Tổng cộng", totalUnits, "100%"]],
+        [14, 82, 44, 42],
+        ["center", "left", "right", "right"]
+      );
+
+      sectionTitle("THÔNG TIN HOẠT ĐỘNG MÔ HÌNH");
+      drawTable(
+        ["STT", "Chỉ số hoạt động", "Giá trị thực tế", "Đơn vị"],
+        [
+          [1, "Trạng thái hiện tại", projectStatus === 1 ? "Đang hoạt động" : projectStatus === 0 ? "Ngừng hoạt động" : "Không xác định", "-"],
+          [2, "Số ngày bật mô hình", reportDaysOnValue !== null ? reportDaysOnValue.toLocaleString() : "0", "ngày"],
+          [3, "Số lần điều khiển", reportTotalCommandsValue !== null ? reportTotalCommandsValue.toLocaleString() : "0", "lượt"],
+          [4, "Thời gian bật trung bình/ngày", `${reportAvgDailyOnValue}${reportAvgDailyOnSecondsValue > 0 ? ` (${Math.round(reportAvgDailyOnSecondsValue)}s)` : ""}`, "thời gian"],
+          [5, "Giờ bật trung bình", reportAvgTimeOnValue, "giờ"],
+          [6, "Giờ tắt trung bình", reportAvgTimeOffValue, "giờ"],
+        ],
+        [14, 78, 58, 32],
+        ["center", "left", "right", "left"]
+      );
+
+      if (analysisData && analysisData.daily_details.length > 0) {
+        sectionTitle("NHẬT KÝ HOẠT ĐỘNG CHI TIẾT");
+        drawTable(
+          ["STT", "Ngày", "Thời gian bật", "Khung giờ bật/tắt", "Số lệnh"],
+          analysisData.daily_details.map((day, index) => [
+            index + 1,
+            new Date(day.date).toLocaleDateString("vi-VN", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" }),
+            day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s",
+            day.time_on ? `${formatTimeOnly(day.time_on)} - ${formatTimeOnly(day.time_off)}` : "—",
+            day.total_cmd.toLocaleString(),
+          ]),
+          [14, 56, 35, 48, 29],
+          ["center", "left", "right", "left", "right"]
+        );
+      }
+
+      const pageCount = doc.getNumberOfPages();
+      for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        doc.setFont("Roboto", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(120);
+        doc.text(`Trang ${page}/${pageCount}`, pageWidth - margin, pageHeight - 8, { align: "right" });
+        doc.setTextColor(0);
+      }
       doc.save("Bao_Cao_Trang_Thai_Du_An.pdf");
     } catch (error) {
-      console.error("Lỗi khi xuất PDF:", error);
+      console.error("Lá»—i khi xuáº¥t PDF:", error);
     } finally {
       setIsDownloading(false);
     }
@@ -86,7 +241,7 @@ export function StatsReportModal({
   const reportAvgTimeOff = analysisData?.summary.avg_time_off || "—";
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Xem trước báo cáo" size="lg">
+    <Modal opened={opened} onClose={onClose} title="Xem trước báo cáo" size="xl">
       <Box className="stats-ring-report-scroll">
         <Box ref={pdfRef} bg="white" p="md" className="stats-ring-report">
           <Title order={4} mb="xl" ta="center" className="stats-ring-report-title">
@@ -282,7 +437,7 @@ export function StatsReportModal({
 
       <style jsx global>{`
         .stats-ring-report {
-          font-size: 12px;
+          font-size: 13px;
         }
 
         .stats-ring-report-scroll {
@@ -310,19 +465,19 @@ export function StatsReportModal({
         }
 
         .stats-ring-report-title {
-          font-size: 15px;
+          font-size: 17px;
           line-height: 1.35;
         }
 
         .stats-ring-report .mantine-Text-root,
         .stats-ring-report .mantine-Table-th,
         .stats-ring-report .mantine-Table-td {
-          font-size: 11px;
-          line-height: 1.35;
+          font-size: 12px;
+          line-height: 1.45;
         }
 
         .stats-ring-report .mantine-Divider-label {
-          font-size: 10px;
+          font-size: 11px;
         }
       `}</style>
     </Modal>
