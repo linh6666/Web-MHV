@@ -25,8 +25,6 @@ import {
   Box,
   Divider,
   Button,
-  Modal,
-  Table,
   ThemeIcon,
   Flex,
   Badge,
@@ -41,10 +39,11 @@ import { getListProject } from "../../../api/apigetlistProject";
 import {  getListDevice} from "../../../api/apiGetDevice";
 import { getListProjectControl} from "../../../api/apigetlistProjectControl";
 import { getListanalysis} from "../../../api/apiGetanalysis";
+import { StatsReportModal } from "./StatsReportModal";
 
 
 // Định nghĩa interface để code sạch và chuyên nghiệp hơn
-interface StatusData {
+export interface StatusData {
   label: string;
   stats: string;
   progress: number;
@@ -65,7 +64,7 @@ interface StatusItem {
   percent: number;
 }
 
-interface ProjectInfo {
+export interface ProjectInfo {
   investor?: string;
   name?: string;
   address?: string;
@@ -88,7 +87,7 @@ interface DailyDetail {
   total_cmd: number;
 }
 
-interface AnalysisData {
+export interface AnalysisData {
   project_id: string;
   summary: AnalysisSummary;
   daily_details: DailyDetail[];
@@ -99,7 +98,7 @@ const icons = {
   down: IconArrowDownRight,
 };
 
-const formatDuration = (seconds: number) => {
+export const formatDuration = (seconds: number) => {
   if (seconds === 0) return "0s";
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
@@ -112,7 +111,7 @@ const formatDuration = (seconds: number) => {
   return parts.join(" ");
 };
 
-const formatTimeOnly = (isoString: string | null) => {
+export const formatTimeOnly = (isoString: string | null) => {
   if (!isoString) return "—";
   try {
     const date = new Date(isoString);
@@ -132,41 +131,10 @@ export function StatsRing() {
   const [projectStatus, setProjectStatus] = useState<number | null>(null);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isDownloading, setIsDownloading] = useState(false);
   const [opened, setOpened] = useState(false);
-  const pdfRef = useRef<HTMLDivElement>(null);
 
   const isMobile = useMediaQuery("(max-width: 576px)") ?? false;
   const isTablet = useMediaQuery("(max-width: 768px)") ?? false;
-
-  const handleDownloadPDF = async () => {
-    if (!pdfRef.current) return;
-    setIsDownloading(true);
-    try {
-      // Import động để tránh lỗi SSR trong Next.js
-      const html2canvas = (await import("html2canvas")).default;
-      const jsPDF = (await import("jspdf")).default;
-
-      const canvas = await html2canvas(pdfRef.current, {
-        scale: 2, // Tăng độ phân giải ảnh
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#ffffff", // Nền trắng để không bị đen nền khi tạo pdf
-      });
-
-      const imgWidth = 210; // Kích thước A4 (mm)
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      const doc = new jsPDF("p", "mm", "a4");
-
-      doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 10, imgWidth, imgHeight);
-      doc.save("Bao_Cao_Trang_Thai_Du_An.pdf");
-    } catch (error) {
-      console.error("Lỗi khi xuất PDF:", error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -346,12 +314,7 @@ export function StatsRing() {
     );
   });
 
-  const reportDaysOn = analysisData ? analysisData.summary.days_on : daysOn;
-  const reportTotalCommands = analysisData ? analysisData.summary.total_commands : totalCommands;
-  const reportAvgDailyOn = analysisData ? analysisData.summary.avg_daily_on : "0:00:00";
-  const reportAvgDailyOnSeconds = analysisData ? analysisData.summary.avg_daily_on_seconds : 0;
-  const reportAvgTimeOn = analysisData?.summary.avg_time_on || "—";
-  const reportAvgTimeOff = analysisData?.summary.avg_time_off || "—";
+
 
   return (
     <Box className="stats-ring-root">
@@ -662,154 +625,18 @@ export function StatsRing() {
       </Stack>
 
       {/* Modal View & Download PDF */}
-      <Modal opened={opened} onClose={() => setOpened(false)} title="Xem trước báo cáo" size="lg">
-        <Box className="stats-ring-report-scroll">
-        <Box ref={pdfRef} bg="white" p="md" className="stats-ring-report">
-          <Title order={4} mb="xl" ta="center" className="stats-ring-report-title">BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH</Title>
-          
-          <Stack gap={4} mb="xl">
-            <Text size="sm"><b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}</Text>
-            <Text size="sm"><b>Tên dự án:</b> {projectInfo?.name || "Đang cập nhật"}</Text>
-            <Text size="sm"><b>Địa chỉ:</b> {projectInfo?.address || "Đang cập nhật"}</Text>
-            <Text size="sm"><b>Cập nhật ngày:</b> {new Date().toLocaleDateString('vi-VN')}</Text>
-          </Stack>
+      <StatsReportModal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        projectInfo={projectInfo}
+        statsData={statsData}
+        totalUnits={totalUnits}
+        projectStatus={projectStatus}
+        daysOn={daysOn}
+        totalCommands={totalCommands}
+        analysisData={analysisData}
+      />
 
-          <Divider my="md" label="THÔNG TIN TRẠNG THÁI CĂN HỘ" labelPosition="center" />
-          
-          <Table striped highlightOnHover withTableBorder withColumnBorders mb="lg">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>STT</Table.Th>
-                <Table.Th>Trạng thái</Table.Th>
-                <Table.Th ta="right">Số lượng (Căn)</Table.Th>
-                <Table.Th ta="right">Tỷ lệ (%)</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {statsData.map((stat, index) => (
-                <Table.Tr key={stat.label}>
-                  <Table.Td>{index + 1}</Table.Td>
-                  <Table.Td fw={600} c="black">{stat.label}</Table.Td>
-                  <Table.Td ta="right">{stat.stats}</Table.Td>
-                  <Table.Td ta="right">{stat.progress}%</Table.Td>
-                </Table.Tr>
-              ))}
-              <Table.Tr fw={800}>
-                <Table.Td colSpan={2} ta="right">Tổng cộng:</Table.Td>
-                <Table.Td ta="right">{totalUnits}</Table.Td>
-                <Table.Td ta="right">100%</Table.Td>
-              </Table.Tr>
-            </Table.Tbody>
-          </Table>
-
-          <Divider my="md" label="THÔNG TIN HOẠT ĐỘNG MÔ HÌNH" labelPosition="center" />
-
-          <Table striped highlightOnHover withTableBorder withColumnBorders>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>STT</Table.Th>
-                <Table.Th>Chỉ số hoạt động</Table.Th>
-                <Table.Th ta="right">Giá trị thực tế</Table.Th>
-                <Table.Th>Đơn vị</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              <Table.Tr>
-                <Table.Td>1</Table.Td>
-                <Table.Td fw={600} c="black">Trạng thái hiện tại</Table.Td>
-                <Table.Td ta="right" c={projectStatus === 1 ? "green.6" : "red.6"} fw={700}>
-                  {projectStatus === 1 ? "Đang hoạt động" : projectStatus === 0 ? "Ngừng hoạt động" : "Không xác định"}
-                </Table.Td>
-                <Table.Td>-</Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td>2</Table.Td>
-                <Table.Td fw={600} c="black">Số ngày bật mô hình</Table.Td>
-                <Table.Td ta="right">{reportDaysOn !== null ? reportDaysOn.toLocaleString() : "0"}</Table.Td>
-                <Table.Td>ngày</Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td>3</Table.Td>
-                <Table.Td fw={600} c="black">Số lần điều khiển</Table.Td>
-                <Table.Td ta="right">{reportTotalCommands !== null ? reportTotalCommands.toLocaleString() : "0"}</Table.Td>
-                <Table.Td>lượt</Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td>4</Table.Td>
-                <Table.Td fw={600} c="black">Thời gian bật trung bình/ngày</Table.Td>
-                <Table.Td ta="right">
-                  {reportAvgDailyOn}
-                  {reportAvgDailyOnSeconds > 0 ? ` (${Math.round(reportAvgDailyOnSeconds)}s)` : ""}
-                </Table.Td>
-                <Table.Td>thời gian</Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td>5</Table.Td>
-                <Table.Td fw={600} c="black">Giờ bật trung bình</Table.Td>
-                <Table.Td ta="right">{reportAvgTimeOn}</Table.Td>
-                <Table.Td>giờ</Table.Td>
-              </Table.Tr>
-              <Table.Tr>
-                <Table.Td>6</Table.Td>
-                <Table.Td fw={600} c="black">Giờ tắt trung bình</Table.Td>
-                <Table.Td ta="right">{reportAvgTimeOff}</Table.Td>
-                <Table.Td>giờ</Table.Td>
-              </Table.Tr>
-            </Table.Tbody>
-          </Table>
-
-          {analysisData && analysisData.daily_details.length > 0 && (
-            <>
-              <Divider my="md" label="NHẬT KÝ HOẠT ĐỘNG CHI TIẾT" labelPosition="center" />
-
-              <Table striped highlightOnHover withTableBorder withColumnBorders>
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>STT</Table.Th>
-                    <Table.Th>Ngày</Table.Th>
-                    <Table.Th ta="right">Thời gian bật</Table.Th>
-                    <Table.Th>Khung giờ bật/tắt</Table.Th>
-                    <Table.Th ta="right">Số lệnh</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {analysisData.daily_details.map((day, index) => (
-                    <Table.Tr key={day.date}>
-                      <Table.Td>{index + 1}</Table.Td>
-                      <Table.Td>
-                        {new Date(day.date).toLocaleDateString('vi-VN', {
-                          weekday: 'long',
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        })}
-                      </Table.Td>
-                      <Table.Td ta="right">{day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s"}</Table.Td>
-                      <Table.Td>
-                        {day.time_on ? `${formatTimeOnly(day.time_on)} - ${formatTimeOnly(day.time_off)}` : "—"}
-                      </Table.Td>
-                      <Table.Td ta="right">{day.total_cmd.toLocaleString()}</Table.Td>
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            </>
-          )}
-        </Box>
-        </Box>
-        
-        <Group justify="flex-end" mt="md" className="stats-ring-modal-actions">
-          <Button variant="default" onClick={() => setOpened(false)}>Đóng</Button>
-          <Button 
-            leftSection={<IconDownload size={18} />} 
-            onClick={handleDownloadPDF} 
-            loading={isDownloading}
-            color="blue"
-          >
-            Tải file PDF
-          </Button>
-        </Group>
-      </Modal>
       <style jsx global>{`
         .stats-ring-scroll-content {
           display: flex;
@@ -837,50 +664,6 @@ export function StatsRing() {
 
         .stats-ring-scroll-content::-webkit-scrollbar {
           display: none;
-        }
-
-        .stats-ring-report {
-          font-size: 12px;
-        }
-
-        .stats-ring-report-scroll {
-          max-height: calc(80vh - 120px);
-          overflow-y: auto;
-          padding-right: 6px;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-
-        .stats-ring-report-scroll::-webkit-scrollbar {
-          display: none;
-        }
-
-        .stats-ring-modal-actions {
-          position: sticky;
-          bottom: 0;
-          z-index: 2;
-          margin-left: calc(var(--mantine-spacing-md) * -1);
-          margin-right: calc(var(--mantine-spacing-md) * -1);
-          margin-bottom: calc(var(--mantine-spacing-md) * -1);
-          padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
-          border-top: 1px solid #e9ecef;
-          background: #ffffff;
-        }
-
-        .stats-ring-report-title {
-          font-size: 15px;
-          line-height: 1.35;
-        }
-
-        .stats-ring-report .mantine-Text-root,
-        .stats-ring-report .mantine-Table-th,
-        .stats-ring-report .mantine-Table-td {
-          font-size: 11px;
-          line-height: 1.35;
-        }
-
-        .stats-ring-report .mantine-Divider-label {
-          font-size: 10px;
         }
       `}</style>
     </Box>
