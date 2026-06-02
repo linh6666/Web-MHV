@@ -16,11 +16,64 @@ import ForgotPasswordModal from "./ForgotPasswordModal/index";
 import { NotificationExtension } from "../../extension/NotificationExtension";
 import { useState, useEffect } from "react";
 import style from "./login.module.css";
+import { jwtDecode } from "jwt-decode";
 
 interface Register {
   username: string;
   password: string;
 }
+
+interface DecodedToken {
+  is_superuser?: boolean;
+  system_name?: string;
+  exp?: number;
+  [key: string]: unknown;
+}
+
+const getRedirectPath = (token: string): string => {
+  try {
+    const decoded = jwtDecode<DecodedToken>(token);
+    
+    // Check if token is expired
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      return "/";
+    }
+
+    const isSuperUser = decoded?.is_superuser === true;
+    const systemName = decoded?.system_name || "";
+    const role = systemName.toLowerCase();
+
+    // 1. Admin / SuperUser -> Quản lý bán hàng
+    if (isSuperUser || systemName === "System Admin" || systemName === "Admin") {
+      return "/quan-ly-ban-hang";
+    }
+
+    // 2. Director, Sale Director, Sale Admin, Accountant -> Có quyền xem Mô hình tương tác
+    if (
+      role === "director" ||
+      role === "sale director" ||
+      role === "sale admin" ||
+      role === "accountant"
+    ) {
+      return "/tuong-tac";
+    }
+
+    // 3. Sale Manager, Sale Staff, Salesperson -> Quản lý bán hàng
+    if (
+      role === "sale manager" ||
+      role === "sale staff" ||
+      role === "salesperson"
+    ) {
+      return "/quan-ly-ban-hang";
+    }
+
+    // 4. Marketing Manager, Member, các role khác -> Thông tin sản phẩm
+    return "/thong-tin-san-pham";
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return "/";
+  }
+};
 
 const Login = () => {
   // ✅ Khai báo toàn bộ hooks trước
@@ -50,7 +103,10 @@ const Login = () => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("access_token");
       if (token) {
-        window.location.href = "/tuong-tac";
+        const path = getRedirectPath(token);
+        if (path && path !== "/") {
+          window.location.href = path;
+        }
       }
     }
   }, []);
@@ -85,7 +141,10 @@ const Login = () => {
     localStorage.setItem("access_token", data.access_token);
 
     NotificationExtension.Success("Đăng nhập thành công!");
-    window.location.href = "/";
+    
+    // Redirect based on role
+    const path = getRedirectPath(data.access_token);
+    window.location.href = path;
   } catch (err: unknown) {
     console.error("Login error:", err);
 
