@@ -227,7 +227,7 @@ function ProjectCard({
         className={`${styles.baseButton} ${styles.primaryButton}`}
         onClick={() => {
           if (status === "approved" || project.rank_name) {
-            router.push(`/quan-ly-ban-hang/tong-mat-bang/${project.id}?name=${encodeURIComponent(project.name)}`);
+            router.push(`/tong-mat-bang/${project.id}?name=${encodeURIComponent(project.name)}`);
           }
         }}
         disabled={status === "pending" || (!project.rank_name && status !== "approved")}

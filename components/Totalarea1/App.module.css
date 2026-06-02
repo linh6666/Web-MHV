@@ -1,0 +1,106 @@
+.container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 22px;
+  color: #222;
+  font-weight: 600;
+  text-align: center;
+  margin: 5px 0 15px 0;
+}
+
+.imageWrapper {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  display: block;
+}
+
+.projectImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 250px);
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.noImage {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  margin: 40px 0;
+}
+
+.footer {
+  margin-top: 15px;
+  width: 100%;
+}
+
+/* ⭐ Thêm mới class này để SVG nằm đè lên ảnh */
+.overlaySvg {
+  pointer-events: none;
+  position: absolute;
+  top: 18%;
+  left: 15%;
+  width: 74%;
+  height: 75%;
+}
+
+.overlaySvg path, 
+.overlaySvg rect,
+.overlaySvg g {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.overlaySvg path:hover,
+.overlaySvg rect:hover {
+  opacity: 0.8;
+}
+
+.overlaySvg1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.overlaySvg1 path, 
+.overlaySvg1 rect,
+.overlaySvg1 g {
+  pointer-events: auto;
+}
+.overlaySvg2 {
+  position: absolute;
+  top: 23%;
+  left: 24.5%;
+  pointer-events: none;
+}
+
+.overlaySvg2 path, 
+.overlaySvg2 rect,
+.overlaySvg2 g {
+  pointer-events: auto;
+}
+.overlaySvg4 {
+  position: absolute;
+  top: -18%;
+  left: 41%;
+  pointer-events: none;
+}
+
+.overlaySvg4 path, 
+.overlaySvg4 rect,
+.overlaySvg4 g {
+  pointer-events: auto;
+}
