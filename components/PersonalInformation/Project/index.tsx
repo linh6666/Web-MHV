@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { Card, Image, Stack, Text, Button, Loader, Group } from "@mantine/core";
 import { DonutChart } from '@mantine/charts';
@@ -136,22 +136,22 @@ function ProjectCard({
 
       <Text className={styles.projectName}>{project.name}</Text>
 
-      <Group wrap="nowrap" p="md" align="flex-start" style={{ flexGrow: 1 }}>
+      <Group wrap="nowrap" p="xs" align="flex-start" style={{ flexGrow: 1 }}>
 
-        <Stack gap="xs" style={{ flex: 1 }}>
+        <Stack gap={2} style={{ flex: 1 }}>
           <Text size="xs" c="dimmed">Loại dự án: {project.type || "Thông tin chưa có"}</Text>
           <Text size="xs" c="dimmed">Địa chỉ: {project.address || "Địa chỉ chưa có"}</Text>
           <Text size="xs" c="dimmed">Chủ đầu tư: {project.investor || "Thông tin chưa có"}</Text>
           <Text size="sm" c="dimmed">Vai trò: {project.rank_name || "Chưa gán rank"}</Text>
         </Stack>
 
-        <Stack align="center" gap={0} style={{ minWidth: 100 }}>
+        <Stack align="center" gap={0} style={{ minWidth: 80 }}>
 
           <div className={styles.chartContainer}>
             {chartData.length > 0 ? (
               <DonutChart
-                size={80}
-                thickness={16}
+                size={62}
+                thickness={12}
                 data={chartData}
                 withTooltip={false}
                 chartLabel={
@@ -209,8 +209,8 @@ function ProjectCard({
             {hoveredStatus?.name ?? '\u00a0'}
             <span
               style={{
-                width: 6,
-                height: 6,
+                width: 5,
+                height: 5,
                 borderRadius: '50%',
                 backgroundColor: hoveredStatus?.color ?? 'transparent',
                 display: 'inline-block',
