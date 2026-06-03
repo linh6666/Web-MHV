@@ -177,6 +177,6 @@ GET_LIST_DEVICE:"/api/v1/device_management/summary",
 GET_LIST_DEVICE_DETAIL:"/api/v1/device_management/analytics/{project_id}",
 
 /// GET Active Users 
-GET_ACTIVE_USERS: "/api/v1/users/analytics/active_users",
+GET_ACTIVE_USERS: "/api/v1/users/analytics/active-users",
 
 }

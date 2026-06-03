@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconArrowDownRight,
   IconArrowUpRight,
@@ -10,6 +10,7 @@ import {
   IconCpu,
   IconActivity,
   IconPower,
+  IconUsers,
 } from "@tabler/icons-react";
 
 import {
@@ -40,7 +41,6 @@ import {  getListDevice} from "../../../api/apiGetDevice";
 import { getListProjectControl} from "../../../api/apigetlistProjectControl";
 import { getListanalysis} from "../../../api/apiGetanalysis";
 import { getListActiveUsers} from "../../../api/apiGetlistActiveUsers";
-
 import { StatsReportModal } from "./StatsReportModal";
 
 
@@ -89,6 +89,12 @@ interface DailyDetail {
   total_cmd: number;
 }
 
+interface ActiveUser {
+  id?: string | number;
+  full_name?: string | null;
+  email?: string | null;
+}
+
 export interface AnalysisData {
   project_id: string;
   summary: AnalysisSummary;
@@ -132,6 +138,8 @@ export function StatsRing() {
   const [totalCommands, setTotalCommands] = useState<number | null>(null);
   const [projectStatus, setProjectStatus] = useState<number | null>(null);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+  const [activeUsersCount, setActiveUsersCount] = useState<number | null>(null);
+  const [activeUsersList, setActiveUsersList] = useState<ActiveUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [opened, setOpened] = useState(false);
 
@@ -144,10 +152,11 @@ export function StatsRing() {
         const token = localStorage.getItem("access_token") ?? "";
 
         // Gọi song song các API để tăng tốc độ tải trang
-        const [projectResResult, deviceResResult, controlResResult] = await Promise.allSettled([
+        const [projectResResult, deviceResResult, controlResResult, activeUsersResResult] = await Promise.allSettled([
           getListProject({ token, skip: 0, limit: 1 }),
           getListDevice({ token, skip: 0, limit: 1 }),
           getListProjectControl({ token, skip: 0, limit: 1 }),
+          getListActiveUsers(),
         ]);
 
         // 1. Xử lý dữ liệu dự án
@@ -256,6 +265,17 @@ export function StatsRing() {
           }
         } else {
           console.error("Lỗi tải API Control:", controlResResult.reason);
+        }
+
+        // 4. Xử lý dữ liệu người dùng trực tuyến
+        if (activeUsersResResult.status === "fulfilled") {
+          const activeUsersRes = activeUsersResResult.value;
+          if (activeUsersRes) {
+            setActiveUsersCount(activeUsersRes.total ?? 0);
+            setActiveUsersList(activeUsersRes.data || []);
+          }
+        } else {
+          console.error("Lỗi tải API Người dùng trực tuyến:", activeUsersResResult.reason);
         }
       } catch (error) {
         console.error("Lỗi tải API StatsRing:", error);
@@ -380,7 +400,7 @@ export function StatsRing() {
             )}
           </Group>
 
-        <SimpleGrid cols={{ base: 1, xs: 2, sm: 4 }} spacing="sm">
+        <SimpleGrid cols={{ base: 1, xs: 2, sm: 3, md: 5 }} spacing="sm">
           {/* Card 1: Số ngày bật */}
           <Paper
             withBorder
@@ -495,6 +515,35 @@ export function StatsRing() {
               </Box>
               <ThemeIcon size={32} radius="md" variant="gradient" gradient={{ from: 'orange', to: 'red' }}>
                 <IconPower size={16} />
+              </ThemeIcon>
+            </Group>
+          </Paper>
+
+          {/* Card 5: Người dùng trực tuyến */}
+          <Paper
+            withBorder
+            radius="md"
+            p="sm"
+            style={{
+              background: "linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)",
+              borderColor: "#a5b4fc",
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              cursor: 'default',
+            }}
+            shadow="xs"
+          >
+            <Group justify="space-between" wrap="nowrap">
+              <Box>
+                <Text c="indigo.7" style={{ fontSize: "10px" }} tt="uppercase" fw={800}>
+                  Người dùng trực tuyến
+                </Text>
+                <Text fw={800} size="18px" mt={2} c="indigo.9" style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
+                  {activeUsersCount !== null ? activeUsersCount.toLocaleString() : "0"}
+                  <Text component="span" style={{ fontSize: "10px" }} fw={700} c="indigo.7"> người</Text>
+                </Text>
+              </Box>
+              <ThemeIcon size={32} radius="md" variant="gradient" gradient={{ from: 'indigo', to: 'violet' }}>
+                <IconUsers size={16} />
               </ThemeIcon>
             </Group>
           </Paper>
@@ -623,6 +672,36 @@ export function StatsRing() {
           </Stack>
         </Paper>
       </SimpleGrid>
+
+      {/* ACTIVE USERS LIST SECTION */}
+      {activeUsersList.length > 0 && (
+        <Paper withBorder radius="md" p="md" shadow="xs" mt="md">
+          <Group mb="md" justify="space-between">
+            <Group gap="xs">
+              <IconUsers size={20} color="teal" />
+              <Title order={5} fw={700}>Danh sách người dùng đang online</Title>
+            </Group>
+            <Badge color="teal" variant="light">{activeUsersList.length} đang hoạt động</Badge>
+          </Group>
+          <ScrollArea h={180} offsetScrollbars>
+            <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm">
+              {activeUsersList.map((user, idx) => (
+                <Paper key={user.id || idx} withBorder p="xs" radius="sm" bg="gray.0">
+                  <Group wrap="nowrap" gap="xs">
+                    <ThemeIcon size="md" radius="xl" color="teal" variant="light">
+                      <IconUsers size={14} />
+                    </ThemeIcon>
+                    <Box style={{ overflow: 'hidden' }}>
+                      <Text size="xs" fw={700} truncate="end">{user.full_name || "Chưa đặt tên"}</Text>
+                      <Text size="10px" c="dimmed" truncate="end">{user.email || "Không có email"}</Text>
+                    </Box>
+                  </Group>
+                </Paper>
+              ))}
+            </SimpleGrid>
+          </ScrollArea>
+        </Paper>
+      )}
       </Box>
       </Stack>
 
@@ -637,6 +716,7 @@ export function StatsRing() {
         daysOn={daysOn}
         totalCommands={totalCommands}
         analysisData={analysisData}
+        activeUsersCount={activeUsersCount}
       />
 
       <style jsx global>{`

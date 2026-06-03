@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef } from "react";
 import { IconDownload } from "@tabler/icons-react";
@@ -14,7 +14,7 @@ import {
   Title,
 } from "@mantine/core";
 
-// Import cÃ¡c types vÃ  helper function Ä‘Æ°á»£c export tá»« index.tsx
+// Import các types và helper function được export từ index.tsx
 import {
   StatusData,
   ProjectInfo,
@@ -33,6 +33,7 @@ interface StatsReportModalProps {
   daysOn: number | null;
   totalCommands: number | null;
   analysisData: AnalysisData | null;
+  activeUsersCount?: number | null;
 }
 
 export function StatsReportModal({
@@ -45,7 +46,8 @@ export function StatsReportModal({
   daysOn,
   totalCommands,
   analysisData,
-}: StatsReportModalProps) {
+  activeUsersCount,
+}: StatsReportModalProps): JSX.Element {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isReportScrolled, setIsReportScrolled] = useState(false);
   const pdfRef = useRef<HTMLDivElement>(null);
@@ -54,8 +56,8 @@ export function StatsReportModal({
     if (!pdfRef.current) return;
     setIsDownloading(true);
     try {
-      // 1. Táº£i font chá»¯ Roboto (Regular & Bold) há»— trá»£ Ä‘áº§y Ä‘á»§ Tiáº¿ng Viá»‡t
-      //    DÃ¹ng CDN pdfmake trÃªn Cloudflare - bá»™ font Ä‘Ãºng chuáº©n unicode cmap cho jsPDF
+      // 1. Tải font chữ Roboto (Regular & Bold) hỗ trợ đầy đủ Tiếng Việt
+      //    Dùng CDN pdfmake trên Cloudflare - bộ font đúng chuẩn unicode cmap cho jsPDF
       const regularUrl = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/fonts/Roboto/Roboto-Regular.ttf";
       const boldUrl = "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.12/fonts/Roboto/Roboto-Medium.ttf";
 
@@ -65,7 +67,7 @@ export function StatsReportModal({
       ]);
 
       if (!regRes.ok || !boldRes.ok) {
-        throw new Error(`Lá»—i táº£i font: regular=${regRes.status}, bold=${boldRes.status}`);
+        throw new Error(`Lỗi tải font: regular=${regRes.status}, bold=${boldRes.status}`);
       }
 
       const [regBuffer, boldBuffer] = await Promise.all([
@@ -73,11 +75,11 @@ export function StatsReportModal({
         boldRes.arrayBuffer(),
       ]);
 
-      // Chuyá»ƒn Ä‘á»•i array buffer cá»§a font sang base64 Ä‘á»ƒ nhÃºng vÃ o jsPDF
+      // Chuyển đổi array buffer của font sang base64 để nhúng vào jsPDF
       const toBase64 = (buffer: ArrayBuffer) => {
         let binary = "";
         const bytes = new Uint8Array(buffer);
-        const chunkSize = 8192; // TrÃ¡nh stack overflow khi dÃ¹ng spread trÃªn máº£ng lá»›n
+        const chunkSize = 8192; // Tránh stack overflow khi dùng spread trên mảng lớn
         for (let i = 0; i < bytes.length; i += chunkSize) {
           binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
         }
@@ -87,7 +89,7 @@ export function StatsReportModal({
       const base64Regular = toBase64(regBuffer);
       const base64Bold = toBase64(boldBuffer);
       
-      // Import Ä‘á»™ng Ä‘á»ƒ trÃ¡nh lá»—i SSR trong Next.js
+      // Import động để tránh lỗi SSR trong Next.js
       const jsPDF = (await import("jspdf")).default;
 
       const doc = new jsPDF("p", "mm", "a4");
@@ -133,36 +135,37 @@ export function StatsReportModal({
         y += 2;
       };
 
-      const drawTable = (headers: string[], rows: Array<Array<string | number>>, widths: number[], aligns: Array<"left" | "center" | "right"> = []) => {
-        const rowPaddingY = 3;
-        const cellPaddingX = 2;
-        const lineHeight = 4.5;
-        const drawRow = (cells: Array<string | number>, isHeader = false) => {
-          doc.setFont("Roboto", isHeader ? "bold" : "normal");
-          doc.setFontSize(9);
-          const cellLines = cells.map((cell, index) => doc.splitTextToSize(String(cell), widths[index] - cellPaddingX * 2));
-          const rowHeight = Math.max(...cellLines.map((line) => line.length)) * lineHeight + rowPaddingY * 2;
-          addPageIfNeeded(rowHeight);
-          let x = margin;
-          const startY = y;
-          if (isHeader) {
-            doc.setFillColor(244, 246, 248);
-            doc.rect(margin, startY, widths.reduce((sum, width) => sum + width, 0), rowHeight, "F");
-          }
-          cells.forEach((_, index) => {
-            doc.setDrawColor(205, 205, 205);
-            doc.rect(x, startY, widths[index], rowHeight);
-            const align = aligns[index] ?? "left";
-            const textX = align === "right" ? x + widths[index] - cellPaddingX : align === "center" ? x + widths[index] / 2 : x + cellPaddingX;
-            doc.text(cellLines[index], textX, startY + rowPaddingY + 3, { align });
-            x += widths[index];
-          });
-          y += rowHeight;
+              const drawTable = (headers: string[], rows: (string | number)[][], widths: number[], aligns: Array<"left" | "center" | "right"> = []) => {
+          const rowPaddingY = 3;
+          const cellPaddingX = 2;
+          const lineHeight = 4.5;
+          const drawRow = (cells: (string | number)[], isHeader = false) => {
+            doc.setFont("Roboto", isHeader ? "bold" : "normal");
+            doc.setFontSize(9);
+            const cellLines = cells.map((cell, index) => doc.splitTextToSize(String(cell), widths[index] - cellPaddingX * 2));
+            const rowHeight = Math.max(...cellLines.map((line) => line.length)) * lineHeight + rowPaddingY * 2;
+            addPageIfNeeded(rowHeight);
+            let x = margin;
+            const startY = y;
+            if (isHeader) {
+              doc.setFillColor(244, 246, 248);
+              doc.rect(margin, startY, widths.reduce((sum, width) => sum + width, 0), rowHeight, "F");
+            }
+            cells.forEach((_, index) => {
+              doc.setDrawColor(205, 205, 205);
+              doc.rect(x, startY, widths[index], rowHeight);
+              const align = aligns[index] ?? "left";
+              const textX = align === "right" ? x + widths[index] - cellPaddingX : align === "center" ? x + widths[index] / 2 : x + cellPaddingX;
+              doc.text(cellLines[index], textX, startY + rowPaddingY + 3, { align });
+              x += widths[index];
+            });
+            y += rowHeight;
+          };
+          drawRow(headers, true);
+          rows.forEach((row) => drawRow(row));
+          y += 2;
         };
-        drawRow(headers, true);
-        rows.forEach((row) => drawRow(row));
-        y += 2;
-      };
+
 
       const reportDaysOnValue = analysisData ? analysisData.summary.days_on : daysOn;
       const reportTotalCommandsValue = analysisData ? analysisData.summary.total_commands : totalCommands;
@@ -196,6 +199,7 @@ export function StatsReportModal({
           [4, "Thời gian bật trung bình/ngày", `${reportAvgDailyOnValue}${reportAvgDailyOnSecondsValue > 0 ? ` (${Math.round(reportAvgDailyOnSecondsValue)}s)` : ""}`, "thời gian"],
           [5, "Giờ bật trung bình", reportAvgTimeOnValue, "giờ"],
           [6, "Giờ tắt trung bình", reportAvgTimeOffValue, "giờ"],
+          [7, "Người dùng trực tuyến", activeUsersCount != null ? activeUsersCount.toLocaleString() : "0", "người"],
         ],
         [14, 78, 58, 32],
         ["center", "left", "right", "left"]
@@ -228,7 +232,7 @@ export function StatsReportModal({
       }
       doc.save("Bao_Cao_Trang_Thai_Du_An.pdf");
     } catch (error) {
-      console.error("Lá»—i khi xuáº¥t PDF:", error);
+      console.error("Lỗi khi xuất PDF:", error);
     } finally {
       setIsDownloading(false);
     }
@@ -383,6 +387,16 @@ export function StatsReportModal({
                 </Table.Td>
                 <Table.Td ta="right">{reportAvgTimeOff}</Table.Td>
                 <Table.Td>giờ</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>7</Table.Td>
+                <Table.Td fw={600} c="black">
+                  Người dùng trực tuyến
+                </Table.Td>
+                <Table.Td ta="right">
+                  {activeUsersCount != null ? activeUsersCount.toLocaleString() : "0"}
+                </Table.Td>
+                <Table.Td>người</Table.Td>
               </Table.Tr>
             </Table.Tbody>
           </Table>
