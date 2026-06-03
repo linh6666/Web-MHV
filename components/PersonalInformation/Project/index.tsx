@@ -56,6 +56,11 @@ function ProjectCard({
 
   const [hoveredStatus, setHoveredStatus] = useState<{ name: string; color: string; percent: number } | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const getStatusColor = (name: string) => {
     const status = name.toUpperCase();
@@ -148,7 +153,7 @@ function ProjectCard({
         <Stack align="center" gap={0} style={{ minWidth: 80 }}>
 
           <div className={styles.chartContainer}>
-            {chartData.length > 0 ? (
+            {isMounted && chartData.length > 0 ? (
               <DonutChart
                 size={62}
                 thickness={12}
@@ -186,6 +191,8 @@ function ProjectCard({
                   },
                 } as React.ComponentPropsWithoutRef<typeof DonutChart>['pieProps']}
               />
+            ) : chartData.length > 0 ? (
+              <div style={{ width: 62, height: 62 }} />
             ) : (
               <Text size="xs" c="dimmed">No data</Text>
             )}

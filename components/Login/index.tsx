@@ -17,6 +17,8 @@ import { NotificationExtension } from "../../extension/NotificationExtension";
 import { useState, useEffect } from "react";
 import style from "./login.module.css";
 import { jwtDecode } from "jwt-decode";
+import { connectSocket } from "../../services/socket";
+
 
 interface Register {
   username: string;
@@ -139,6 +141,9 @@ const Login = () => {
 
     // ✅ Lưu token vào localStorage
     localStorage.setItem("access_token", data.access_token);
+
+    // ✅ Kích hoạt kết nối Socket
+    connectSocket(data.access_token);
 
     NotificationExtension.Success("Đăng nhập thành công!");
     

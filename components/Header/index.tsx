@@ -14,6 +14,7 @@ import { IconBell, IconHeart, IconPhoneCall } from "@tabler/icons-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
+import { connectSocket, disconnectSocket } from "../../services/socket";
 import classes from "./DoubleHeader.module.css";
 import UserIcon from "./User/index";
 import FavoriteHoverContent from "./favourite";
@@ -60,6 +61,7 @@ export default function Header() {
       setIsSuperUser(false);
       setSystemName(null);
       setIsActive(false);
+      disconnectSocket();
       return;
     }
 
@@ -74,6 +76,7 @@ export default function Header() {
         setIsSuperUser(false);
         setSystemName(null);
         setIsActive(false);
+        disconnectSocket();
         return;
       }
 
@@ -81,11 +84,15 @@ export default function Header() {
       setIsSuperUser(decoded?.is_superuser === true);
       setSystemName(decoded?.system_name || null);
       setIsActive(decoded?.is_active === true);
+
+      // ✅ Tự động kết nối Socket khi F5 / Tải trang
+      connectSocket(token);
     } catch {
       setIsLoggedIn(false);
       setIsSuperUser(false);
       setSystemName(null);
       setIsActive(false);
+      disconnectSocket();
     }
   }, []);
 

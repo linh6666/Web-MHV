@@ -22,6 +22,7 @@ import Order from "./Order";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { disconnectSocket } from "../../services/socket";
 
 
 interface User {
@@ -102,6 +103,9 @@ function ProfilePageContent() {
  const handleLogout = () => {
   const confirmed = window.confirm("Bạn có chắc chắn muốn đăng xuất?");
   if (!confirmed) return;
+
+  // ✅ Ngắt kết nối socket
+  disconnectSocket();
 
   // ✅ Xóa token trong localStorage
   localStorage.removeItem("access_token");
