@@ -92,6 +92,12 @@ export default function MenuBuilding({
           { label: "layer2", values: [layer2Value] },
           { label: "layer3", values: [layer3Value] }, // Lọc theo tòa nhà cụ thể
         ],
+        mapping: [
+          {
+            label: "layer3",
+            key: layer3Value,
+          },
+        ],
       });
 
       if (!data?.data || !Array.isArray(data.data) || data.data.length === 0) {
@@ -143,6 +149,12 @@ export default function MenuBuilding({
           { label: "layer2", values: [layer2Value] },
           { label: "layer3", values: [layer3Value] },
           { label: "layer4", values: [layer4Value] },
+        ],
+        mapping: [
+          {
+            label: "layer4",
+            key: layer4Value,
+          },
         ],
       });
       if (response?.data && response.data.length > 0) {
