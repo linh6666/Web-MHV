@@ -32,6 +32,7 @@ const mockdata = [
     links: [
       { label: 'Định danh trong vai trò hệ thống', link: 'System' },
        { label: 'Phân Quyền người dùng trong hệ thống', link: 'User' },
+         { label: 'Thông tin người dùng trực tuyến', link: 'User' },
      
     ],
   },
