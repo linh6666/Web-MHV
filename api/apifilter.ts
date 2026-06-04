@@ -6,9 +6,15 @@ interface FilterItem {
   values: string[];
 }
 
+interface MappingItem {
+  label: string;
+  key: string;
+}
+
 interface CreateNodeAttributeBody {
   project_id: string;
   filters: FilterItem[];
+  mapping?: MappingItem[];
 }
 
 // 🧩 Hàm call API POST

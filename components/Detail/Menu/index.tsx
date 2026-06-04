@@ -102,6 +102,12 @@ export default function Menu({
           { label: "layer1", values: ["ct", "ct;ti"], },
           { label: "layer2", values: [phase] },
         ],
+        mapping: [
+          {
+            label: "layer2",
+            key: phase,
+          },
+        ],
       });
 
       if (!data?.data || !Array.isArray(data.data) || data.data.length === 0) {
@@ -174,6 +180,12 @@ export default function Menu({
           { label: "layer1", values: ["ct", "ct;ti"] },
           { label: "layer2", values: [phase] },
           { label: "layer3", values: [modelName] },
+        ],
+        mapping: [
+          {
+            label: "layer3",
+            key: modelName,
+          },
         ],
       });
 
