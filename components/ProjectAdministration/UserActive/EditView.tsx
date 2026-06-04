@@ -1,6 +1,14 @@
 "use client";
 
-import { Box, Button, Group, LoadingOverlay, TextInput } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Button,
+  Group,
+  LoadingOverlay,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
@@ -24,7 +32,9 @@ const EditView = ({ email }: EditViewProps) => {
         setUserDetail(res);
       } catch (error) {
         console.error("Lỗi khi lấy chi tiết trạng thái:", error);
-        NotificationExtension.Fails("Không thể tải thông tin chi tiết trạng thái.");
+        NotificationExtension.Fails(
+          "Không thể tải thông tin chi tiết trạng thái."
+        );
         modals.closeAll();
       } finally {
         setLoading(false);
@@ -37,42 +47,66 @@ const EditView = ({ email }: EditViewProps) => {
   }, [email]);
 
   return (
-    <Box miw={320} mx="auto" style={{ position: "relative" }}>
-      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ blur: 2 }} />
+    <Box miw={360} mx="auto" style={{ position: "relative" }}>
+      <LoadingOverlay
+        visible={loading}
+        zIndex={1000}
+        overlayProps={{ blur: 2 }}
+      />
 
       {userDetail && (
-        <>
-          <TextInput
-            label="Họ và tên"
-            value={userDetail.user_name || ""}
-            readOnly
-            mt="md"
-          />
+        <Stack gap="sm" mt="md">
+          <Box
+            p="md"
+            style={{
+              border: "1px solid #e9ecef",
+              borderRadius: 8,
+              backgroundColor: "#f8fafc",
+            }}
+          >
+            <Group justify="space-between" align="flex-start" gap="md">
+              <Box>
+                <Text size="xs" c="dimmed" fw={600} tt="uppercase">
+                  Người dùng
+                </Text>
+                <Text fw={700} size="lg" mt={4}>
+                  {userDetail.user_name || "-"}
+                </Text>
+                <Text size="sm" c="dimmed" mt={2}>
+                  {email || "-"}
+                </Text>
+              </Box>
 
-          <TextInput
-            label="Email"
-            value={email || ""}
-            readOnly
-            mt="md"
-          />
+              <Badge
+                color={userDetail.is_online ? "green" : "gray"}
+                variant="light"
+                size="lg"
+              >
+                {userDetail.is_online ? "Trực tuyến" : "Ngoại tuyến"}
+              </Badge>
+            </Group>
+          </Box>
 
-          <TextInput
-            label="Trạng thái kết nối"
-            value={userDetail.is_online ? "Đang kết nối (Trực tuyến)" : "Mất kết nối (Ngoại tuyến)"}
-            readOnly
-            mt="md"
-          />
-
-          <TextInput
-            label="Trạng thái chi tiết"
-            value={userDetail.status || ""}
-            readOnly
-            mt="md"
-          />
-        </>
+          <Box
+            p="md"
+            style={{
+              border: "1px solid #e9ecef",
+              borderRadius: 8,
+              backgroundColor: "#ffffff",
+            }}
+          >
+            <Group justify="space-between" gap="md" wrap="nowrap">
+              <Text size="sm" c="dimmed">
+                Trạng thái chi tiết
+              </Text>
+              <Text size="sm" fw={600} ta="right">
+                {userDetail.status || "-"}
+              </Text>
+            </Group>
+          </Box>
+        </Stack>
       )}
 
-      {/* ===== ACTION ===== */}
       <Group justify="flex-end" mt="lg">
         <Button
           variant="outline"
@@ -89,4 +123,3 @@ const EditView = ({ email }: EditViewProps) => {
 };
 
 export default EditView;
-

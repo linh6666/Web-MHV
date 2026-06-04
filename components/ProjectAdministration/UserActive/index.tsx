@@ -235,7 +235,7 @@ export default function LargeFixedTable() {
         columns={columns}
         dataSource={data}
         loading={loading}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 900 }}
         pagination={false}
         bordered
         rowKey="user_id"
