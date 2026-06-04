@@ -172,13 +172,17 @@ export const API_ROUTE = {
   GET_LIST_DETAIL_MAPPING: "/api/v1/midi/detail/{script_id}",
 
   ///customer
-GET_LIST_DEVICE:"/api/v1/device_management/summary",
+  GET_LIST_DEVICE: "/api/v1/device_management/summary",
 
-GET_LIST_DEVICE_DETAIL:"/api/v1/device_management/analytics/{project_id}",
+  GET_LIST_DEVICE_DETAIL: "/api/v1/device_management/analytics/{project_id}",
 
-/// GET Active Users 
-GET_ACTIVE_USERS: "/api/v1/users/analytics/active-users",
+  /// GET Active Users 
+  GET_ACTIVE_USERS: "/api/v1/users/analytics/active-users",
 
-///User online
-GET_USER_ONLINE: "/api/v1/users/all/online-cursor",
+  ///User online
+  GET_USER_ONLINE: "/api/v1/users/all/online-cursor",
+  //Get lis dealtail
+  GET_LIST_DETAIL_USERS: "/api/v1/users/{email}/status",
+
+
 }

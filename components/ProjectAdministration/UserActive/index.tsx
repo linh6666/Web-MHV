@@ -137,10 +137,10 @@ export default function LargeFixedTable() {
     modals.openConfirmModal({
       title: (
         <div style={{ fontWeight: 600, fontSize: 18 }}>
-          Chỉnh sửa dự án
+          Chi tiết trạng thái người dùng
         </div>
       ),
-      children: <EditView id={item.user_id} onSearch={fetchData} />,
+      children: <EditView email={item.email} />,
       confirmProps: { display: "none" },
       cancelProps: { display: "none" },
     });
