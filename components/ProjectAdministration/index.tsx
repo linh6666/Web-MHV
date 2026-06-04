@@ -17,6 +17,8 @@ import  LockRequest from './LockRequest';
 import User from './User'; 
 import Roles from './Roles'; 
 import UserProjectRole from './UserProjectRole';
+import UserActive from './UserActive';
+
 import Order from './Order'; 
 import  PaymentRequest from './PaymentRequest';
 import  ProjectDetails from './ProjectDetails';
@@ -32,7 +34,7 @@ const mockdata = [
     links: [
       { label: 'Định danh trong vai trò hệ thống', link: 'System' },
        { label: 'Phân Quyền người dùng trong hệ thống', link: 'User' },
-         { label: 'Thông tin người dùng trực tuyến', link: 'User' },
+         { label: 'Thông tin người dùng trực tuyến', link: 'UserActive' },
      
     ],
   },
@@ -128,6 +130,9 @@ export function ProjectManagementContent() {
        return <JionProject/>;
          case 'PaymentRequest':
         return <PaymentRequest/>;
+          case 'UserActive':
+        return <UserActive/>;
+
          
       case 'home':
         return <HomeAdmin />;
