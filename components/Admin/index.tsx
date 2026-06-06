@@ -50,7 +50,7 @@ const mockdata = [
     ],
   },
   {
-    label: 'DỰ ÁN',
+    label: 'QUẢN LÝ DỰ ÁN',
     icon: IconNotes,
     initiallyOpened: true,
     links: [
