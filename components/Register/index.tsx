@@ -4,8 +4,8 @@ import {
   Anchor,
   Box,
   Button,
-  MultiSelect,
   PasswordInput,
+  Select,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -24,8 +24,8 @@ interface Register {
   email: string;
   phone: string;
   password: string;
-  province: string[];
-  ward: string[];
+  province: string | null;
+  ward: string | null;
   introducer: string;
   detal_address: string;
 }
@@ -47,8 +47,8 @@ const RegisterForm = () => {
       email: "",
       phone: "",
       password: "",
-      province: [],
-      ward: [],
+      province: null,
+      ward: null,
       introducer: "",
       detal_address: "",
     },
@@ -93,9 +93,9 @@ const RegisterForm = () => {
   const floatingEmail = clickEmail || form.values.email.length > 0 || undefined;
   const [clickProvince, setClickProvince] = useState(false);
   const floatingProvince =
-    clickProvince || form.values.province.length > 0 || undefined;
+    clickProvince || !!form.values.province || undefined;
   const [clickWard, setClickWard] = useState(false);
-  const floatingWard = clickWard || form.values.ward.length > 0 || undefined;
+  const floatingWard = clickWard || !!form.values.ward || undefined;
   const [clickIntroducer, setClickIntroducer] = useState(false);
   const floatingIntroducer =
     clickIntroducer || form.values.introducer.length > 0 || undefined;
@@ -164,8 +164,8 @@ const RegisterForm = () => {
         values.email,
         values.phone,
         values.password,
-        values.province[0],
-        values.ward[0],
+        values.province || "",
+        values.ward || "",
         values.detal_address
       );
 
@@ -282,7 +282,7 @@ const RegisterForm = () => {
 
             {/* Province */}
             <div className={style.inputBox}>
-             <MultiSelect
+              <Select
   label="Tỉnh/Thành phố"
   labelProps={{ "data-floating": floatingProvince }}
   withAsterisk
@@ -296,12 +296,10 @@ const RegisterForm = () => {
   onFocus={() => setClickProvince(true)}
   onBlur={() => setClickProvince(false)}
   value={form.values.province}
-  onChange={(values) => {
-    // ✅ chỉ giữ lại option cuối cùng (người dùng chọn gần nhất)
-    const limited = values.slice(-1);
-    form.setFieldValue("province", limited);
-    setSelectedProvince(limited[0] || null);
-    form.setFieldValue("ward", []); // reset phường khi đổi tỉnh
+  onChange={(value) => {
+    form.setFieldValue("province", value);
+    setSelectedProvince(value);
+    form.setFieldValue("ward", null); // reset phường khi đổi tỉnh
   }}
   searchable={false}
 />
@@ -310,7 +308,7 @@ const RegisterForm = () => {
 
             {/* Ward */}
           {/* Ward */}
-<MultiSelect
+<Select
   label="Phường/Xã"
   labelProps={{ "data-floating": floatingWard }}
   withAsterisk
@@ -324,10 +322,8 @@ const RegisterForm = () => {
   onFocus={() => setClickWard(true)}
   onBlur={() => setClickWard(false)}
   value={form.values.ward}
-  onChange={(values) => {
-    // ✅ Chỉ giữ lại 1 phường/xã cuối cùng mà người dùng chọn
-    const limited = values.slice(-1);
-    form.setFieldValue("ward", limited);
+  onChange={(value) => {
+    form.setFieldValue("ward", value);
   }}
   searchable={false}
 />
