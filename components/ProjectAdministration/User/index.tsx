@@ -77,32 +77,44 @@ export default function LargeFixedTable({}) {
   }, []);
 
   useEffect(() => {
-    const fetchAllWards = async () => {
+    const fetchWardsForVisibleProvinces = async () => {
       try {
-        const provinceCodes = provinceOptions.map((p) => p.value);
-
-        const results = await Promise.all(
-          provinceCodes.map((code) => getWardsByProvince(code))
+        // Lấy danh sách các province_id duy nhất của các user trong trang hiện tại
+        const visibleProvinceIds = Array.from(
+          new Set(data.map((user) => user.province_id).filter(Boolean))
         );
 
-        const allWards: { value: string; label: string }[] = results.flatMap((data: Ward[]) =>
+        if (visibleProvinceIds.length === 0) return;
+
+        // Chỉ gọi API lấy phường/xã cho các tỉnh thực sự hiển thị trong bảng
+        const results = await Promise.all(
+          visibleProvinceIds.map((code) => getWardsByProvince(code))
+        );
+
+        const fetchedWards = results.flatMap((data: Ward[]) =>
           data.map((item: Ward) => ({
             value: item.code,
             label: item.full_name_vi,
           }))
         );
 
-        setWardOptions(allWards);
+        // Gộp danh sách mới vào danh sách cũ và lọc trùng để giữ cache hiển thị
+        setWardOptions((prevOptions) => {
+          const combined = [...prevOptions, ...fetchedWards];
+          const unique = Array.from(
+            new Map(combined.map((item) => [item.value, item])).values()
+          );
+          return unique;
+        });
       } catch (error) {
         console.error("Lỗi khi lấy danh sách phường/xã:", error);
-        setWardOptions([]);
       }
     };
 
-    if (provinceOptions.length) {
-      fetchAllWards();
+    if (data.length && provinceOptions.length) {
+      fetchWardsForVisibleProvinces();
     }
-  }, [provinceOptions]);
+  }, [data, provinceOptions]);
 
   // ✅ Sửa fetchData
   const fetchData = useCallback(async () => {
