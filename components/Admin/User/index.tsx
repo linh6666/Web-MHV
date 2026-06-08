@@ -1,27 +1,29 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+"use client";
 
+import React, { useEffect, useState, useCallback } from "react";
 import type { ColumnsType } from "antd/es/table";
-import { Table, Pagination } from "antd";
+import { Table } from "antd";
 import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
-import { getListUser  } from "../../../api/apigetlistuse";
+import { getListUser } from "../../../api/apigetlistuse";
+import { getListProvinces } from "../../../api/apigetlistaddress";
+import { getWardsByProvince } from "../../../api/apigetlistProvinces";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import CreateView from "./CreateView";
 import EditView from "./EditView";
 import DeleteView from "./DeleteView";
-import { getListProvinces } from "../../../api/apigetlistaddress";
-import { getWardsByProvince } from "../../../api/apigetlistProvinces";
 
 interface DataType {
   key: string;
   full_name: string;
   email: string;
   phone: string;
+  system_name: string;
   is_active: boolean;
   is_superuser: boolean;
   province_id: string;
@@ -30,11 +32,6 @@ interface DataType {
   creation_time: string;
   last_login: string;
   last_logout: string;
-}
-
-interface ListRolesResponse {
-  data: DataType[];
-  total: number; // tổng số record
 }
 
 interface Province {
@@ -46,6 +43,10 @@ interface Ward {
   code: string;
   full_name_vi: string;
 }
+interface ListRolesResponse {
+  data: DataType[];
+  total: number;
+}
 
 export default function LargeFixedTable({}) {
 
@@ -53,10 +54,12 @@ export default function LargeFixedTable({}) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [provinceOptions, setProvinceOptions] = useState<{ value: string; label: string }[]>([]);
   const [wardOptions, setWardOptions] = useState<{ value: string; label: string }[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 10; 
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
 
   const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
 
@@ -152,11 +155,38 @@ export default function LargeFixedTable({}) {
     } finally {
       setLoading(false);
     }
-  }, [token, currentPage]);
+  }, [token, currentPage, pageSize]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText]);
+
+  // Filter data client-side based on searchText
+  useEffect(() => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) {
+      setFilteredData(data);
+      return;
+    }
+    const filtered = data.filter(item => {
+      const sysName = provinceOptions.find(p => p.value === item.province_id)?.label?.toLowerCase() ?? "";
+      const wardName = wardOptions.find(w => w.value === item.ward_id)?.label?.toLowerCase() ?? "";
+      return (
+        item.full_name?.toLowerCase().includes(keyword) ||
+        item.email?.toLowerCase().includes(keyword) ||
+        item.phone?.toLowerCase().includes(keyword) ||
+        item.system_name?.toLowerCase().includes(keyword) ||
+        sysName.includes(keyword) ||
+        wardName.includes(keyword)
+      );
+    });
+    setFilteredData(filtered);
+  }, [searchText, data, provinceOptions, wardOptions]);
 
   const openModal = () => {
     modals.openConfirmModal({
@@ -269,20 +299,22 @@ const columns: ColumnsType<DataType> = [
     render: (record: DataType) => (
       <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
         <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="documentEdit"
-            aria-label="Chỉnh sửa"
-            color="success"
-            onClick={() => openEditUserModal(record)}
-          />
+            <EuiButtonIcon
+              iconType="documentEdit"
+              aria-label="Chỉnh sửa"
+              color="success"
+              onClick={() => openEditUserModal(record)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
+            />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="trash"
-            aria-label="Xóa"
-            color="danger"
-            onClick={() => openDeleteUserModal(record)}
-          />
+            <EuiButtonIcon
+              iconType="trash"
+              aria-label="Xóa"
+              color="danger"
+              onClick={() => openDeleteUserModal(record)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
+            />
         </EuiFlexItem>
       </EuiFlexGroup>
     ),
@@ -293,7 +325,7 @@ const columns: ColumnsType<DataType> = [
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -301,24 +333,21 @@ const columns: ColumnsType<DataType> = [
       <Table
         style={{ marginTop: 12 }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         scroll={{ x: 2000 }}
-        pagination={false}
         bordered
+        pagination={{
+          total: filteredData.length,
+          current: currentPage,
+          pageSize: pageSize,
+          onChange: (page) => setCurrentPage(page),
+          showSizeChanger: false,
+          showQuickJumper: false,
+        }}
       />
 
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
-      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-        <Pagination
-          total={total}
-          current={currentPage}
-          pageSize={pageSize}
-          onChange={(page) => setCurrentPage(page)}
-          showSizeChanger={false}
-          showQuickJumper={false}
-        />
-      </div>
     </>
   );
 }
