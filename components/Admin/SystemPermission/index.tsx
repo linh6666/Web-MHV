@@ -40,6 +40,8 @@ export default function LargeFixedTable() {
   const [error, setError] = useState<string | null>(null);
    const [systemOptions, setSystemOptions] = useState<{ value: string; label: string }[]>([]);
   const [permissionOptions, setPermissionOptions] = useState<{ value: string; label: string }[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
  const [total, setTotal] = useState<number>(0);
    const [currentPage, setCurrentPage] = useState<number>(1);
    const pageSize = 10; 
@@ -71,7 +73,12 @@ export default function LargeFixedTable() {
     } finally {
       setLoading(false);
     }
-  }, [token,currentPage]);
+  }, [token, currentPage, pageSize]);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText]);
 
   useEffect(() => {
  const fetchSystems = async () => {
@@ -109,7 +116,27 @@ export default function LargeFixedTable() {
     fetchPermissions();
   }, [fetchData]);
 
-  // ✅ Hàm mở modal chỉnh sửa
+  // Filter data client-side based on searchText
+  useEffect(() => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) {
+      setFilteredData(data);
+      return;
+    }
+    const filtered = data.filter(item => {
+      const system = systemOptions.find(s => s.value === item.system_id?.toString());
+      const permission = permissionOptions.find(p => p.value === item.permission_id?.toString());
+      const sysName = system?.label?.toLowerCase() ?? "";
+      const permName = permission?.label?.toLowerCase() ?? "";
+      const desc = item.description_vi?.toLowerCase() ?? "";
+      return (
+        sysName.includes(keyword) ||
+        permName.includes(keyword) ||
+        desc.includes(keyword)
+      );
+    });
+    setFilteredData(filtered);
+  }, [searchText, data, systemOptions, permissionOptions]);
   const openEditUserModal = (role: DataType) => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa cấu hình</div>,
@@ -164,20 +191,22 @@ const columns: ColumnsType<DataType> = [
     render: (user: DataType) => (
       <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
         <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="documentEdit"
-            aria-label="Chỉnh sửa"
-            color="success"
-            onClick={() => openEditUserModal(user)}
-          />
+            <EuiButtonIcon
+              iconType="documentEdit"
+              aria-label="Chỉnh sửa"
+              color="success"
+              onClick={() => openEditUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
+            />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
-          <EuiButtonIcon
-            iconType="trash"
-            aria-label="Xóa"
-            color="danger"
-            onClick={() => openDeleteUserModal(user)}
-          />
+            <EuiButtonIcon
+              iconType="trash"
+              aria-label="Xóa"
+              color="danger"
+              onClick={() => openDeleteUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
+            />
         </EuiFlexItem>
       </EuiFlexGroup>
     ),
@@ -208,7 +237,7 @@ const columns: ColumnsType<DataType> = [
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
           <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -216,24 +245,21 @@ const columns: ColumnsType<DataType> = [
       <Table
         style={{ marginTop: 12 }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
-        pagination={false}
+        pagination={{
+          total: filteredData.length,
+          current: currentPage,
+          pageSize: pageSize,
+          onChange: (page) => setCurrentPage(page),
+          showSizeChanger: false,
+          showQuickJumper: false,
+        }}
         bordered
         rowKey="id" // ✅ thêm key cho mỗi hàng
       />
 
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
-       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-              <Pagination
-                total={total}
-                current={currentPage}
-                pageSize={pageSize}
-                onChange={(page) => setCurrentPage(page)}
-                showSizeChanger={false}
-                showQuickJumper={false}
-              />
-            </div>
     </>
   );
 }
