@@ -28,6 +28,8 @@ export default function LargeFixedTable() {
     const [total, setTotal] = useState<number>(0);
       const [currentPage, setCurrentPage] = useState<number>(1);
       const pageSize = 10; 
+  const [searchText, setSearchText] = useState<string>("");
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
 
   const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
 
@@ -50,6 +52,7 @@ export default function LargeFixedTable() {
        
       }));
       setData(users);
+      setFilteredData(users);
         setTotal(result.total);
          const totalPages = Math.ceil(result.total / pageSize);
       if (currentPage > totalPages && totalPages > 0) {
@@ -66,6 +69,27 @@ export default function LargeFixedTable() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+   // Reset page when search changes
+   useEffect(() => {
+     setCurrentPage(1);
+   }, [searchText]);
+
+   // Client‑side filter based on search input
+   useEffect(() => {
+     const keyword = searchText.toLowerCase().trim();
+     if (!keyword) {
+       setFilteredData(data);
+       setCurrentPage(1);
+       return;
+     }
+     const filtered = data.filter(item =>
+       item.type_vi?.toLowerCase().includes(keyword) ||
+       item.type_en?.toLowerCase().includes(keyword)
+     );
+     setFilteredData(filtered);
+     setCurrentPage(1);
+   }, [searchText, data]);
 
   // ✅ Hàm mở modal chỉnh sửa
   const openEditUserModal = (role: DataType) => {
@@ -91,15 +115,16 @@ export default function LargeFixedTable() {
         <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
           <EuiFlexItem grow={false}>
             {/* ✅ truyền đúng user vào onClick */}
-            <EuiButtonIcon
+                        <EuiButtonIcon
               iconType="documentEdit"
               aria-label="Chỉnh sửa"
               color="success"
               onClick={() => openEditUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon iconType="trash" aria-label="Xóa" color="danger" onClick={() => openDeleteUserModal(user)} />
+            <EuiButtonIcon iconType="trash" aria-label="Xóa" color="danger" onClick={() => openDeleteUserModal(user)} style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }} />
           </EuiFlexItem>
         </EuiFlexGroup>
       ),
@@ -130,7 +155,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-     {/* <AppSearch />    */}
+     <AppSearch value={searchText} onSearch={setSearchText} />   
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -138,17 +163,17 @@ export default function LargeFixedTable() {
       <Table
         style={{ marginTop: 12 }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize)}
         loading={loading}
         pagination={false}
         bordered
-        rowKey="id" // ✅ thêm key cho mỗi hàng
+        rowKey="id"
       />
 
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
         <Pagination
-          total={total}
+          total={filteredData.length}
           current={currentPage}
           pageSize={pageSize}
           onChange={(page) => setCurrentPage(page)}
