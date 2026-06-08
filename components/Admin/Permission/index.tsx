@@ -28,6 +28,7 @@ export default function LargeFixedTable() {
   const [error, setError] = useState<string | null>(null);
     const [total, setTotal] = useState<number>(0);
      const [currentPage, setCurrentPage] = useState<number>(1);
+     const [searchText, setSearchText] = useState("");
       const pageSize = 10; 
 
 
@@ -83,8 +84,8 @@ export default function LargeFixedTable() {
 
   // ✅ Định nghĩa cột bảng
   const columns: ColumnsType<DataType> = [
-    { title: "Mã Chức năng", dataIndex: "code", key: "code", width: 90 },
-    { title: "Mô tả chức năng", dataIndex: "description_vi", key: "description_vi", width: 100 },
+    { title: "Mã Chức năng", dataIndex: "code", key: "code"},
+    { title: "Mô tả chức năng", dataIndex: "description_vi", key: "description_vi" },
     // { title: "Mô Tả (Tiếng Anh)", dataIndex: "description_en", key: "description_en", width: 100 },
     {
       title: "Hành Động",
@@ -97,11 +98,19 @@ export default function LargeFixedTable() {
             <EuiButtonIcon
               iconType="documentEdit"
               aria-label="Chỉnh sửa"
-              color="success"onClick={() => openEditUserModal(user)}
+              color="success"
+              onClick={() => openEditUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon iconType="trash" aria-label="Xóa" color="danger" onClick={() => openDeleteUserModal(user)} />
+            <EuiButtonIcon
+              iconType="trash"
+              aria-label="Xóa"
+              color="danger"
+              onClick={() => openDeleteUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
+            />
           </EuiFlexItem>
         </EuiFlexGroup>
       ),
@@ -129,10 +138,21 @@ export default function LargeFixedTable() {
     });
   };
 
+  // ✅ Lọc dữ liệu client-side theo từ khóa tìm kiếm
+  const filteredData = data.filter((item) => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) return true;
+    return (
+      item.code?.toLowerCase().includes(keyword) ||
+      item.description_vi?.toLowerCase().includes(keyword) ||
+      item.description_en?.toLowerCase().includes(keyword)
+    );
+  });
+
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -140,7 +160,7 @@ export default function LargeFixedTable() {
       <Table
         style={{ marginTop: 12 }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         pagination={false}
         bordered
@@ -150,7 +170,7 @@ export default function LargeFixedTable() {
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
               <Pagination
-                total={total}
+                total={filteredData.length}
                 current={currentPage}
                 pageSize={pageSize}
                 onChange={(page) => setCurrentPage(page)}
