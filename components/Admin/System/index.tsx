@@ -35,6 +35,7 @@ export default function LargeFixedTable() {
    console.error("Lỗi khi tải dữ liệu:", error);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchText, setSearchText] = useState("");
   const pageSize = 10;
 
   const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
@@ -72,6 +73,11 @@ export default function LargeFixedTable() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // ✅ Reset về trang 1 khi từ khóa tìm kiếm thay đổi
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText]);
 
   // Modal chỉnh sửa
   const openEditUserModal = (role: DataType) => {
@@ -129,6 +135,7 @@ export default function LargeFixedTable() {
         aria-label="Chỉnh sửa"
         color="success"
         onClick={() => openEditUserModal(user)}
+        style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
       />
     </EuiToolTip>
   </EuiFlexItem>
@@ -140,6 +147,7 @@ export default function LargeFixedTable() {
         aria-label="Xóa"
         color="danger"
         onClick={() => openDeleteUserModal(user)}
+        style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
       />
     </EuiToolTip>
   </EuiFlexItem>
@@ -149,34 +157,41 @@ export default function LargeFixedTable() {
     },
   ];
 
+  // ✅ Lọc dữ liệu client-side theo từ khóa tìm kiếm
+  const filteredData = data.filter((item) => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) return true;
+    return (
+      item.name?.toLowerCase().includes(keyword) ||
+      item.description_vi?.toLowerCase().includes(keyword) ||
+      item.rank_total?.toString().includes(keyword)
+    );
+  });
+
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      {/* <AppSearch />   */}
-      <div></div>
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
+        <div></div>
         <AppAction openModal={openModal} />
       </Group>
 
       <Table
-       style={{ marginTop: 12 }} 
+       style={{ marginTop: 12 }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
-        pagination={false}
-        bordered
         rowKey="id"
+        bordered
+        pagination={{
+          total: filteredData.length,
+          current: currentPage,
+          pageSize: pageSize,
+          onChange: (page) => setCurrentPage(page),
+          showSizeChanger: false,
+          showQuickJumper: false,
+        }}
       />
-
-      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-        <Pagination
-          total={total} // dùng count từ server
-          current={currentPage}
-          pageSize={pageSize}
-          onChange={(page) => setCurrentPage(page)}
-          showSizeChanger={false}
-          showQuickJumper={false}
-        />
-      </div>
     </>
   );
 }
