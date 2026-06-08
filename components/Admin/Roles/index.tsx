@@ -1,7 +1,9 @@
+
+
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { Pagination, Table } from "antd";
+import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
@@ -23,6 +25,8 @@ interface DataType {
 
 export default function LargeFixedTable() {
   const [data, setData] = useState<DataType[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState<DataType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
@@ -50,10 +54,13 @@ export default function LargeFixedTable() {
       }));
       setData(users);
       setTotal(result.total);
+
       const totalPages = Math.ceil(result.total / pageSize);
       if (currentPage > totalPages && totalPages > 0) {
         setCurrentPage(totalPages);
       }
+      // Update filtered data after fetching
+      setFilteredData(result.data.map((item: DataType) => ({ ...item, key: item.id })));
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Đã xảy ra lỗi khi tải dữ liệu.");
@@ -65,6 +72,21 @@ export default function LargeFixedTable() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) {
+      setFilteredData(data);
+      return;
+    }
+    const filtered = data.filter(item =>
+      item.name?.toLowerCase().includes(keyword) ||
+      item.description_vi?.toLowerCase().includes(keyword) ||
+      item.description_en?.toLowerCase().includes(keyword) ||
+      item.rank?.toString().toLowerCase().includes(keyword)
+    );
+    setFilteredData(filtered);
+  }, [searchText, data]);
 
   const openEditUserModal = (role: DataType) => {
     modals.openConfirmModal({
@@ -107,6 +129,7 @@ export default function LargeFixedTable() {
             aria-label="Chỉnh sửa"
             color="success"
             onClick={() => openEditUserModal(user)}
+            style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -115,6 +138,7 @@ export default function LargeFixedTable() {
             aria-label="Xóa"
             color="danger"
             onClick={() => openDeleteUserModal(user)}
+            style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
           />
         </EuiFlexItem>
       </EuiFlexGroup>
@@ -146,7 +170,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-       {/* <AppSearch />  */}
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} /> 
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -154,25 +178,22 @@ export default function LargeFixedTable() {
       <Table
         style={{ marginTop: 12 }}
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
-        pagination={false}
+        pagination={{
+          total: filteredData.length,
+          current: currentPage,
+          pageSize: pageSize,
+          onChange: (page) => setCurrentPage(page),
+          showSizeChanger: false,
+          showQuickJumper: false,
+        }}
         bordered
         rowKey="id"
       />
 
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
-      
-      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
-        <Pagination
-          total={total}
-          current={currentPage}
-          pageSize={pageSize}
-          onChange={(page) => setCurrentPage(page)}
-          showSizeChanger={false}
-          showQuickJumper={false}
-        />
-      </div>
+    
     </>
   );
 }
