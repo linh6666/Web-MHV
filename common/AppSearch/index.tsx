@@ -49,8 +49,12 @@ const AppSearch: React.FC<AppSearchProps> = ({
               fullWidth
               value={innerValue}
               onChange={(e) => {
-                setInnerValue(e.target.value);
+                const newVal = e.target.value;
+                setInnerValue(newVal);
                 if (onChange) onChange(e); // cập nhật input nhưng chưa search
+                if (newVal === "" && onSearch) {
+                  onSearch(""); // Tự động trigger search rỗng khi xóa hết text
+                }
               }}
               // ❌ Bỏ onSearch ở đây, chỉ search khi nhấn nút
               onKeyDown={(e) => {

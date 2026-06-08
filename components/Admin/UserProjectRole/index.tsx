@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import AppSearch from "../../../common/AppSearch";
@@ -8,7 +8,7 @@ import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
 import { getListRoless } from "../../../api/apiUserProjectRole";
-import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
+import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiSelect, EuiFormControlLayout } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import CreateView from "./CreateView";
 import EditView from "./EditView";
@@ -28,8 +28,26 @@ export default function LargeFixedTable() {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [selectedProject, setSelectedProject] = useState("");
 
   const pageSize = 10;
+
+  // ✅ Tạo options cho ô select lọc theo dự án (project_name)
+  const projectOptions = useMemo(() => {
+    const uniqueProjects = new Set<string>();
+    allData.forEach((item) => {
+      const name = item.project_name?.trim();
+      if (name) uniqueProjects.add(name);
+    });
+
+    return [
+      { value: "", text: "Tất cả dự án" },
+      ...Array.from(uniqueProjects)
+        .sort()
+        .map((name) => ({ value: name, text: name })),
+    ];
+  }, [allData]);
   const token = localStorage.getItem("access_token") || "";
 
   // ✅ FIX: dùng useCallback
@@ -69,8 +87,30 @@ export default function LargeFixedTable() {
     fetchData();
   }, [fetchData]);
 
+  // ✅ Reset trang về 1 khi từ khóa tìm kiếm hoặc dự án được lọc thay đổi
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText, selectedProject]);
+
+  // ✅ Lọc dữ liệu client-side theo dự án và từ khóa tìm kiếm
+  const filteredData = allData.filter((item) => {
+    // 1. Lọc theo dự án
+    if (selectedProject && item.project_name !== selectedProject) {
+      return false;
+    }
+
+    // 2. Lọc theo từ khóa
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) return true;
+    return (
+      item.role_name?.toLowerCase().includes(keyword) ||
+      item.project_name?.toLowerCase().includes(keyword) ||
+      item.user_email?.toLowerCase().includes(keyword)
+    );
+  });
+
   // ✅ phân trang client
-  const paginatedData = allData.slice(
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
@@ -138,9 +178,28 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group justify="space-between" mb={12}>
-        {/* <AppSearch /> */}
-        <div></div>
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <AppAction openModal={openModal} />
+      </Group>
+
+      <Group mb={16}>
+        <EuiFormControlLayout
+          compressed
+          style={{ width: 160 }}
+          clear={
+            selectedProject
+              ? { onClick: () => setSelectedProject("") }
+              : undefined
+          }
+        >
+          <EuiSelect
+            compressed
+            options={projectOptions}
+            value={selectedProject}
+            onChange={(e) => setSelectedProject(e.target.value)}
+            fullWidth
+          />
+        </EuiFormControlLayout>
       </Group>
 
       {/* ✅ FIX lỗi unused error */}
@@ -158,7 +217,7 @@ export default function LargeFixedTable() {
 
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
         <Pagination
-          total={total}
+          total={filteredData.length}
           current={currentPage}
           pageSize={pageSize}
           onChange={setCurrentPage}
