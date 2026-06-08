@@ -158,8 +158,9 @@ export default function LargeFixedTable() {
             <EuiButtonIcon
               iconType="documentEdit"
               aria-label="Edit"
-                  color="success"
+              color="success"
               onClick={() => openEditUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
@@ -168,6 +169,7 @@ export default function LargeFixedTable() {
               aria-label="Delete"
               color="danger"
               onClick={() => openDeleteUserModal(user)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
         </EuiFlexGroup>
