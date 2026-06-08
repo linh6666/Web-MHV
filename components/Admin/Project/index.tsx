@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-
+import AppSearch from "../../../common/AppSearch";
 import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
@@ -60,6 +60,20 @@ export default function LargeFixedTable() {
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 10;
+  // Search state for AppSearch
+  const [searchText, setSearchText] = useState<string>("");
+  // Filtered data based on searchText (search by name, type, address, investor)
+  const filteredData = useMemo(() => {
+    if (!searchText) return data;
+    const lower = searchText.toLowerCase();
+    return data.filter(
+      (item) =>
+        item.name.toLowerCase().includes(lower) ||
+        item.type.toLowerCase().includes(lower) ||
+        item.address.toLowerCase().includes(lower) ||
+        item.investor.toLowerCase().includes(lower)
+    );
+  }, [data, searchText]);
 
   const token =
     typeof window !== "undefined"
@@ -221,6 +235,7 @@ export default function LargeFixedTable() {
               aria-label="Chỉnh sửa"
               color="success"
               onClick={() => openEditUserModal(item)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
@@ -229,6 +244,7 @@ export default function LargeFixedTable() {
               aria-label="Xóa"
               color="danger"
               onClick={() => openDeleteUserModal(item)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -250,13 +266,14 @@ export default function LargeFixedTable() {
         }}
       >
         <div style={{ marginBottom: 12 }}></div>
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <AppAction openModal={openModal} />
       </Group>
 
       <Table
-       style={{ marginTop: 12 }} 
+        style={{ marginTop: 12 }} 
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         scroll={{ x: 1300 }}
         pagination={false}
@@ -274,7 +291,7 @@ export default function LargeFixedTable() {
         }}
       >
         <Pagination
-          total={total}
+          total={filteredData.length}
           current={currentPage}
           pageSize={pageSize}
           onChange={(page) => setCurrentPage(page)}
