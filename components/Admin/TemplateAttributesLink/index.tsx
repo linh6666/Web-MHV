@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import AppAction from "../../../common/AppAction";
+import AppSearch from "../../../common/AppSearch";
 import { modals } from "@mantine/modals";
 import { getListTemplateAttributesLink } from "../../../api/apiTemplateAttributesLink";
 import { getListProjectTemplates } from "../../../api/apiProjectTemplates2";
@@ -44,9 +45,9 @@ export default function LargeFixedTable() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [templateId, setTemplateId] = useState<string>("");
-  const [total, setTotal] = useState<number>(0);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const pageSize = 10; 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchText, setSearchText] = useState<string>("");
+  const pageSize = 10;
   // dropdown mẫu dự án
   const [templateOptions, setTemplateOptions] = useState<{ value: string; label: string }[]>([]);
   // dropdown thuộc tính
@@ -111,50 +112,63 @@ const fetchTemplateList = useCallback(async () => {
   }, [fetchTemplateList, fetchAttributeList]);
 
   // ============================================================
-  // 🔹 3️⃣ Gọi API lấy dữ liệu bảng
+  // 🔹 3️⃣ Gọi API lấy dữ liệu bảng (fetch toàn bộ, lọc client-side)
   // ============================================================
   const fetchAttributes = useCallback(async () => {
-    if (!templateId) return;
+    if (!templateId) {
+      setData([]);
+      return;
+    }
     setLoading(true);
     setError(null);
 
     try {
-
-  const skip = (currentPage - 1) * pageSize;
-
       const res = await getListTemplateAttributesLink({
         token,
         template_id: templateId,
-        skip,
-        limit: pageSize
-        
+        skip: 0,
+        limit: 1000,
       });
-      const data: TemplateAttributeLink[] = res.data || [];
+      const rawData: TemplateAttributeLink[] = res.data || [];
 
-      const rows: DataType[] = data.map((item) => ({
+      const rows: DataType[] = rawData.map((item) => ({
         id: item.id.toString(),
         project_template_id: item.project_template_id,
         attribute_id: item.attribute_id,
       }));
       setData(rows);
-  setTotal(res.total);
-  const totalPages = Math.ceil(res.total / pageSize);
-      if (currentPage > totalPages && totalPages > 0) {
-        setCurrentPage(totalPages);
-      }
-
-
+      setCurrentPage(1);
     } catch (err) {
       setError("Không thể tải dữ liệu bảng");
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, [templateId, token,currentPage]);
+  }, [templateId, token]);
 
   useEffect(() => {
     fetchAttributes();
   }, [fetchAttributes]);
+
+  // ============================================================
+  // 🔹 3b️⃣ Lọc dữ liệu theo searchText
+  // ============================================================
+  const filteredData = data.filter((row) => {
+    if (!searchText) return true;
+    const keyword = searchText.toLowerCase();
+    const templateLabel =
+      templateOptions.find((o) => o.value === row.project_template_id)?.label?.toLowerCase() || "";
+    const attributeLabel =
+      attributeOptions.find((o) => o.value === row.attribute_id)?.label?.toLowerCase() || "";
+    return templateLabel.includes(keyword) || attributeLabel.includes(keyword);
+  });
+
+  // Reset về trang 1 khi searchText thay đổi
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText]);
+
+  const pagedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   // ============================================================
   // 🔹 4️⃣ Cột bảng
@@ -190,6 +204,7 @@ const fetchTemplateList = useCallback(async () => {
               aria-label="Chỉnh sửa"
               color="success"
               onClick={() => openEditUserModal(record)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
@@ -198,6 +213,7 @@ const fetchTemplateList = useCallback(async () => {
               aria-label="Xóa"
               color="danger"
               onClick={() => openDeleteUserModal(record)}
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
             />
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -243,26 +259,30 @@ const fetchTemplateList = useCallback(async () => {
   return (
     <>
       <Group justify="space-between" align="center">
-        <Select
-          label="Chọn mẫu dự án để xem dữ liệu"
-          placeholder="Chọn dự án mẫu"
-          data={templateOptions}
-          value={templateId}
-          onChange={(value) => setTemplateId(value || "")}
-          rightSection={<IconChevronDown size={16} />}
-          withAsterisk
-          clearable
-          mb="md"
-        />
-        <AppAction openModal={openModal} />
-      </Group>
 
-      <Table columns={columns} dataSource={data} loading={loading} pagination={false} bordered rowKey="id" />
+          
+          <Select
+            label="Chọn mẫu dự án để xem dữ liệu"
+            placeholder="Chọn dự án mẫu"
+            data={templateOptions}
+            value={templateId}
+            onChange={(value) => setTemplateId(value || "")}
+            rightSection={<IconChevronDown size={16} />}
+            withAsterisk
+            clearable
+            mb="md"
+          />
+     
+          <AppAction openModal={openModal} />
+      </Group>
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
+
+      <Table columns={columns} dataSource={pagedData} loading={loading} pagination={false} bordered rowKey="id" />
 
       {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
         <Pagination
-          total={total}
+          total={filteredData.length}
           current={currentPage}
           pageSize={pageSize}
           onChange={(page) => setCurrentPage(page)}
