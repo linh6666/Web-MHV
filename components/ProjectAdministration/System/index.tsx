@@ -36,6 +36,7 @@ export default function LargeFixedTable() {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 10;
+  const [searchText, setSearchText] = useState<string>("");
 
   const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
 
@@ -72,6 +73,17 @@ export default function LargeFixedTable() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Filter data based on search text
+  const filteredData = data.filter((item) => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) return true;
+    return (
+      item.name?.toLowerCase().includes(keyword) ||
+      item.description_vi?.toLowerCase().includes(keyword) ||
+      item.rank_total?.toString().includes(keyword)
+    );
+  });
 
   // Modal chỉnh sửa
   // const openEditUserModal = (role: DataType) => {
@@ -152,7 +164,7 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -160,7 +172,7 @@ export default function LargeFixedTable() {
       <Table
        style={{ marginTop: 12 }} 
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         pagination={false}
         bordered
