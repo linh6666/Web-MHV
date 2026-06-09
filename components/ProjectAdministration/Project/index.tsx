@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import AppSearch from "../../../common/AppSearch";
 import { modals } from "@mantine/modals";
 import { getListProject } from "../../../api/apigetlistProject";
 import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
@@ -33,6 +34,9 @@ export default function LargeFixedTable() {
     typeof window !== "undefined"
       ? localStorage.getItem("access_token")
       : null;
+
+  // Search state
+  const [searchText, setSearchText] = useState<string>("");
 
   // ===========================
   // 🔥 FETCH DATA
@@ -77,6 +81,18 @@ export default function LargeFixedTable() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Filter data based on search text
+  const filteredData = data.filter((item) => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) return true;
+    return (
+      item.name?.toLowerCase().includes(keyword) ||
+      item.type?.toLowerCase().includes(keyword) ||
+      item.address?.toLowerCase().includes(keyword) ||
+      item.investor?.toLowerCase().includes(keyword)
+    );
+  });
 
   // ===========================
   // 🔥 MODAL EDIT
@@ -161,6 +177,7 @@ export default function LargeFixedTable() {
               iconType="documentEdit"
               aria-label="Chỉnh sửa"
               color="success"
+              style={{ border: "none", outline: "none", background: "transparent", boxShadow: "none" }}
               onClick={() => openEditUserModal(item)}
             />
           </EuiFlexItem>
@@ -181,12 +198,13 @@ export default function LargeFixedTable() {
           alignItems: "center",
         }}
       >
+         <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <div style={{ marginBottom: 12 }}></div>
       </Group>
 
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         scroll={{ x: 1200 }}
         pagination={false}
