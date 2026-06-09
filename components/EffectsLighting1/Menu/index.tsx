@@ -35,7 +35,7 @@ export default function Menu({ project_id }: MenuProps) {
           name: string;
         }
         const items = (res.data as MappingItem[])
-          .filter((m) => m.name !== "CONTROL")
+          .filter((m) => m.button_label_vi !== "CONTROL")
           .map((m) => ({
             id: m.id,
             label: m.button_label_vi,
