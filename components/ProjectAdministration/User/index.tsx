@@ -20,6 +20,7 @@ import { getWardsByProvince } from "../../../api/apigetlistProvinces";
 interface DataType {
   key: string;
   full_name: string;
+  system_name: string;
   email: string;
   phone: string;
   is_active: boolean;
@@ -56,7 +57,8 @@ export default function LargeFixedTable({}) {
   const [provinceOptions, setProvinceOptions] = useState<{ value: string; label: string }[]>([]);
   const [wardOptions, setWardOptions] = useState<{ value: string; label: string }[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 10; 
+  const pageSize = 10;
+  const [searchText, setSearchText] = useState<string>(" ");
 
   const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
 
@@ -157,6 +159,18 @@ export default function LargeFixedTable({}) {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Filter data based on search text
+  const filteredData = data.filter((item) => {
+    const keyword = searchText.toLowerCase().trim();
+    if (!keyword) return true;
+    return (
+      item.full_name?.toLowerCase().includes(keyword) ||
+      item.email?.toLowerCase().includes(keyword) ||
+      item.phone?.toLowerCase().includes(keyword) ||
+      item.system_name?.toLowerCase().includes(keyword)
+    );
+  });
 
   const openModal = () => {
     modals.openConfirmModal({
@@ -282,7 +296,7 @@ const columns: ColumnsType<DataType> = [
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch value={searchText} onSearch={(value) => setSearchText(value)} />
         <div></div>
         <AppAction openModal={openModal} label="Tạo tài khoản" />
         
@@ -291,7 +305,7 @@ const columns: ColumnsType<DataType> = [
       <Table
        style={{ marginTop: 12 }} 
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         scroll={{ x: 1700 }}
         pagination={false}
