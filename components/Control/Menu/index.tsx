@@ -62,11 +62,17 @@ export default function Menu({ project_id }: MenuProps) {
 
   // Menu items
   const menuItems: MenuItem[] = [
-    ...mappingButtons.map((item) => ({
-      label: item.button_label_vi,
-      type: "modal" as const,
-      mappingId: item.id,
-    })),
+    // ...mappingButtons.map((item) => ({
+//   label: item.button_label_vi,
+//   type: "modal" as const,
+//   mappingId: item.id,
+// })),
+    {
+      label: "MAPPING",
+      link: `/tuong-tac/Ciputra/Mapping${
+        project_id ? `?id=${project_id}` : ""
+      }`,
+    },
     {
       label: "GIỚI THIỆU TỔNG THỂ",
       link: `/tuong-tac/Ciputra/Gioi-thieu-du-an${
