@@ -1,7 +1,4 @@
 "use client";
-
-"use client";
-
 import React, { useEffect, useState, useCallback } from "react";
 import type { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
