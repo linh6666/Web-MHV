@@ -133,7 +133,7 @@ export default function Menu({ project_id }: MenuProps) {
 
       {/* Menu Buttons */}
       <div className={styles.Function}>
-        <Stack align="center" style={{ gap: "20px", marginTop: "10px" }}>
+        <Stack align="center" style={{ gap: "15px", marginTop: "10px" }}>
           {menuItems.map((item, index) => (
             <Button
               key={index}
