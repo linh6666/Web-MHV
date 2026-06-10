@@ -199,7 +199,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   const layer7Options = useMemo(() => {
     const uniqueValues = new Set<string>();
     data.forEach((item) => {
-      const val = (item.layer7?.trim() || item.layer3?.trim());
+      const val = item.layer2?.trim() || item.layer3?.trim();
       if (val && val !== "-") uniqueValues.add(val);
     });
     
@@ -212,7 +212,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
   const buildingTypeOptions = useMemo(() => {
     const uniqueValues = new Set<string>();
     data.forEach((item) => {
-      const val = item.building_type?.trim();
+      const val = item.layer3?.trim();
       if (val && val !== "-") uniqueValues.add(val);
     });
     
@@ -239,14 +239,14 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
      SEARCH & FILTER LOGIC
   ======================= */
   const filteredData = data.filter((item) => {
-    // 1. Phân khu filter
+    // 1. Phân khu/Tòa filter — khớp với render: layer2 fallback layer3
     if (selectedLayer7) {
-      const itemLayer = (item.layer7?.trim() || item.layer3?.trim());
+      const itemLayer = item.layer2?.trim() || item.layer3?.trim();
       if (itemLayer !== selectedLayer7) return false;
     }
 
-    // 2. Loại nhà filter
-    if (selectedBuildingType && item.building_type !== selectedBuildingType) {
+    // 2. Loại nhà filter — khớp với dataIndex: layer3
+    if (selectedBuildingType && item.layer3?.trim() !== selectedBuildingType) {
       return false;
     }
 
@@ -294,8 +294,8 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
       title: "Phân khu/Tòa",
       dataIndex: "layer2",
       width: 40,
-      render: (layer7: unknown, record: DataType) => {
-        if (typeof layer7 === "string" && layer7.trim() !== "") return layer7;
+      render: (layer2: unknown, record: DataType) => {
+        if (typeof layer2 === "string" && layer2.trim() !== "") return layer2;
         if (typeof record.layer3 === "string" && record.layer3.trim() !== "")
           return record.layer3;
         return "-";
@@ -318,20 +318,26 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
         <EuiFlexGroup wrap={false} gutterSize="s" alignItems="center">
           <EuiFlexItem grow={false}>
             <EuiButtonIcon
+              color="primary"
               iconType="image"
               onClick={() => openImgModal(record, templateId)}
+              style={{ border: "none", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiButtonIcon
+             color="success"
               iconType="documentEdit"
               onClick={() => openEditUserModal(record)}
+              style={{ border: "none", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiButtonIcon
+              color="danger"
               iconType="trash"
               onClick={() => openDeleteUserModal(record)}
+              style={{ border: "none", boxShadow: "none" }}
             />
           </EuiFlexItem>
         </EuiFlexGroup>
