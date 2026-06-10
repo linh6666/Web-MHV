@@ -45,8 +45,8 @@ const EditView = ({
     initialValues: {
      
     
+      layer2:"",
       layer3:"",
-      building_type:"",
       status_unit:"",
    
      
@@ -68,8 +68,8 @@ const EditView = ({
       updates: {
        
     
+        layer2: values.layer2,
         layer3: values.layer3,
-        building_type: values.building_type,
         status_unit: values.status_unit,
       },
     };
@@ -118,8 +118,8 @@ const fetchDetail = useCallback(async () => {
    formRef.current.setValues({
 
  
+  layer2: item.layer2 ?? "",
   layer3: item.layer3 ?? "",
-  building_type: item.building_type ?? "",
   status_unit: item.status_unit ?? "",
  
 });
@@ -155,11 +155,11 @@ const fetchDetail = useCallback(async () => {
 
    <TextInput
         label="Phân khu/tòa "
-         {...form.getInputProps("layer3")}
+         {...form.getInputProps("layer2")}
       />
        <TextInput
         label="Loại tòa nhà "
-         {...form.getInputProps("building_type")}
+         {...form.getInputProps("layer3")}
       />
        <Select
         label="Trạng thái"

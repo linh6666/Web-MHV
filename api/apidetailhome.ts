@@ -11,14 +11,14 @@ export interface GetDetailHomeParams {
 }
 
 export interface CreateUserPayload {
-  
+
   // describe_vi: string;
   // unit_code:string;
-  layer3:string;
-  building_type:string;
-  status_unit:string;
- 
-//  main_door_direction:string;
+  layer2: string;
+  layer3: string;
+  status_unit: string;
+
+  //  main_door_direction:string;
 
 }
 

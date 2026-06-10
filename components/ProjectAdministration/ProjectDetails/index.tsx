@@ -292,7 +292,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
  
     {
       title: "Phân khu/Tòa",
-      dataIndex: "zone",
+      dataIndex: "layer2",
       width: 40,
       render: (layer7: unknown, record: DataType) => {
         if (typeof layer7 === "string" && layer7.trim() !== "") return layer7;
@@ -303,7 +303,7 @@ export default function LargeFixedTable({ projectId }: { projectId?: string }) {
     },
        {
       title: "Loại nhà",
-      dataIndex: "building_type",
+      dataIndex: "layer3",
       width: 50,
     },
      {
