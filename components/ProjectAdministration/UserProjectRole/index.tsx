@@ -8,7 +8,7 @@ import AppAction from "../../../common/AppAction";
 
 import { modals } from "@mantine/modals";
 import { getListRoless } from "../../../api/apiUserProjectRole";
-import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem } from "@elastic/eui";
+import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiFormControlLayout, EuiSelect } from "@elastic/eui";
 import { Group } from "@mantine/core";
 import CreateView from "./CreateView";
 import EditView from "./EditView";
@@ -28,6 +28,8 @@ export default function LargeFixedTable() {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [selectedProject, setSelectedProject] = useState("");
 
   const pageSize = 10;
   const token = localStorage.getItem("access_token") || "";
@@ -69,8 +71,28 @@ export default function LargeFixedTable() {
     fetchData();
   }, [fetchData]);
 
+  // Options cho select project_name
+  const projectOptions = [
+    { value: "", text: "Tất cả dự án" },
+    ...Array.from(new Set(allData.map((item) => item.project_name).filter(Boolean)))
+      .sort()
+      .map((val) => ({ value: val, text: val })),
+  ];
+
+  // Lọc client-side theo searchText + selectedProject
+  const filteredData = allData.filter((item) => {
+    if (selectedProject && item.project_name !== selectedProject) return false;
+    if (searchText.trim()) {
+      return [item.role_name, item.project_name, item.user_email ?? ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(searchText.toLowerCase().trim());
+    }
+    return true;
+  });
+
   // ✅ phân trang client
-  const paginatedData = allData.slice(
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
@@ -138,10 +160,28 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group justify="space-between" mb={12}>
-        {/* <AppSearch /> */}
+        <AppSearch
+          value={searchText}
+          onSearch={(value) => setSearchText(value)}
+        />
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
+
+      <EuiFlexGroup gutterSize="s" style={{ marginBottom: 12 }}>
+        <EuiFlexItem grow={false} style={{ width: 220 }}>
+          <EuiFormControlLayout
+            clear={selectedProject ? { onClick: () => setSelectedProject("") } : undefined}
+          >
+            <EuiSelect
+              options={projectOptions}
+              value={selectedProject}
+              onChange={(e) => setSelectedProject(e.target.value)}
+              fullWidth
+            />
+          </EuiFormControlLayout>
+        </EuiFlexItem>
+      </EuiFlexGroup>
 
       {/* ✅ FIX lỗi unused error */}
       {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
@@ -157,7 +197,7 @@ export default function LargeFixedTable() {
 
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
         <Pagination
-          total={total}
+          total={searchText.trim() ? filteredData.length : total}
           current={currentPage}
           pageSize={pageSize}
           onChange={setCurrentPage}

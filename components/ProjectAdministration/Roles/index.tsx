@@ -27,6 +27,7 @@ export default function LargeFixedTable() {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchText, setSearchText] = useState("");
   const pageSize = 10;
 
   const token = localStorage.getItem("access_token") || "YOUR_TOKEN_HERE";
@@ -66,6 +67,16 @@ export default function LargeFixedTable() {
     fetchData();
   }, [fetchData]);
 
+  // Lọc client-side theo searchText
+  const filteredData = searchText.trim()
+    ? data.filter((item) =>
+        [item.name, item.description_vi, item.description_en, String(item.rank)]
+          .join(" ")
+          .toLowerCase()
+          .includes(searchText.toLowerCase().trim())
+      )
+    : data;
+
   const openEditUserModal = (role: DataType) => {
     modals.openConfirmModal({
       title: <div style={{ fontWeight: 600, fontSize: 18 }}>Chỉnh sửa vai trò </div>,
@@ -98,10 +109,17 @@ export default function LargeFixedTable() {
               aria-label="Chỉnh sửa"
               color="success"
               onClick={() => openEditUserModal(user)}
+              style={{ border: "none", boxShadow: "none" }}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
-            <EuiButtonIcon iconType="trash" aria-label="Xóa" color="danger" onClick={() => openDeleteUserModal(user)} />
+            <EuiButtonIcon
+              iconType="trash"
+              aria-label="Xóa"
+              color="danger"
+              onClick={() => openDeleteUserModal(user)}
+              style={{ border: "none", boxShadow: "none" }}
+            />
           </EuiFlexItem>
         </EuiFlexGroup>
       ),
@@ -131,7 +149,10 @@ export default function LargeFixedTable() {
   return (
     <>
       <Group style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <AppSearch /> */}
+        <AppSearch
+          value={searchText}
+          onSearch={(value) => setSearchText(value)}
+        />
         <div></div>
         <AppAction openModal={openModal} />
       </Group>
@@ -139,7 +160,7 @@ export default function LargeFixedTable() {
       <Table
        style={{ marginTop: 12 }} 
         columns={columns}
-        dataSource={data}
+        dataSource={filteredData}
         loading={loading}
         pagination={false}
         bordered
@@ -150,7 +171,7 @@ export default function LargeFixedTable() {
       
       <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
         <Pagination
-          total={total}
+          total={searchText.trim() ? filteredData.length : total}
           current={currentPage}
           pageSize={pageSize}
           onChange={(page) => setCurrentPage(page)}
