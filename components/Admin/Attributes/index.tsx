@@ -51,7 +51,7 @@ export default function LargeFixedTable() {
       return;
     }
     try {
-      const result: ListRolesResponse = await getListRoles({ token, skip: 0, limit: 1000 });
+      const result: ListRolesResponse = await getListRoles({ token, skip: 0, limit: 100 });
       const users = result.data.map((item: DataType) => ({ ...item, key: item.id }));
       setData(users);
       setFilteredData(users);
@@ -134,7 +134,17 @@ useEffect(() => {
     { title: "Định danh thuộc tính", dataIndex: "label", key: "label", width: 30 },
     { title: "Kiểu dữ liệu", dataIndex: "data_type", key: "data_type", width: 90 },
     { title: "Tên hiển thị", dataIndex: "display_label_vi", key: "display_label_vi", width: 100 },
-    { title: "Tên dữ liệu cha", dataIndex: "parent_attributes_id", key: "parent_attributes_id", width: 100 },
+    {
+      title: "Tên dữ liệu cha",
+      dataIndex: "parent_attributes_id",
+      key: "parent_attributes_id",
+      width: 100,
+      render: (parent_attributes_id: string | null) => {
+        if (!parent_attributes_id) return "-";
+        const parent = data.find((item) => item.id === parent_attributes_id);
+        return parent ? parent.label : `#${parent_attributes_id}`;
+      },
+    },
     {
       title: "Hành Động",
       width: 30,
