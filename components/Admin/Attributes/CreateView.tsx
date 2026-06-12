@@ -1,29 +1,36 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Group,
   LoadingOverlay,
-
   Select,
-
   TextInput,
 } from "@mantine/core";
-import { isNotEmpty,  useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
-import { createUser } from "../../../api/apicreateAttributes"; // 🔁 sửa đường dẫn nếu cần
-
-
+import { createUser } from "../../../api/apicreateAttributes";
+import { getListRoles } from "../../../api/apigetlistAttributes";
+import { getListProjectTemplates } from "../../../api/apiProjectTemplates2";
 
 interface CreateViewProps {
   onSearch: () => Promise<void>;
 }
 
+interface ProjectTemplate {
+  id: string | number;
+  template_vi?: string;
+  template_name?: string;
+}
+
 const CreateView = ({ onSearch }: CreateViewProps) => {
   const [visible, { open, close }] = useDisclosure(false);
+  const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
+  const [templateOptions, setTemplateOptions] = useState<{ value: string; label: string }[]>([]);
 
   const form = useForm({
     initialValues: {
@@ -31,29 +38,61 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
       data_type: "",
       parent_attributes_id: "",
       display_label_vi: "",
-     
- 
+      project_template_id: "",
     },
     validate: {
       label: isNotEmpty(" không được để trống"),
       data_type: isNotEmpty(" không được để trống"),
-      parent_attributes_id: isNotEmpty("không được để trống"),
       display_label_vi: isNotEmpty("không được để trống"),
-     
+      project_template_id: isNotEmpty("không được để trống"),
     },
   });
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        const token = localStorage.getItem("access_token") || "";
+        
+        // Gọi đồng thời cả API lấy danh sách thuộc tính và danh sách mẫu dự án
+        const [resAttributes, resTemplates] = await Promise.all([
+          getListRoles({ token, limit: 100 }),
+          getListProjectTemplates({ token, limit: 100 }),
+        ]);
+
+        const attributesData = resAttributes?.data || [];
+        setParentOptions(
+          attributesData.map((item: any) => ({
+            value: item.id,
+            label: item.label || "Không có tên",
+          }))
+        );
+
+        const templatesData = (resTemplates?.data as ProjectTemplate[]) || [];
+        setTemplateOptions(
+          templatesData
+            .filter((item) => item.template_vi?.trim())
+            .map((item) => ({
+              value: item.id.toString(),
+              label: item.template_vi!,
+            }))
+        );
+      } catch (error) {
+        console.error("Lỗi khi load danh sách options:", error);
+      }
+    };
+    fetchOptions();
+  }, []);
 
   const handleSubmit = async (values: typeof form.values) => {
     open();
     try {
       const userData = {
         label: values.label,
-           data_type: values.data_type, 
-          parent_attributes_id: values.parent_attributes_id,
+        data_type: values.data_type,
+        parent_attributes_id: values.parent_attributes_id || null,
         display_label_vi: values.display_label_vi,
-       
       };
-      await createUser(userData);
+      await createUser(values.project_template_id, userData);
       await onSearch();
       modals.closeAll();
     } catch (error) {
@@ -77,6 +116,15 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         overlayProps={{ radius: "sm", blur: 2 }}
       />
 
+      <Select
+        label="Mẫu dự án"
+        placeholder="Chọn mẫu dự án"
+        data={templateOptions}
+        withAsterisk
+        mt="md"
+        {...form.getInputProps("project_template_id")}
+      />
+
       <TextInput
         label="Định danh thuộc tính"
         placeholder="Nhập định danh thuộc tính"
@@ -85,42 +133,38 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         {...form.getInputProps("label")}
       />
 
- 
- <TextInput
+      <TextInput
         label="Tên hiển thị "
         placeholder="Nhập tên hiển thị "
         withAsterisk
         mt="md"
         {...form.getInputProps("display_label_vi")}
       />
-       <TextInput
+
+      <Select
         label="Tên dữ liệu cha"
-        placeholder="Nhập tên dữ liệu cha"
-        withAsterisk
+        placeholder="Chọn tên dữ liệu cha"
+        data={parentOptions}
+        clearable
+        searchable
         mt="md"
         {...form.getInputProps("parent_attributes_id")}
       />
 
-
-<Select
-  label="Kiểu dữ liệu"
-  placeholder="Chọn kiểu dữ liệu"
-  data={[
-    { value: "bigint", label: "Số nguyên (bigint)" },
-    { value: "float", label: "Số thực (float)" },
-    { value: "text", label: "Văn bản (text)" },
-    { value: "boolean", label: "Đúng/Sai (boolean)" },
-    { value: "time", label: "Thời gian (time)" },
-  ]}
-  withAsterisk
-  mt="md"
-  {...form.getInputProps("data_type")}
-/>
-
-     
-
-   
-  
+      <Select
+        label="Kiểu dữ liệu"
+        placeholder="Chọn kiểu dữ liệu"
+        data={[
+          { value: "bigint", label: "Số nguyên (bigint)" },
+          { value: "float", label: "Số thực (float)" },
+          { value: "text", label: "Văn bản (text)" },
+          { value: "boolean", label: "Đúng/Sai (boolean)" },
+          { value: "time", label: "Thời gian (time)" },
+        ]}
+        withAsterisk
+        mt="md"
+        {...form.getInputProps("data_type")}
+      />
 
       <Group justify="flex-end" mt="lg">
         <Button
