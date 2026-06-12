@@ -16,6 +16,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { createUser } from "../../../api/apicreateAttributes";
 import { getListRoles } from "../../../api/apigetlistAttributes";
 import { getListProjectTemplates } from "../../../api/apiProjectTemplates2";
+import { createUser as createTemplateLink } from "../../../api/apiTemplateAttributesLink";
 
 interface CreateViewProps {
   onSearch: () => Promise<void>;
@@ -25,6 +26,11 @@ interface ProjectTemplate {
   id: string | number;
   template_vi?: string;
   template_name?: string;
+}
+
+interface AttributeItem {
+  id: string;
+  label?: string;
 }
 
 const CreateView = ({ onSearch }: CreateViewProps) => {
@@ -59,9 +65,9 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
           getListProjectTemplates({ token, limit: 100 }),
         ]);
 
-        const attributesData = resAttributes?.data || [];
+        const attributesData = (resAttributes?.data as AttributeItem[]) || [];
         setParentOptions(
-          attributesData.map((item: any) => ({
+          attributesData.map((item) => ({
             value: item.id,
             label: item.label || "Không có tên",
           }))
@@ -92,7 +98,16 @@ const CreateView = ({ onSearch }: CreateViewProps) => {
         parent_attributes_id: values.parent_attributes_id || null,
         display_label_vi: values.display_label_vi,
       };
-      await createUser(values.project_template_id, userData);
+      const newAttribute = await createUser(userData);
+
+      if (values.project_template_id && newAttribute?.id) {
+        await createTemplateLink({
+          project_template_id: values.project_template_id,
+          attribute_id: newAttribute.id,
+          is_required: "false",
+        });
+      }
+
       await onSearch();
       modals.closeAll();
     } catch (error) {

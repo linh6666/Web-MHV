@@ -23,6 +23,11 @@ interface EditViewProps {
   id: string;
 }
 
+interface AttributeItem {
+  id: string | number;
+  label?: string;
+}
+
 const EditView = ({ onSearch, id }: EditViewProps) => {
   const [visible, { open, close }] = useDisclosure(false);
   const [parentOptions, setParentOptions] = useState<{ value: string; label: string }[]>([]);
@@ -38,6 +43,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
   });
 
   const formRef = useRef(form);
+  formRef.current = form;
 
   /** Submit cập nhật user */
   const handleSubmit = async (values: CreateUserPayload) => {
@@ -70,7 +76,7 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
       formRef.current.setValues({
         label: userData.label || "",
         data_type: userData.data_type || "",
-        parent_attributes_id: userData.parent_attributes_id || "",
+        parent_attributes_id: userData.parent_attributes_id != null ? userData.parent_attributes_id.toString() : "",
         display_label_vi: userData.display_label_vi || "",
       });
     } catch (error) {
@@ -87,10 +93,10 @@ const EditView = ({ onSearch, id }: EditViewProps) => {
     try {
       const token = localStorage.getItem("access_token") || "";
       const res = await getListRoles({ token, limit: 100 });
-      const data = res?.data || [];
+      const data = (res?.data as AttributeItem[]) || [];
       setParentOptions(
-        data.map((item: any) => ({
-          value: item.id,
+        data.map((item) => ({
+          value: item.id.toString(),
           label: item.label || "Không có tên",
         }))
       );
