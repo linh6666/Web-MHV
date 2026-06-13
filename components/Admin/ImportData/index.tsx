@@ -178,6 +178,7 @@ const openEditUserModal = (role: DataType) => {
           aria-label="Tải xuống"
           color="primary"
                 onClick={() => openEditUserModal(user)}
+                style={{ border: "none", outline: "none", background: "transparent", }}
               />
            
           </EuiFlexItem>
