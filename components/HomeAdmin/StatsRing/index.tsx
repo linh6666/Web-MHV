@@ -1054,18 +1054,21 @@ export function StatsRing() {
       </Stack>
 
       {/* Modal View & Download PDF */}
-      <StatsReportModal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        projectInfo={projectInfo}
-        statsData={statsData}
-        totalUnits={totalUnits}
-        projectStatus={projectStatus}
-        daysOn={daysOn}
-        totalCommands={totalCommands}
-        analysisData={analysisData}
-        activeUsersCount={activeUsersCount}
-      />
+        <StatsReportModal
+          opened={opened}
+          onClose={() => setOpened(false)}
+          projectInfo={projectInfo}
+          statsData={statsData}
+          totalUnits={totalUnits}
+          projectStatus={projectStatus}
+          daysOn={daysOn}
+          totalCommands={totalCommands}
+          typeChartData={typeChartData}
+          totalCommandsHottrend={totalCommandsHottrend}
+          sortedUsers={sortedUsers}
+          analysisData={analysisData}
+          activeUsersCount={activeUsersCount}
+        />
 
       <style jsx global>{`
         .stats-ring-scroll-content {

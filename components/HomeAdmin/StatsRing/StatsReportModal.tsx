@@ -12,7 +12,9 @@ import {
   Table,
   Text,
   Title,
+  Badge,
 } from "@mantine/core";
+// import { PieChart } from "@mantine/charts"; // unused
 
 // Import các types và helper function được export từ index.tsx
 import {
@@ -23,6 +25,20 @@ import {
   formatTimeOnly,
   formatDateVi,
 } from "./index";
+
+// Types for hot trend chart data and sorted users
+interface HotTrendChartItem {
+  name: string;
+  value: number;
+  color?: string;
+}
+
+interface SortedUser {
+  id: string;
+  name: string;
+  email: string;
+  count: number;
+}
 
 interface StatsReportModalProps {
   opened: boolean;
@@ -35,6 +51,9 @@ interface StatsReportModalProps {
   totalCommands: number | null;
   analysisData: AnalysisData | null;
   activeUsersCount?: number | null;
+  typeChartData?: HotTrendChartItem[];
+  totalCommandsHottrend?: number;
+  sortedUsers?: SortedUser[];
 }
 
 export function StatsReportModal({
@@ -48,6 +67,9 @@ export function StatsReportModal({
   totalCommands,
   analysisData,
   activeUsersCount,
+  typeChartData = [],
+  totalCommandsHottrend = 0,
+  sortedUsers = [],
 }: StatsReportModalProps): JSX.Element {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isReportScrolled, setIsReportScrolled] = useState(false);
@@ -222,7 +244,40 @@ export function StatsReportModal({
         );
       }
 
-      const pageCount = doc.getNumberOfPages();
+        // ==== NEW SECTION: Thống kê Xu hướng & Tương tác ====
+        if (typeChartData && typeChartData.length > 0) {
+          sectionTitle("Thống kê Xu hướng & Tương tác");
+          const hotRows = typeChartData.map((item, idx) => [
+            idx + 1,
+            item.name,
+            item.value,
+            totalCommandsHottrend > 0 ? Math.round((item.value / totalCommandsHottrend) * 100) : 0,
+          ]);
+          hotRows.push(["Tổng cộng:", "", totalCommandsHottrend?.toLocaleString() ?? "0", "100%"]);
+          drawTable(
+            ["STT", "Loại lệnh", "Số lượng", "Tỷ lệ (%)"],
+            hotRows,
+            [14, 80, 40, 40],
+            ["center", "left", "right", "right"]
+          );
+        }
+
+        // ==== NEW SECTION: Top người dùng tích cực nhất ====
+        if (sortedUsers && sortedUsers.length > 0) {
+          sectionTitle("Top người dùng tích cực nhất");
+          const topRows = sortedUsers.map((user, idx) => [
+            idx + 1,
+            `${user.name}\n${user.email}`,
+            user.count,
+          ]);
+          drawTable(
+            ["STT", "Người dùng", "Lượt điều khiển"],
+            topRows,
+            [14, 120, 40],
+            ["center", "left", "right"]
+          );
+        }
+        const pageCount = doc.getNumberOfPages();
       for (let page = 1; page <= pageCount; page += 1) {
         doc.setPage(page);
         doc.setFont("Roboto", "normal");
@@ -435,6 +490,80 @@ export function StatsReportModal({
                 </Table.Tbody>
               </Table>
             </>
+          )}
+
+          {/* ==== NEW SECTION: Hottrend Summary ==== */}
+          {typeChartData.length > 0 && (
+            <Box mt="md">
+              <Title order={5} fw={700}>Thống kê Xu hướng & Tương tác</Title>
+              <Table striped highlightOnHover withTableBorder withColumnBorders mb="lg">
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>STT</Table.Th>
+                    <Table.Th>Loại lệnh</Table.Th>
+                    <Table.Th ta="right">Số lượng</Table.Th>
+                    <Table.Th ta="right">Tỷ lệ (%)</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {typeChartData.map((item, idx) => (
+                    <Table.Tr key={item.name}>
+                      <Table.Td>{idx + 1}</Table.Td>
+                      <Table.Td>{item.name}</Table.Td>
+                      <Table.Td ta="right">{item.value.toLocaleString()}</Table.Td>
+                      <Table.Td ta="right">{totalCommandsHottrend > 0 ? Math.round((item.value / totalCommandsHottrend) * 100) : 0}%</Table.Td>
+                    </Table.Tr>
+                  ))}
+                  <Table.Tr fw={800}>
+                    <Table.Td colSpan={2} ta="right">Tổng cộng:</Table.Td>
+                    <Table.Td ta="right">{totalCommandsHottrend.toLocaleString()}</Table.Td>
+                    <Table.Td ta="right">100%</Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
+              </Table>
+
+              {/* Leaderboard of top active users */}
+              {sortedUsers.length > 0 && (
+                <Box mt="md">
+                  <Title order={5} fw={700}>Top người dùng tích cực nhất</Title>
+                  <Table striped highlightOnHover withTableBorder withColumnBorders>
+                    <Table.Thead>
+                      <Table.Tr>
+                        <Table.Th w={60}>HẠNG</Table.Th>
+                        <Table.Th>NGƯỜI DÙNG</Table.Th>
+                        <Table.Th ta="right">LƯỢT ĐIỀU KHIỂN</Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {sortedUsers.map((user, idx) => {
+                        const rank = idx + 1;
+                        let rankBadgeColor = "gray";
+                        let rankBadgeVariant = "light";
+                        if (rank === 1) { rankBadgeColor = "yellow"; rankBadgeVariant = "filled"; }
+                        else if (rank === 2) { rankBadgeColor = "blue"; rankBadgeVariant = "filled"; }
+                        else if (rank === 3) { rankBadgeColor = "orange"; rankBadgeVariant = "filled"; }
+                        return (
+                          <Table.Tr key={user.id} style={{ fontSize: "11px" }}>
+                            <Table.Td>
+                              <Badge size="xs" color={rankBadgeColor} variant={rankBadgeVariant} style={{ width: '22px', height: '22px', padding: 0, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {rank}
+                              </Badge>
+                            </Table.Td>
+                            <Table.Td>
+                              <Box>
+                                <Text size="xs" fw={700}>{user.name}</Text>
+                                <Text style={{ fontSize: '9px' }} c="dimmed">{user.email}</Text>
+                              </Box>
+                            </Table.Td>
+                            <Table.Td ta="right">{user.count.toLocaleString()}</Table.Td>
+                          </Table.Tr>
+                        );
+                      })}
+                    </Table.Tbody>
+                  </Table>
+                </Box>
+              )}
+            </Box>
           )}
         </Box>
       </Box>
