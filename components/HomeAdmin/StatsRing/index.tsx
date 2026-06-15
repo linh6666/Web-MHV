@@ -11,6 +11,8 @@ import {
   IconActivity,
   IconPower,
   IconUsers,
+  IconFlame,
+  IconRefresh,
 } from "@tabler/icons-react";
 
 import {
@@ -30,6 +32,10 @@ import {
   Flex,
   Badge,
   ScrollArea,
+  Grid,
+  Select,
+  TextInput,
+  Table,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 
@@ -41,6 +47,9 @@ import {  getListDevice} from "../../../api/apiGetDevice";
 import { getListProjectControl} from "../../../api/apigetlistProjectControl";
 import { getListanalysis} from "../../../api/apiGetanalysis";
 import { getListActiveUsers} from "../../../api/apiGetlistActiveUsers";
+import { getListHottrend} from "../../../api/apiGetlistHottrend";
+import { getListUser } from "../../../api/apigetlistuse";
+
 import { StatsReportModal } from "./StatsReportModal";
 
 
@@ -101,6 +110,24 @@ export interface AnalysisData {
   daily_details: DailyDetail[];
 }
 
+interface HottrendData {
+  metric_name?: string;
+  period?: string;
+  start_date?: string;
+  end_date?: string;
+  data?: {
+    types?: Record<string, number>;
+    users?: Record<string, number>;
+  };
+}
+
+interface UserRecord {
+  id?: string | number;
+  full_name?: string | null;
+  name?: string | null;
+  email?: string | null;
+}
+
 const icons = {
   up: IconArrowUpRight,
   down: IconArrowDownRight,
@@ -122,10 +149,28 @@ export const formatDuration = (seconds: number) => {
 export const formatTimeOnly = (isoString: string | null) => {
   if (!isoString) return "—";
   try {
-    const date = new Date(isoString);
-    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    if (isoString.includes("T")) {
+      const timePart = isoString.split("T")[1];
+      return timePart.split(".")[0];
+    }
+    return isoString.split(".")[0];
   } catch {
     return isoString;
+  }
+};
+
+export const formatDateVi = (dateStr: string) => {
+  if (!dateStr) return "—";
+  try {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    const date = new Date(y, m - 1, d);
+    const days = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+    const weekday = days[date.getDay()];
+    const dd = String(d).padStart(2, "0");
+    const mm = String(m).padStart(2, "0");
+    return `${weekday}, ${dd}/${mm}/${y}`;
+  } catch {
+    return dateStr;
   }
 };
 
@@ -143,8 +188,49 @@ export function StatsRing() {
   const [loading, setLoading] = useState(true);
   const [opened, setOpened] = useState(false);
 
+  // States for Hot Trend
+  const [projectId, setProjectId] = useState<string>("");
+  const [hottrendData, setHottrendData] = useState<HottrendData | null>(null);
+  const [hottrendLoading, setHottrendLoading] = useState(false);
+  const [metricName] = useState("cmd_daily_overview");
+  const [period, setPeriod] = useState("daily");
+  const [startDate, setStartDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 30); // 30 ngày trước
+    return d.toISOString().split("T")[0];
+  });
+  const [endDate, setEndDate] = useState(() => {
+    return new Date().toISOString().split("T")[0];
+  });
+  const [usersMap, setUsersMap] = useState<Record<string, { full_name: string; email: string }>>({});
+
   const isMobile = useMediaQuery("(max-width: 576px)") ?? false;
   const isTablet = useMediaQuery("(max-width: 768px)") ?? false;
+
+  const fetchHottrendData = async (
+    projId: string,
+    mName: string,
+    pPeriod: string,
+    sDate: string,
+    eDate: string
+  ) => {
+    if (!projId) return;
+    setHottrendLoading(true);
+    try {
+      const res = await getListHottrend(projId, {
+        metric_name: mName,
+        period: pPeriod,
+        start_date: sDate,
+        end_date: eDate,
+      });
+      setHottrendData(res);
+      console.log("✅ Loaded hot trend data:", res);
+    } catch (error) {
+      console.error("❌ Lỗi khi tải API getListHottrend:", error);
+    } finally {
+      setHottrendLoading(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -158,6 +244,25 @@ export function StatsRing() {
           getListProjectControl({ token, skip: 0, limit: 1 }),
           getListActiveUsers(),
         ]);
+
+        // 0. Tải danh sách user để map thông tin người dùng trong hot trend
+        try {
+          const usersRes = await getListUser({ token, skip: 0, limit: 100 });
+          if (usersRes?.data) {
+            const map: Record<string, { full_name: string; email: string }> = {};
+            usersRes.data.forEach((u: UserRecord) => {
+              if (u.id) {
+                map[String(u.id)] = {
+                  full_name: u.full_name || u.name || "Chưa đặt tên",
+                  email: u.email || "Không có email",
+                };
+              }
+            });
+            setUsersMap(map);
+          }
+        } catch (error) {
+          console.error("Lỗi khi tải API getListUser:", error);
+        }
 
         // 1. Xử lý dữ liệu dự án
         if (projectResResult.status === "fulfilled") {
@@ -176,6 +281,7 @@ export function StatsRing() {
 
             // Gọi API phân tích sử dụng project.id
             if (project.id) {
+              setProjectId(project.id);
               try {
                 const analysisRes = await getListanalysis(project.id);
                 setAnalysisData(analysisRes);
@@ -183,6 +289,13 @@ export function StatsRing() {
               } catch (error) {
                 console.error("❌ Lỗi khi tải API getListanalysis:", error);
               }
+
+              // Gọi API hottrend
+              const defaultEnd = new Date().toISOString().split("T")[0];
+              const d = new Date();
+              d.setDate(d.getDate() - 30);
+              const defaultStart = d.toISOString().split("T")[0];
+              fetchHottrendData(project.id, "cmd_daily_overview", "daily", defaultStart, defaultEnd);
             }
 
             // Mapping dữ liệu cho Card
@@ -273,6 +386,18 @@ export function StatsRing() {
           if (activeUsersRes) {
             setActiveUsersCount(activeUsersRes.total ?? 0);
             setActiveUsersList(activeUsersRes.data || []);
+            // Thêm các user online vào usersMap nếu chưa có
+            activeUsersRes.data.forEach((u: UserRecord) => {
+              if (u.id) {
+                setUsersMap(prev => ({
+                  ...prev,
+                  [String(u.id)]: {
+                    full_name: u.full_name || "Chưa đặt tên",
+                    email: u.email || "Không có email"
+                  }
+                }));
+              }
+            });
           }
         } else {
           console.error("Lỗi tải API Người dùng trực tuyến:", activeUsersResResult.reason);
@@ -336,7 +461,41 @@ export function StatsRing() {
     );
   });
 
+  // Map Hot Trend command types for PieChart/BarChart
+  const typesData = hottrendData?.data?.types || {};
+  const typeChartData = Object.entries(typesData).map(([key, val]) => {
+    let name = key;
+    let color = "#3b82f6"; // default blue
+    if (key === "all") { name = "Tất cả"; color = "#10b981"; }
+    else if (key === "eff") { name = "Hiệu ứng"; color = "#f59e0b"; }
+    else if (key === "one") { name = "Đơn lẻ"; color = "#3b82f6"; }
+    else if (key === "filter") { name = "Bộ lọc"; color = "#8b5cf6"; }
 
+    return {
+      name,
+      value: Number(val),
+      color,
+    };
+  });
+
+  const totalCommandsHottrend = Object.values(typesData).reduce((sum: number, val: unknown) => sum + Number(val), 0);
+
+  // Map Hot Trend users leaderboard
+  const usersData = hottrendData?.data?.users || {};
+  const sortedUsers = Object.entries(usersData)
+    .map(([userId, count]) => {
+      const userDetail = usersMap[userId] || {
+        full_name: `User ${userId.slice(0, 8)}`,
+        email: "Chưa cập nhật thông tin"
+      };
+      return {
+        id: userId,
+        name: userDetail.full_name,
+        email: userDetail.email,
+        count: Number(count),
+      };
+    })
+    .sort((a, b) => b.count - a.count);
 
   return (
     <Box className="stats-ring-root">
@@ -566,10 +725,14 @@ export function StatsRing() {
             <Box h={220} mt="lg">
               <BarChart
                 h={200}
-                data={[...analysisData.daily_details].reverse().map(item => ({
-                  date: new Date(item.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
-                  "Số lệnh": item.total_cmd,
-                }))}
+                data={[...analysisData.daily_details].reverse().map(item => {
+                  const parts = item.date.split("-");
+                  const shortDate = parts.length >= 3 ? `${parts[2]}/${parts[1]}` : item.date;
+                  return {
+                    date: shortDate,
+                    "Số lệnh": item.total_cmd,
+                  };
+                })}
                 dataKey="date"
                 series={[{ name: "Số lệnh", color: "violet" }]}
                 tickLine="y"
@@ -588,7 +751,7 @@ export function StatsRing() {
                   <Box key={day.date} p="xs" style={{ borderRadius: '8px', border: '1px solid #f1f3f5', backgroundColor: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
                     <Group justify="space-between" wrap="nowrap">
                       <Box>
-                        <Text size="xs" fw={700}>{new Date(day.date).toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })}</Text>
+                        <Text size="xs" fw={700}>{formatDateVi(day.date)}</Text>
                         <Group gap="md" mt={4}>
                           <Text size="10px" c="dimmed">
                             Thời gian bật: <span style={{ fontWeight: 600, color: '#495057' }}>{day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s"}</span>
@@ -611,6 +774,191 @@ export function StatsRing() {
           </Paper>
         </SimpleGrid>
       )}
+
+      {/* HOT TREND SECTION */}
+      <Paper withBorder radius="md" p="md" shadow="xs" style={{ position: "relative" }}>
+        {hottrendLoading && (
+          <Center
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(255, 255, 255, 0.7)",
+              zIndex: 10,
+              borderRadius: "8px",
+            }}
+          >
+            <Loader size="md" variant="dots" color="orange" />
+          </Center>
+        )}
+
+        <Stack gap="md">
+          {/* Header */}
+          <Flex direction={{ base: "column", sm: "row" }} justify="space-between" align={{ base: "flex-start", sm: "center" }} gap="xs">
+            <Box>
+              <Group gap="xs" mb={4}>
+                <ThemeIcon size={28} radius="md" variant="light" color="orange">
+                  <IconFlame size={16} />
+                </ThemeIcon>
+                <Title order={5} fw={700}>Thống kê Xu hướng & Tương tác</Title>
+              </Group>
+              <Text size="xs" c="dimmed" pl={36}>
+                Phân tích tần suất gửi lệnh và xếp hạng người dùng hoạt động tích cực
+              </Text>
+            </Box>
+
+            {/* Filter controls inline */}
+            <Group gap="xs" wrap="wrap" w={{ base: "100%", sm: "auto" }}>
+              <TextInput
+                type="date"
+                label="Từ ngày"
+                size="xs"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                styles={{ label: { fontSize: "10px", fontWeight: 700 } }}
+              />
+              <TextInput
+                type="date"
+                label="Đến ngày"
+                size="xs"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                styles={{ label: { fontSize: "10px", fontWeight: 700 } }}
+              />
+              <Select
+                label="Chu kỳ"
+                size="xs"
+                w={110}
+                value={period}
+                onChange={(val) => setPeriod(val || "daily")}
+                data={[
+                  { value: "daily", label: "Hàng ngày" },
+                  { value: "weekly", label: "Hàng tuần" },
+                  { value: "monthly", label: "Hàng tháng" },
+                ]}
+                styles={{ label: { fontSize: "10px", fontWeight: 700 } }}
+              />
+              <Button
+                size="xs"
+                color="orange"
+                onClick={() => fetchHottrendData(projectId, metricName, period, startDate, endDate)}
+                leftSection={<IconRefresh size={14} />}
+                style={{ alignSelf: "flex-end" }}
+              >
+                Cập nhật
+              </Button>
+            </Group>
+          </Flex>
+
+          <Divider size="xs" color="gray.1" />
+
+          {/* Results grid */}
+          <Grid gutter="md">
+            {/* Left: Chart of command types */}
+            <Grid.Col span={{ base: 12, md: 5 }}>
+              <Paper withBorder radius="md" p="sm" bg="gray.0">
+                <Text fw={750} size="xs" c="gray.7" tt="uppercase" mb="xs">Phân bổ loại lệnh ({totalCommandsHottrend} lệnh)</Text>
+                
+                {typeChartData.length > 0 ? (
+                  <Box pos="relative" h={200}>
+                    <Center h="100%">
+                      <PieChart
+                        data={typeChartData}
+                        withTooltip
+                        tooltipDataSource="segment"
+                        strokeWidth={1.5}
+                        size={140}
+                        pieProps={{
+                          innerRadius: 45,
+                          outerRadius: 60,
+                          paddingAngle: 1,
+                        }}
+                      />
+                      <Stack gap={0} align="center" pos="absolute" style={{ pointerEvents: 'none' }}>
+                        <Text style={{ fontSize: "9px" }} c="dimmed" tt="uppercase" fw={800}>TỔNG LỆNH</Text>
+                        <Text size="lg" fw={900}>{totalCommandsHottrend}</Text>
+                      </Stack>
+                    </Center>
+                  </Box>
+                ) : (
+                  <Center h={200}>
+                    <Text size="xs" c="dimmed">Không có dữ liệu loại lệnh</Text>
+                  </Center>
+                )}
+
+                {/* Legend list */}
+                <Stack gap="xs" mt="xs">
+                  {typeChartData.map((item) => (
+                    <Group key={item.name} justify="space-between" style={{ fontSize: "11px" }}>
+                      <Group gap="xs">
+                        <Box w={8} h={8} style={{ borderRadius: '50%', backgroundColor: item.color }} />
+                        <Text fw={600} c="gray.8">{item.name}</Text>
+                      </Group>
+                      <Text fw={700}>{item.value} ({totalCommandsHottrend > 0 ? Math.round((item.value / totalCommandsHottrend) * 100) : 0}%)</Text>
+                    </Group>
+                  ))}
+                </Stack>
+              </Paper>
+            </Grid.Col>
+
+            {/* Right: Leaderboard of top users */}
+            <Grid.Col span={{ base: 12, md: 7 }}>
+              <Paper withBorder radius="md" p="sm" bg="gray.0" h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
+                <Text fw={750} size="xs" c="gray.7" tt="uppercase" mb="xs">Top người dùng tích cực nhất</Text>
+                
+                <ScrollArea h={220} offsetScrollbars style={{ flexGrow: 1 }}>
+                  {sortedUsers.length > 0 ? (
+                    <Table verticalSpacing="xs" horizontalSpacing="sm">
+                      <Table.Thead>
+                        <Table.Tr style={{ fontSize: "10px", color: "gray" }}>
+                          <Table.Th w={60}>HẠNG</Table.Th>
+                          <Table.Th>NGƯỜI DÙNG</Table.Th>
+                          <Table.Th align="right" style={{ textAlign: 'right' }}>LƯỢT ĐIỀU KHIỂN</Table.Th>
+                        </Table.Tr>
+                      </Table.Thead>
+                      <Table.Tbody>
+                        {sortedUsers.map((user, idx) => {
+                          const rank = idx + 1;
+                          let rankBadgeColor = "gray";
+                          let rankBadgeVariant = "light";
+                          if (rank === 1) { rankBadgeColor = "yellow"; rankBadgeVariant = "filled"; }
+                          else if (rank === 2) { rankBadgeColor = "blue"; rankBadgeVariant = "filled"; }
+                          else if (rank === 3) { rankBadgeColor = "orange"; rankBadgeVariant = "filled"; }
+                          
+                          return (
+                            <Table.Tr key={user.id} style={{ fontSize: "11px" }}>
+                              <Table.Td>
+                                <Badge size="xs" color={rankBadgeColor} variant={rankBadgeVariant} style={{ width: '22px', height: '22px', padding: 0, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  {rank}
+                                </Badge>
+                              </Table.Td>
+                              <Table.Td>
+                                <Box>
+                                  <Text size="xs" fw={700}>{user.name}</Text>
+                                  <Text style={{ fontSize: '9px' }} c="dimmed">{user.email}</Text>
+                                </Box>
+                              </Table.Td>
+                              <Table.Td align="right" style={{ textAlign: 'right', fontWeight: 800, color: 'var(--mantine-color-orange-filled)' }}>
+                                {user.count.toLocaleString()}
+                              </Table.Td>
+                            </Table.Tr>
+                          );
+                        })}
+                      </Table.Tbody>
+                    </Table>
+                  ) : (
+                    <Center h={180}>
+                      <Text size="xs" c="dimmed">Không tìm thấy dữ liệu tương tác người dùng</Text>
+                    </Center>
+                  )}
+                </ScrollArea>
+              </Paper>
+            </Grid.Col>
+          </Grid>
+        </Stack>
+      </Paper>
 
       {/* CHART SECTION */}
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">

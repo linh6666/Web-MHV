@@ -184,5 +184,7 @@ export const API_ROUTE = {
   //Get lis dealtail
   GET_LIST_DETAIL_USERS: "/api/v1/users/{email}/status",
 
+  /// Get hot trend
+  GET_LIST_HOT_TREND: "/api/v1/device_management/metric/{project_id}",
 
 }

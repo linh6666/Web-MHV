@@ -21,6 +21,7 @@ import {
   AnalysisData,
   formatDuration,
   formatTimeOnly,
+  formatDateVi,
 } from "./index";
 
 interface StatsReportModalProps {
@@ -211,7 +212,7 @@ export function StatsReportModal({
           ["STT", "Ngày", "Thời gian bật", "Khung giờ bật/tắt", "Số lệnh"],
           analysisData.daily_details.map((day, index) => [
             index + 1,
-            new Date(day.date).toLocaleDateString("vi-VN", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" }),
+            formatDateVi(day.date),
             day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s",
             day.time_on ? `${formatTimeOnly(day.time_on)} - ${formatTimeOnly(day.time_off)}` : "—",
             day.total_cmd.toLocaleString(),
@@ -419,14 +420,7 @@ export function StatsReportModal({
                   {analysisData.daily_details.map((day, index) => (
                     <Table.Tr key={day.date}>
                       <Table.Td>{index + 1}</Table.Td>
-                      <Table.Td>
-                        {new Date(day.date).toLocaleDateString("vi-VN", {
-                          weekday: "long",
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })}
-                      </Table.Td>
+                      <Table.Td>{formatDateVi(day.date)}</Table.Td>
                       <Table.Td ta="right">
                         {day.total_time_on > 0 ? formatDuration(day.total_time_on) : "0s"}
                       </Table.Td>
