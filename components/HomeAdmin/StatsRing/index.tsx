@@ -1063,6 +1063,8 @@ export function StatsRing() {
           projectStatus={projectStatus}
           daysOn={daysOn}
           totalCommands={totalCommands}
+          startDate={startDate}
+          endDate={endDate}
           typeChartData={typeChartData}
           totalCommandsHottrend={totalCommandsHottrend}
           sortedUsers={sortedUsers}

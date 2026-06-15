@@ -51,6 +51,8 @@ interface StatsReportModalProps {
   totalCommands: number | null;
   analysisData: AnalysisData | null;
   activeUsersCount?: number | null;
+  startDate?: string;
+  endDate?: string;
   typeChartData?: HotTrendChartItem[];
   totalCommandsHottrend?: number;
   sortedUsers?: SortedUser[];
@@ -67,6 +69,8 @@ export function StatsReportModal({
   totalCommands,
   analysisData,
   activeUsersCount,
+  startDate,
+  endDate,
   typeChartData = [],
   totalCommandsHottrend = 0,
   sortedUsers = [],
@@ -203,6 +207,9 @@ export function StatsReportModal({
       writeText(`Tên dự án: ${projectInfo?.name || "Đang cập nhật"}`, margin);
       writeText(`Địa chỉ: ${projectInfo?.address || "Đang cập nhật"}`, margin, { maxWidth: pageWidth - margin * 2 });
       writeText(`Cập nhật ngày: ${new Date().toLocaleDateString("vi-VN")}`, margin);
+      if (startDate && endDate) {
+        writeText(`Khoảng thời gian: ${formatDateVi(startDate)} - ${formatDateVi(endDate)}`, margin);
+      }
 
       sectionTitle("THÔNG TIN TRẠNG THÁI CĂN HỘ");
       drawTable(
@@ -317,20 +324,25 @@ export function StatsReportModal({
               BÁO CÁO TỔNG QUAN DỰ ÁN & HOẠT ĐỘNG MÔ HÌNH
             </Title>
 
-            <Stack gap={4} mt="md">
-              <Text size="sm">
-                <b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}
-              </Text>
-              <Text size="sm">
-                <b>Tên dự án:</b> {projectInfo?.name || "Đang cập nhật"}
-              </Text>
-              <Text size="sm">
-                <b>Địa chỉ:</b> {projectInfo?.address || "Đang cập nhật"}
-              </Text>
-              <Text size="sm">
-                <b>Cập nhật ngày:</b> {new Date().toLocaleDateString("vi-VN")}
-              </Text>
-            </Stack>
+              <Stack gap={4} mt="md">
+                <Text size="sm">
+                  <b>Chủ đầu tư:</b> {projectInfo?.investor || "Đang cập nhật"}
+                </Text>
+                <Text size="sm">
+                  <b>Tên dự án:</b> {projectInfo?.name || "Đang cập nhật"}
+                </Text>
+                <Text size="sm">
+                  <b>Địa chỉ:</b> {projectInfo?.address || "Đang cập nhật"}
+                </Text>
+                <Text size="sm">
+                  <b>Cập nhật ngày:</b> {new Date().toLocaleDateString("vi-VN")}
+                </Text>
+                {startDate && endDate && (
+                  <Text size="sm">
+                    <b>Khoảng thời gian:</b> {formatDateVi(startDate)} - {formatDateVi(endDate)}
+                  </Text>
+                )}
+              </Stack>
           </Box>
 
           <Divider my="md" label="THÔNG TIN TRẠNG THÁI CĂN HỘ" labelPosition="center" />
