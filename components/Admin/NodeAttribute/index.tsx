@@ -10,13 +10,46 @@ import {
   Button,
   Loader,
   Paper,
+  Card,
+  Image,
+  Text,
+  Stack,
 } from "@mantine/core";
-import { IconPlus, IconChevronDown, IconTrash } from "@tabler/icons-react";
+import { IconPlus, IconChevronDown, IconTrash, IconArrowLeft } from "@tabler/icons-react";
 import { getListProject } from "../../../api/apigetlistProject";
 import { getListRoles } from "../../../api/apigetlistAttributes";
 import { createProjectTemplate } from "../../../api/apiNodeAttribute";
+import styles from "./NodeAttribute.module.css";
+
+// ===========================
+// ✅ TYPES
+// ===========================
+
+interface OverviewImage {
+  url?: string;
+  thumbnail_url?: string;
+}
 
 interface ProjectTemplate {
+  id: string | number;
+  name?: string;
+  type?: string;
+  address?: string;
+  investor?: string;
+  overview_image?: OverviewImage;
+  thumbnail_url?: string;
+}
+
+interface ProjectOption {
+  value: string;
+  label: string;
+  image: string;
+  type?: string;
+  address?: string;
+  investor?: string;
+}
+
+interface RoleOption {
   id: string | number;
   label: string;
   name?: string;
@@ -29,13 +62,28 @@ interface SelectNode {
   children: SelectNode[];
 }
 
+// ===========================
+// 🔥 HELPER
+// ===========================
+
+const getImageUrl = (item: ProjectTemplate): string => {
+  const url = item.thumbnail_url || item.overview_image?.url || "";
+  if (!url) return "/placeholder.png";
+  return url.replace("http://", "https://");
+};
+
+// ===========================
+// COMPONENT
+// ===========================
+
 export default function RecursiveSelect() {
-  const [templateOptions, setTemplateOptions] = useState<
-    { value: string; label: string }[]
-  >([]);
-  const [roleOptions, setRoleOptions] = useState<
-    { value: string; label: string }[]
-  >([]);
+  // --- Bước 1: Danh sách dự án ---
+  const [templateOptions, setTemplateOptions] = useState<ProjectOption[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [selectedOption, setSelectedOption] = useState<ProjectOption | null>(null);
+
+  // --- Bước 2: Cây thuộc tính ---
+  const [roleOptions, setRoleOptions] = useState<{ value: string; label: string }[]>([]);
   const [selectTree, setSelectTree] = useState<SelectNode[]>([
     { id: "root", value: "", children: [] },
   ]);
@@ -46,27 +94,34 @@ export default function RecursiveSelect() {
       ? localStorage.getItem("access_token") || ""
       : "";
 
-  // 🧠 Lấy danh sách project
+  // 🧠 Lấy danh sách project (giữ nguyên API gốc getListProject)
   const fetchTemplateList = useCallback(async () => {
+    setProjectsLoading(true);
     try {
       const res = await getListProject({ token, skip: 0, limit: 100 });
       const data: ProjectTemplate[] = res.data || [];
       const options = data.map((item) => ({
         value: item.id.toString(),
         label: item.name || `Project ${item.id}`,
+        image: getImageUrl(item),
+        type: item.type,
+        address: item.address,
+        investor: item.investor,
       }));
       setTemplateOptions(options);
     } catch (err) {
       console.error("Lỗi khi load danh sách project:", err);
       setTemplateOptions([]);
+    } finally {
+      setProjectsLoading(false);
     }
   }, [token]);
 
-  // 🧠 Lấy danh sách roles
+  // 🧠 Lấy danh sách roles (thuộc tính)
   const fetchRoles = useCallback(async () => {
     try {
       const res = await getListRoles({ token });
-      const data: ProjectTemplate[] = res.data || [];
+      const data: RoleOption[] = res.data || [];
       const opts = data.map((item) => ({
         value: item.id.toString(),
         label: item.name || `${item.label}`,
@@ -82,6 +137,18 @@ export default function RecursiveSelect() {
     fetchTemplateList();
     fetchRoles();
   }, [fetchTemplateList, fetchRoles]);
+
+  // 🎯 Chọn dự án từ card → chuyển sang bước 2
+  const handleSelectProject = (option: ProjectOption) => {
+    setSelectedOption(option);
+    setSelectTree([{ id: "root", value: option.value, children: [] }]);
+  };
+
+  // 🔙 Quay lại chọn dự án
+  const handleBack = () => {
+    setSelectedOption(null);
+    setSelectTree([{ id: "root", value: "", children: [] }]);
+  };
 
   // ⬆️ Update node value
   const updateNodeValue = useCallback((id: string, newValue: string) => {
@@ -181,7 +248,7 @@ export default function RecursiveSelect() {
       const values = collectAllValues(selectTree);
 
       if (!project_id || !attribute_id || values.length === 0) {
-        alert("⚠️ Vui lòng chọn đủ Dự án, Thuộc tính và nhập ít nhất 1 giá trị!");
+        alert("⚠️ Vui lòng chọn đủ Thuộc tính và nhập ít nhất 1 giá trị!");
         setLoading(false);
         return;
       }
@@ -192,7 +259,8 @@ export default function RecursiveSelect() {
       console.log("Kết quả trả về:", res);
 
       alert("✅ Tạo dữ liệu thành công!");
-      setSelectTree([{ id: "root", value: "", quantity: 1, children: [] }]);
+      // Reset cây nhưng giữ project đã chọn
+      setSelectTree([{ id: "root", value: selectedOption?.value || "", quantity: 1, children: [] }]);
     } catch (err) {
       console.error("❌ Lỗi khi tạo dữ liệu:", err);
     } finally {
@@ -200,25 +268,13 @@ export default function RecursiveSelect() {
     }
   };
 
-  // 🧩 Render đệ quy
+  // 🧩 Render đệ quy (chỉ từ level 1 trở đi, level 0 đã chọn từ card)
   const renderSelects = (nodes: SelectNode[], level = 0) =>
     nodes.map((node) => {
       const content = (
         <Box mb="sm">
           <Group align="flex-end">
-            {level === 0 && (
-              <Select
-                label="Dự án"
-                placeholder="Chọn dự án"
-                data={templateOptions}
-                value={node.value}
-                onChange={(val) => updateNodeValue(node.id, val || "")}
-                rightSection={<IconChevronDown size={16} />}
-                withAsterisk
-                clearable
-                mb="xs"
-              />
-            )}
+            {/* Level 0: ẩn Select, project_id đã được set từ card */}
 
             {level === 1 && (
               <Select
@@ -309,8 +365,90 @@ export default function RecursiveSelect() {
       return <React.Fragment key={node.id}>{content}</React.Fragment>;
     });
 
+  // ===========================
+  // 📦 BƯỚC 1: Danh sách dự án dạng Card (giống Interact/index.tsx)
+  // ===========================
+  if (!selectedOption) {
+    if (projectsLoading) {
+      return (
+        <div style={{ textAlign: "center", marginTop: 100 }}>
+          <Loader />
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.background}>
+        <div className={styles.container}>
+          <div className={styles.cardGrid}>
+            {templateOptions.map((option) => (
+              <Card
+                key={option.value}
+                shadow="sm"
+                radius="md"
+                withBorder
+                padding="0"
+                className={styles.card}
+                style={{ cursor: "pointer" }}
+                onClick={() => handleSelectProject(option)}
+              >
+                {/* ===== IMAGE ===== */}
+                <Image
+                  src={option.image}
+                  height={160}
+                  alt={option.label}
+                  style={{
+                    borderTopLeftRadius: "var(--mantine-radius-md)",
+                    borderTopRightRadius: "var(--mantine-radius-md)",
+                  }}
+                />
+
+                {/* ===== CONTENT ===== */}
+                <Stack gap={0} p="md" style={{ flexGrow: 1 }}>
+                  <Text fw={500}>{option.label}</Text>
+                  <Text size="sm" c="dimmed">Loại dự án: {option.type || "Thông tin chưa có"}</Text>
+                  <Text size="sm" c="dimmed">Địa chỉ: {option.address || "Địa chỉ chưa có"}</Text>
+                  <Text size="sm" c="dimmed">Nhà đầu tư: {option.investor || "Thông tin chưa có"}</Text>
+                </Stack>
+
+                {/* ===== BUTTON ===== */}
+                <Button
+                  className={`${styles.baseButton} ${styles.primaryButton}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectProject(option);
+                  }}
+                >
+                  Chọn dự án
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ===========================
+  // 📝 BƯỚC 2: Nhập thuộc tính cho dự án đã chọn
+  // ===========================
   return (
     <div>
+      {/* Header: tên dự án đã chọn + nút quay lại */}
+      <Group mb="md" align="center">
+        <ActionIcon
+          variant="light"
+          color="blue"
+          onClick={handleBack}
+          title="Quay lại chọn dự án"
+        >
+          <IconArrowLeft size={18} />
+        </ActionIcon>
+        <Text fw={600} size="lg">
+          Dự án: {selectedOption.label}
+        </Text>
+      </Group>
+
       {renderSelects(selectTree)}
 
       <Group mt="xl">
