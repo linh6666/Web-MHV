@@ -470,6 +470,7 @@ export function StatsRing() {
     else if (key === "eff") { name = "Hiệu ứng"; color = "#f59e0b"; }
     else if (key === "one") { name = "Đơn lẻ"; color = "#3b82f6"; }
     else if (key === "filter") { name = "Bộ lọc"; color = "#8b5cf6"; }
+      else if (key === "mapping") { name = "Projection Mapping"; color = "#294b61"; }
 
     return {
       name,

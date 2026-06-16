@@ -507,7 +507,7 @@ export function StatsReportModal({
           {/* ==== NEW SECTION: Hottrend Summary ==== */}
           {typeChartData.length > 0 && (
             <Box mt="md">
-              <Title order={5} fw={700}>Thống kê Xu hướng & Tương tác</Title>
+                <Divider my="md" label="Thống kê Xu hướng & Tương tác" labelPosition="center" />
               <Table striped highlightOnHover withTableBorder withColumnBorders mb="lg">
                 <Table.Thead>
                   <Table.Tr>
@@ -537,7 +537,7 @@ export function StatsReportModal({
               {/* Leaderboard of top active users */}
               {sortedUsers.length > 0 && (
                 <Box mt="md">
-                  <Title order={5} fw={700}>Top người dùng tích cực nhất</Title>
+                   <Divider my="md" label="Top người dùng tích cực" labelPosition="center" />
                   <Table striped highlightOnHover withTableBorder withColumnBorders>
                     <Table.Thead>
                       <Table.Tr>
