@@ -7,6 +7,8 @@ import {
 } from "@mantine/core";
 import { NotificationExtension } from "../../../extension/NotificationExtension";
 import { modals } from "@mantine/modals";
+import { api } from "../../../libray/axios";
+import axios from "axios";
 
 export default function ResetPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -26,27 +28,25 @@ export default function ResetPassword() {
       return;
     }
 
-    const response = await fetch("https://www.mohinhviet.com.vn/api/v1/users/me/password", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${access_token}`,
-      },
-      body: JSON.stringify({
+    try {
+      await api.patch("/api/v1/users/me/password", {
         current_password: currentPassword,
         new_password: newPassword,
-      }),
-    });
+      });
 
-    if (response.ok) {
       NotificationExtension.Success("Đổi mật khẩu thành công!");
       // Reset password inputs
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-    } else {
-      const errorData = await response.json();
-      NotificationExtension.Fails(errorData.detail || "Không xác định");
+    } catch (err: unknown) {
+      let errorDetail = "Không xác định";
+      if (axios.isAxiosError(err)) {
+        errorDetail = err.response?.data?.detail || err.message || errorDetail;
+      } else if (err instanceof Error) {
+        errorDetail = err.message;
+      }
+      NotificationExtension.Fails(errorDetail);
     }
   };
 

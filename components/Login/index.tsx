@@ -108,6 +108,10 @@ const Login = () => {
         const path = getRedirectPath(token);
         if (path && path !== "/") {
           window.location.href = path;
+        } else {
+          // Token không hợp lệ hoặc đã hết hạn -> xóa dọn dẹp
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
         }
       }
     }

@@ -11,7 +11,7 @@ import {
   IconExchange,
   IconMenuOrder,
 } from "@tabler/icons-react";
-import { Loader, Container, Text } from "@mantine/core";
+import { Loader, Container, Text, Button } from "@mantine/core";
 import { getCurrentUser } from "../../api/apiProfile";
 import ProfileInfo from "./Profile";
 import Project from "./Project";
@@ -63,7 +63,7 @@ function ProfilePageContent() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-  const activeTabParam = searchParams.get("tab") as TabType | null;
+  const activeTabParam = searchParams?.get("tab") as TabType | null;
 
   const [activeTab, setActiveTab] = useState<TabType>("profile");
 
@@ -77,7 +77,15 @@ function ProfilePageContent() {
     setLoading(true);
     getCurrentUser()
       .then((data) => setUser(data))
-      .catch((err) => console.error("Lỗi khi gọi API:", err))
+      .catch((err) => {
+        console.error("Lỗi khi gọi API getCurrentUser:", err);
+        disconnectSocket();
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        if (typeof window !== "undefined") {
+          window.location.href = "/";
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -91,10 +99,13 @@ function ProfilePageContent() {
 
   if (!user) {
     return (
-      <Container size="sm" py="xl">
-        <Text c="red" ta="center">
-          Không lấy được thông tin user
+      <Container size="sm" py="xl" style={{ textAlign: "center" }}>
+        <Text c="red" ta="center" mb="md">
+          Không lấy được thông tin người dùng hoặc phiên đăng nhập đã hết hạn.
         </Text>
+        <Button onClick={() => (window.location.href = "/")} color="blue">
+          Quay lại trang đăng nhập
+        </Button>
       </Container>
     );
   }

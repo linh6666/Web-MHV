@@ -1,5 +1,21 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { BASE_API_FASTAPI  } from "../config";
+import { BASE_API_FASTAPI } from "../config";
+import { disconnectSocket } from "../services/socket";
+
+const handleAuthLogout = () => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    try {
+      disconnectSocket();
+    } catch (e) {
+      console.error("Error disconnecting socket:", e);
+    }
+    if (window.location.pathname !== "/" && window.location.pathname !== "/dang-nhap") {
+      window.location.href = "/";
+    }
+  }
+};
 
 const createApiInstance = (baseURL: string) => {
   const api = axios.create({
@@ -30,35 +46,35 @@ const createApiInstance = (baseURL: string) => {
 
       const originalRequest = error.config;
 
-      if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true; // tránh vòng lặp vô hạn
+      if (error.response?.status === 401) {
+        if (!originalRequest?._retry) {
+          originalRequest._retry = true; // tránh vòng lặp vô hạn
 
-        // Gọi API refresh token ở đây
-        try {
-          const refreshToken = localStorage.getItem("refresh_token");
-          if (!refreshToken) {
-            // Chưa có refresh token -> logout hoặc redirect login
-            return Promise.reject(error);
+          // Gọi API refresh token nếu có
+          const refreshToken = typeof window !== "undefined" ? localStorage.getItem("refresh_token") : null;
+          if (refreshToken) {
+            try {
+              const response = await axios.post(`${baseURL}/auth/refresh`, {
+                refresh_token: refreshToken,
+              });
+
+              const newToken = response.data.access_token;
+              localStorage.setItem("access_token", newToken);
+
+              // Cập nhật lại header Authorization với token mới
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+              // Thử gọi lại request ban đầu với token mới
+              return axios(originalRequest);
+            } catch (refreshError) {
+              handleAuthLogout();
+              return Promise.reject(refreshError);
+            }
           }
-
-          const response = await axios.post(`${baseURL}/auth/refresh`, {
-            refresh_token: refreshToken,
-          });
-
-          const newToken = response.data.access_token;
-          localStorage.setItem("access_token", newToken);
-
-          // Cập nhật lại header Authorization với token mới
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-
-          // Thử gọi lại request ban đầu với token mới
-          return axios(originalRequest);
-        } catch (refreshError) {
-          // Refresh token thất bại, logout hoặc redirect login
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          return Promise.reject(refreshError);
         }
+
+        // Không có refresh token hoặc refresh thất bại hoặc retry vẫn 401
+        handleAuthLogout();
       }
 
       return Promise.reject(error);
